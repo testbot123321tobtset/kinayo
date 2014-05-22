@@ -1,0 +1,82 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+@import 'core/container';
+@import 'core/tabpanel';
+
+$container-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
+$container-border-width: 0;
+$container-border-style: solid;
+$container-border-color: transparent;
+$container-border-visible-edge-width: $default-border-width;
+$container-border-visible-edge-style: $default-border-style;
+$container-border-visible-edge-color: $default-border-color;
+
+.blurred-background {
+    
+    /* http://codepen.io/rikschennink/pen/zvcgx */
+    @include filter(blur(15px));
+    opacity: 0.35;
+    
+    @include single-transition;
+}
+
+.page-user-root {
+    @include single-transition;
+}
+
+.user-group-container, .user-edit-group-container, .photo-message-input-container {
+    
+    @include single-transition;
+    
+    @include no-border;
+
+    @include no-background;
+    background-color: $container-background-color !important;
+    
+    .user-group-container-feed-container {
+        
+        @include full-transparency;
+        
+        .x-scroll-view {
+
+            padding-top: $default-toolbar-height !important;
+        }
+    }
+    
+    .users-list {
+        
+        .x-scroll-view {
+
+            padding-top: 0 !important;
+        }
+    }
+}
+
+.photo-message-input-container {
+
+    .x-tabbar {
+        
+        @include no-background;
+        background-color: $tabbar-background-color !important;
+
+        .x-tab {
+
+            .x-button-icon {
+
+                &:before {
+                    
+                    font-size: 1.9em !important;
+                    line-height: 1.25em !important;
+                    
+                    color: $default-color-active !important;
+                }
+            }
+
+            .x-button-label {
+                
+                color: $default-color-active !important;
+            }
+        }
+    }
+}

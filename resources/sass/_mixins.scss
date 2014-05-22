@@ -1,0 +1,423 @@
+@import 'compass';
+@import '_variables';
+
+/* Widths and Heights */
+@mixin full-width {
+    width: 100% !important;
+}
+
+@mixin full-height {
+    height: 100% !important;
+}
+
+@mixin auto-height {
+    height: auto !important;
+}
+
+/* Margins and Paddings */
+@mixin no-margin {
+    margin: 0 !important;
+}
+@mixin no-margin-not-important {
+    margin: 0;
+}
+
+@mixin no-padding {
+    padding: 0 !important;
+}
+@mixin no-padding-not-important {
+    padding: 0;
+}
+
+/* Borders */
+@mixin no-border {
+    border: 0px solid transparent !important;
+}
+
+@mixin no-border-not-important {
+    border: 0px solid transparent;
+}
+
+@mixin no-bottom-border {
+    border-bottom: 0px solid transparent !important;
+}
+
+@mixin no-top-border {
+    border-top: 0px solid transparent !important;
+}
+
+@mixin no-left-border {
+    border-left: 0px solid transparent !important;
+}
+
+@mixin no-right-border {
+    border-right: 0px solid transparent !important;
+}
+
+@mixin transparent-border {
+    border: 1px solid transparent !important;
+}
+
+@mixin border {
+    border: 1px solid $default-border-color !important;
+}
+
+@mixin border-right {
+    border-right: 1px solid $default-border-color !important;
+}
+
+@mixin border-left {
+    border-left: 1px solid $default-border-color !important;
+}
+
+@mixin border-top {
+    border-top: 1px solid $default-border-color !important;
+}
+
+@mixin border-bottom {
+    border-bottom: 1px solid $default-border-color !important;
+}
+
+@mixin no-border-radius {
+    @include border-radius(0);
+}
+
+/* Background */
+@mixin no-background {
+    background-image: none !important;
+    background-color: transparent !important;
+}
+
+@mixin no-background-not-important {
+    background-image: none;
+    background-color: transparent;
+}
+
+/* Transparency */
+@mixin full-transparency {
+    opacity: 0 !important;
+    background-image: none !important;
+    background-color: transparent !important;
+}
+
+/* Box shadow */
+@mixin no-box-shadow {
+    @include box-shadow(none);
+}
+
+@mixin right-side-box-shadow {
+    @include box-shadow($default-box-shadow-color 3px 0px 10px);
+}
+
+@mixin normal-reverse-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px -2px 20px);
+}
+
+@mixin reverse-box-shadow {
+    @include normal-reverse-box-shadow;
+}
+
+@mixin normal-depressed-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px 1px 10px inset);
+}
+
+@mixin depressed-box-shadow {
+    @include normal-depressed-box-shadow;
+}
+
+@mixin depressed-box-shadow-with-no-offset {
+    @include box-shadow($default-box-shadow-color 0px 0px 10px inset);
+}
+
+@mixin micro-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px 1px 2px);
+}
+
+@mixin micro-reverse-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px -1px 2px);
+}
+
+@mixin mini-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px 1px 4px);
+}
+
+@mixin mini-reverse-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px -1px 4px);
+}
+
+@mixin mini-right-side-box-shadow {
+    @include box-shadow($default-box-shadow-color 1px 0px 4px);
+}
+
+@mixin mini-left-side-box-shadow {
+    @include box-shadow($default-box-shadow-color -1px 0px 4px);
+}
+
+@mixin mini-depressed-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px 1px 1px inset);
+}
+
+@mixin mini-depressed-box-shadow-with-no-offset {
+    @include box-shadow($default-box-shadow-color 0px 0px 2px inset);
+}
+
+@mixin mega-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px 8px 10px);
+}
+
+@mixin mega-box-shadow-with-no-offset {
+    @include box-shadow($default-box-shadow-color 0px 2px 30px);
+}
+
+@mixin mega-reverse-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px -8px 10px);
+}
+
+@mixin mega-right-side-box-shadow {
+    @include box-shadow($default-box-shadow-color 1px 0px 10px);
+}
+
+@mixin mega-left-side-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px 0px 10px);
+}
+
+@mixin mega-depressed-box-shadow {
+    @include box-shadow($default-box-shadow-color 0px 12px 15px inset);
+}
+
+@mixin mega-depressed-box-shadow-with-no-offset {
+    @include box-shadow($default-box-shadow-color 0px 0px 15px inset);
+}
+
+@mixin netflix-search-widget-shadow {
+    @include box-shadow(#181818 0px 4px 11px);
+}
+
+/* Source: http://nicolasgallagher.com/css-drop-shadows-without-images/demo/ */
+@mixin fancy-box-shadow {
+    /* Shared styles */
+    &.drop-shadow {
+        position: relative;
+        -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.03) inset;
+           -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.03) inset;
+                box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.03) inset;
+    }
+
+    &.drop-shadow:before,
+    &.drop-shadow:after {
+        content: "";
+        position: absolute;
+        z-index: -2;
+    }
+
+    /* Lifted corners */
+
+    &.lifted {
+        -moz-border-radius: 4px;
+             border-radius: 4px;
+    }
+
+    &.lifted:before,
+    &.lifted:after {
+        bottom: 15px;
+        left: 10px;
+        width: 50%;
+        height: 20%;
+        max-width: 300px;
+        max-height: 100px;
+        -webkit-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+           -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+                box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+        -webkit-transform: rotate(-3deg);
+           -moz-transform: rotate(-3deg);
+            -ms-transform: rotate(-3deg);
+             -o-transform: rotate(-3deg);
+                transform: rotate(-3deg);
+    }
+
+    &.lifted:after {
+        right: 10px;
+        left: auto;
+        -webkit-transform: rotate(3deg);
+           -moz-transform: rotate(3deg);
+            -ms-transform: rotate(3deg);
+             -o-transform: rotate(3deg);
+                transform: rotate(3deg);
+    }
+
+    /* Curled corners */
+
+    &.curled {
+        border: 1px solid #efefef;
+        -moz-border-radius: 0 0 120px 120px / 0 0 6px 6px;
+             border-radius: 0 0 120px 120px / 0 0 6px 6px;
+    }
+
+    &.curled:before,
+    &.curled:after {
+        bottom: 12px;
+        left: 10px;
+        width: 50%;
+        height: 55%;
+        max-width: 200px;
+        max-height: 100px;
+        -webkit-box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+           -moz-box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+        -webkit-transform: skew(-8deg) rotate(-3deg);
+           -moz-transform: skew(-8deg) rotate(-3deg);
+            -ms-transform: skew(-8deg) rotate(-3deg);
+             -o-transform: skew(-8deg) rotate(-3deg);
+                transform: skew(-8deg) rotate(-3deg);
+    }
+
+    &.curled:after {
+        right: 10px;
+        left: auto;
+        -webkit-transform: skew(8deg) rotate(3deg);
+           -moz-transform: skew(8deg) rotate(3deg);
+            -ms-transform: skew(8deg) rotate(3deg);
+             -o-transform: skew(8deg) rotate(3deg);
+                transform: skew(8deg) rotate(3deg);
+    }
+
+    /* Perspective */
+
+    &.perspective:before {
+        left: 80px;
+        bottom: 5px;
+        width: 50%;
+        height: 35%;
+        max-width: 200px;
+        max-height: 50px;
+        -webkit-box-shadow: -80px 0 8px rgba(0, 0, 0, 0.4);
+           -moz-box-shadow: -80px 0 8px rgba(0, 0, 0, 0.4);
+                box-shadow: -80px 0 8px rgba(0, 0, 0, 0.4);
+        -webkit-transform: skew(50deg);
+           -moz-transform: skew(50deg);
+            -ms-transform: skew(50deg);
+             -o-transform: skew(50deg);
+                transform: skew(50deg);
+        -webkit-transform-origin: 0 100%;
+           -moz-transform-origin: 0 100%;
+            -ms-transform-origin: 0 100%;
+             -o-transform-origin: 0 100%;
+                transform-origin: 0 100%;
+    }
+
+    &.perspective:after {
+        display: none;
+    }
+
+    /* Raised shadow - no pseudo-elements needed */
+
+    &.raised {
+        -webkit-box-shadow:  0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0) inset;
+           -moz-box-shadow:  0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0) inset;
+                box-shadow:  0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0) inset;
+    }
+
+    /* Curved shadows */
+
+    &.curved:before {
+        top: 10px !important;
+        bottom: 10px !important;
+        left: 0 !important;
+        right: 50% !important;
+        -webkit-box-shadow: 0 0 15px rgba(0,0,0,0.6) !important;
+        -moz-box-shadow: 0 0 15px rgba(0,0,0,0.6) !important;
+        box-shadow: 0 0 15px rgba(0,0,0,0.6) !important;
+        -moz-border-radius: 10px / 100px !important;
+        border-radius: 10px / 100px !important;
+    }
+
+    &.curved-vt-2:before {
+        right: 0 !important;
+    }
+
+    &.curved-hz-1:before {
+        top: 50% !important;
+        bottom: 0 !important;
+        left: 10px !important;
+        right: 10px !important;
+        -moz-border-radius: 100px / 10px !important;
+        border-radius: 100px / 10px !important;
+    }
+
+    &.curved-hz-2:before {
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 10px !important;
+        right: 10px !important;
+        -moz-border-radius: 100px / 10px !important;
+        border-radius: 100px / 10px !important;
+    }
+
+    /* Rotated box */
+
+    &.rotated {
+        -webkit-box-shadow: none;
+           -moz-box-shadow: none;
+                box-shadow: none;
+        -webkit-transform: rotate(-3deg);
+           -moz-transform: rotate(-3deg);
+            -ms-transform: rotate(-3deg);
+             -o-transform: rotate(-3deg);
+                transform: rotate(-3deg);
+    }
+
+    &.rotated > :first-child:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0) inset;
+           -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0) inset;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0) inset;
+    }
+}
+
+/* Box reflection */
+@mixin mini-reflection {
+    -webkit-box-reflect: below 1px /* distance of reflection from the actual object  */ -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(74% /* length of the reflection (larger percent = less reflection) */ , transparent), to(rgba(0, 0, 0, 0.35 /* opacity of the reflection */ ))) /* reflection mask is done by using a gradient */;
+}
+
+/* Text shadow */
+@mixin no-text-shadow {
+    @include text-shadow(none);
+}
+
+@mixin depressed-text-shadow {
+    @include text-shadow;
+}
+
+@mixin undepressed-text-shadow {
+     @include text-shadow(black 0px 1px 1px);
+}
+
+@mixin mega-text-shadow {
+     @include text-shadow(black 0px 0px 2px);
+}
+
+/* Text stroke */
+@mixin no-text-stroke {
+    -webkit-text-stroke-width: 0px !important;
+    -webkit-text-stroke-color: transparent !important;
+}
+
+
+/* 
+    Letterpress effect as shown in http://www.midwinter-dg.com/permalink-7-great-css-based-text-effects-using-the-text-shadow-property_2011-03-03.html
+    
+    To create the appearance of text that has been stamped, choose a text colour that is darker than the background, 
+    and then create a 1px text shadow with a 1px blur and offset it down 1px
+    Make the text-shadow slightly lighter than the background.
+*/
+@mixin letterpress-text-shadow {
+    color: $letterpress-text-color !important;
+    @include text-shadow($letterpress-text-shadow-color $letterpress-text-shadow-h-offset $letterpress-text-shadow-v-offset $letterpress-text-shadow-blur);
+}

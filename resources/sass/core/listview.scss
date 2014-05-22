@@ -1,0 +1,115 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+.x-list {
+    
+    @include no-background;
+    
+    border-bottom: 1px solid $default-border-color-for-fieldsets !important;
+    
+    .x-list-disclosure {
+        
+        &:before {
+            
+            font-family: $list-disclosure-icon-font-family;
+            font-size: $list-disclosure-icon-font-size;
+            line-height: $list-disclosure-icon-font-line-height;
+            content: ''
+                
+        }
+    }
+    
+    .x-list-item {
+        
+        @include no-background;
+        background-color: $list-background-color !important;
+        
+        &:before {
+
+            border-bottom: 1px solid $default-border-color-for-fieldsets;
+        }
+
+        &.x-item-pressed {
+            
+            @include no-background;
+            background-color: $list-pressed-background-color !important;
+            
+            &.x-list-item-tpl {
+                
+                @include no-background;
+                background-color: $list-pressed-background-color !important;
+                
+                color: $list-pressed-color;
+                
+                &:before {
+                    
+                    border-bottom: 1px solid $default-border-color-for-fieldsets;
+                }
+                
+                &:last-child {
+                    
+                    &:before {
+                    
+                        @include no-border;
+                    }
+                }
+                
+                .x-list-disclosure {
+                    
+                    &:before {
+
+                        color: $list-active-color;
+                    }
+                }
+            }
+        }
+        
+        &.x-item-selected {
+            
+            @include no-background;
+            background-color: $list-active-background-color !important;
+            
+            &.x-list-item-tpl {
+                
+                @include no-background;
+                background-color: $list-active-background-color !important;
+                
+                color: $list-active-color;
+                    
+                &:before {
+                    
+                    border-bottom: 1px solid $default-border-color-for-fieldsets;
+                }
+                
+                &:last-child {
+                    
+                    &:before {
+                    
+                        @include no-border;
+                    }
+                }
+                
+                .x-list-disclosure {
+                    
+                    &:before {
+
+                        color: $list-active-color;
+                    }
+                }
+            }
+        }
+    }
+    
+    .x-list-header {
+    
+        @include no-border;
+        border-top: $default-border-width $default-border-style $default-border-color !important;
+        border-bottom: $default-border-width $default-border-style $default-border-color !important;
+        
+        .x-innerhtml {
+            
+            
+        }
+    }
+}

@@ -1,0 +1,144 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+$tabbar-background-color: rgba(255, 255, 255, $default-theme-translucency-opacity);
+$tabbar-border-width: 0;
+$tabbar-border-style: solid;
+$tabbar-border-color: transparent;
+$tabbar-border-visible-edge-width: $default-border-width;
+$tabbar-border-visible-edge-style: $default-border-style;
+$tabbar-border-visible-edge-color: $default-border-color;
+$tabbar-tab-button-color: $default-color-normal;
+$tabbar-tab-button-pressed-color: lighten($tabbar-tab-button-color, $default-color-variance);
+$tabbar-tab-button-active-color: $default-color-active;
+
+.x-tabbar {
+
+    @include no-border;
+    border: $tabbar-border-width $tabbar-border-style $tabbar-border-color !important;
+
+    @include no-background;
+    background-color: $tabbar-background-color !important;
+    
+    height: $default-toolbar-height !important;
+    min-height: $default-toolbar-height !important;
+
+    &.x-docked-bottom {
+
+        @include no-border;
+        border: $tabbar-border-width $tabbar-border-style $tabbar-border-color !important;
+        border-top: $tabbar-border-visible-edge-width $tabbar-border-visible-edge-style $tabbar-border-visible-edge-color !important;
+
+        @include no-background;
+        background-color: $tabbar-background-color !important;
+        
+        height: $default-toolbar-height !important;
+        min-height: $default-toolbar-height !important;
+        
+        /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
+        & + div {
+            
+            .x-scroll-view {
+                
+                padding-bottom: $default-toolbar-height !important;
+            }
+        }
+
+        &.x-docked-bottom-that-is-top {
+
+            @include no-border;
+            border: $tabbar-border-width $tabbar-border-style $tabbar-border-color !important;
+            border-bottom: $tabbar-border-visible-edge-width $tabbar-border-visible-edge-style $tabbar-border-visible-edge-color !important;
+
+            @include no-background;
+            background-color: $tabbar-background-color !important;
+            
+            height: $default-toolbar-height !important;
+            min-height: $default-toolbar-height !important;
+            
+            /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
+            & + div {
+                
+                .x-scroll-view {
+                    
+                    padding-top: $default-toolbar-height !important;
+                }
+            }
+        }
+    }
+
+    &.x-docked-top {
+
+        @include no-border;
+        border: $tabbar-border-width $tabbar-border-style $tabbar-border-color !important;
+        border-bottom: $tabbar-border-visible-edge-width $tabbar-border-visible-edge-style $tabbar-border-visible-edge-color !important;
+
+        @include no-background;
+        background-color: $tabbar-background-color !important;
+        
+        height: $default-toolbar-height !important;
+        min-height: $default-toolbar-height !important;
+
+        /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
+        & + div {
+
+            .x-scroll-view {
+
+                padding-top: $default-toolbar-height !important;
+            }
+        }
+    }
+
+    &.x-full-width {
+        @include full-width;
+    }
+
+    .x-tab {
+
+        .x-button-icon {
+
+            &:before {
+                
+                color: $tabbar-tab-button-color !important;
+            }
+        }
+
+        .x-button-label {
+            
+            color: $tabbar-tab-button-color !important;
+        }
+
+        &.x-tab-pressed {
+
+            .x-button-icon {
+
+                &:before {
+                    
+                    color: $tabbar-tab-button-pressed-color !important;
+                }
+            }
+
+            .x-button-label {
+                
+                color: $tabbar-tab-button-pressed-color !important;
+            }
+        }
+
+        &.x-tab-active {
+
+            .x-button-icon {
+
+                &:before {
+                    
+                    color: $tabbar-tab-button-active-color !important;
+                }
+            }
+
+            .x-button-label {
+                
+                color: $tabbar-tab-button-active-color !important;
+            }
+        }
+    }
+}

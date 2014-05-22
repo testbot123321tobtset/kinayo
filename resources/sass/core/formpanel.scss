@@ -1,0 +1,29 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+$form-panel-background-color: $default-background-color;
+
+.x-form {
+    
+    @include no-background;
+    
+    @include no-border;
+    
+    .x-scroll-container {
+        
+        @include no-background;
+    }
+
+    .x-form-fieldset {
+
+        @include no-margin;
+        margin-top: $default-margin-for-fieldsets !important;
+    }
+
+    .x-button {
+        
+        @include no-margin;
+        margin-top: $default-margin-for-fieldsets !important;
+    }
+}

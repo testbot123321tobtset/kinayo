@@ -1,0 +1,52 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+.x-form-fieldset {
+    
+    @include no-margin;
+    @include no-padding;
+    @include no-border;
+    @include no-background;
+
+    .x-form-fieldset-inner {
+        
+        @include no-margin;
+        @include no-padding;
+        @include no-border;
+        @include no-background;
+    }
+
+    .x-field {
+        
+        @include no-margin;
+        @include no-padding;
+        @include no-border;
+        @include no-background;
+
+        &:before {
+            
+            @include no-margin;
+            @include no-padding;
+            @include no-background;
+            
+            border-bottom: solid 1px $default-border-color-for-fields;
+        }
+    }
+
+    .x-field-input {
+        
+        @include no-border;
+    }
+}
+
+.x-form-fieldset-title {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.x-form-fieldset-instructions {
+/*    color: #555555;
+    margin: 1em;
+    font-size: .8em;*/
+}

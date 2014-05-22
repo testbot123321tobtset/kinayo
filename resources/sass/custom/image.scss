@@ -1,0 +1,20 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+@import 'core/image';
+
+$image-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
+$image-margin: 1em auto;
+
+.photo-to-be-posted {
+    
+    /*background-size: contain !important;*/
+    background-color: $image-background-color !important;
+    /*background-position: center !important;*/
+    
+    @include no-margin;
+    
+    img {
+         @include mini-box-shadow;
+    }
+}

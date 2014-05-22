@@ -1,0 +1,7 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+.x-container {
+    background-color: $default-theme-background-color;
+}

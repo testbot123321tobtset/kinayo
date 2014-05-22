@@ -1,0 +1,92 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+@import 'core/panel';
+@import 'core/tabpanel';
+
+.camera-trigger-panel {
+    
+    @include no-border;
+    @include no-background;
+    @include no-margin;
+    
+    min-height: $default-toolbar-height !important;
+    height: $default-toolbar-height !important;
+    min-width: $default-toolbar-height !important;
+    width: $default-toolbar-height !important;
+    
+    .x-tabbar {
+        
+        @include no-background;
+        
+        &.x-docked-bottom {
+        
+            @include no-background;
+            
+            @include no-border;
+        }
+        
+        .x-tab {
+
+            .x-button-icon {
+
+                &:before {
+                    
+                    color: $default-color-active !important;
+                }
+            }
+
+            .x-button-label {
+                
+                color: $default-color-active !important;
+            }
+        }
+    }
+    
+/*  
+    This will make it a text-less button when you set 'cls' in
+    CameraTriggerPanel to: cls: 'rounded-button camera-trigger-button'
+
+    .x-panel-inner {
+        
+        @include no-border;
+        @include no-background;
+        @include no-margin;
+        
+        .camera-trigger-button {
+            
+            @include no-background;
+            @include no-margin;
+            @include no-border;
+            @include full-height;
+            @include full-width;
+            
+            .x-button-icon {
+                
+                @include no-text-shadow;
+                @include no-text-stroke;
+                
+                &:before {
+                    font-size: 1.8em !important;
+                    line-height: 1em !important;
+                    color: $default-color-active !important;
+                }
+            }
+            
+            &.x-button-pressing {
+                
+                .x-button-icon {
+                    
+                    @include no-text-shadow;
+                    @include no-text-stroke;
+
+                    &:before {
+                        
+                        color: lighten($default-color-active, $default-color-variance) !important;
+                    }
+                }
+            }
+        }
+    }
+*/
+}

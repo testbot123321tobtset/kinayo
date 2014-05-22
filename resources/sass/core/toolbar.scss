@@ -1,0 +1,182 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+$toolbar-background-color: rgba(255, 255, 255, $default-theme-translucency-opacity);
+$toolbar-border-width: 0;
+$toolbar-border-style: solid;
+$toolbar-border-color: transparent;
+$toolbar-border-visible-edge-width: $default-border-width;
+$toolbar-border-visible-edge-style: $default-border-style;
+$toolbar-border-visible-edge-color: $default-border-color;
+$toolbar-title-color: $default-color-active;
+$toolbar-button-color: $default-color-active;
+$toolbar-button-pressing-color: lighten($toolbar-button-color, $default-color-variance);
+$toolbar-button-background-color: $default-darker-background-color; 
+$toolbar-button-pressing-background-color: lighten($toolbar-button-background-color, $default-color-variance);
+
+.x-toolbar {
+    
+    @include no-background;
+    background-color: $toolbar-background-color !important;
+    
+    height: $default-toolbar-height !important;
+    min-height: $default-toolbar-height !important;
+    
+    .x-container {
+        
+        @include no-background;
+    }
+
+    &.x-docked-bottom {
+        
+        @include no-background;
+        background-color: $toolbar-background-color !important;
+        
+        @include no-border;
+        border: $toolbar-border-width $toolbar-border-style $toolbar-border-color !important;
+        border-top: $toolbar-border-visible-edge-width $toolbar-border-visible-edge-style $toolbar-border-visible-edge-color !important;
+    }
+
+    &.x-docked-top {
+        
+        @include no-background;
+        background-color: $toolbar-background-color !important;
+        
+        @include no-border;
+        border: $toolbar-border-width $toolbar-border-style $toolbar-border-color !important;
+        border-bottom: $toolbar-border-visible-edge-width $toolbar-border-visible-edge-style $toolbar-border-visible-edge-color !important;
+    }
+
+    &.x-full-width {
+
+        @include full-width;
+    }
+
+    .x-title {
+
+        color: $toolbar-title-color !important;
+    }
+
+    .x-toolbar-inner > .x-container {
+        
+    }
+
+    .button-stacked {
+        
+        @include no-background;
+        
+        @include no-margin;
+        margin: 0 0.2em !important;
+        
+        @include no-padding;
+        padding-top: .4em !important;
+        
+        @include no-border;
+        
+        -webkit-box-orient: vertical;
+        -ms-flex-direction: column;
+        flex-direction: column;
+
+        height: $default-toolbar-height !important;
+        min-height: $default-toolbar-height !important;
+        
+        min-width: 3.2em !important;
+
+        .x-button-icon {
+
+            margin: 0 auto;
+
+            height: 1.6em !important;
+            width: 1.6em !important;
+
+            font-size: 1.1em !important;
+            line-height: 1.5em !important;
+        }
+
+        .x-button-label {
+
+            display: block;
+            
+            @include no-margin;
+            
+            @include no-padding;
+            padding: 0.1em 0 0.2em 0;
+            
+            font-size: 0.65em !important;
+            line-height: 1em !important;
+            
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            
+            color: $toolbar-title-color !important;
+        }
+    }
+
+    .x-button {
+        
+        @include full-height;
+        
+        @include no-margin;
+        
+        @include no-background;
+        &.messagebox-button {
+            
+            background-color: $toolbar-button-background-color !important;
+            
+            &.x-button-pressing {
+                
+                background-color: $toolbar-button-pressing-background-color !important;
+            }
+        }
+        
+        @include no-border;
+        &.messagebox-button {
+            
+            border-right: $toolbar-border-visible-edge-width $toolbar-border-visible-edge-style $toolbar-border-visible-edge-color !important;
+        }
+        
+        &:last-child {
+            @include no-border;
+        }
+
+        .x-button-icon {
+            
+            &:before {
+                
+                color: $toolbar-button-color !important;
+            }
+        }
+        
+        &.x-button-pressing {
+            
+            .x-button-icon {
+
+                &:before {
+
+                    color: $toolbar-button-pressing-color !important;
+                }
+            }
+        }
+        
+        &.messagebox-button {
+
+            .x-button-label {
+
+                display: block;
+
+                @include no-margin;
+
+                @include no-padding;
+
+                font-size: 0.8em !important;
+                text-transform: uppercase !important;
+
+                text-rendering: optimizeLegibility;
+                -webkit-font-smoothing: antialiased;
+
+                color: $toolbar-title-color !important;
+            }
+        }
+    }
+}

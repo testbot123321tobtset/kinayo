@@ -1,0 +1,23 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+/*
+Blur Code:
+http://codepen.io/rikschennink/pen/zvcgx
+http://compass-style.org/reference/compass/css3/filter/
+*/
+
+.x-panel.x-floating,
+.x-form.x-floating {
+    @include no-border-radius;
+}
+
+.x-toolbar.x-docked-top {
+    @include no-border-radius;
+}
+
+.x-container.x-floating > .x-dock > .x-toolbar.x-docked-bottom,
+.x-panel.x-floating > .x-dock > .x-toolbar.x-docked-bottom {
+    @include no-border-radius;
+}

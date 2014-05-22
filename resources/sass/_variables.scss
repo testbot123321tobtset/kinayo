@@ -1,0 +1,290 @@
+/*
+Colors
+*/
+/* Dark to light colors (black & white) */
+$lead: #191919;
+$tungsten: #333333;
+$iron: #4C4C4C;
+$black-32: #515151;
+$black-35: #595959;
+$black-38: #606060;
+$steel: #666666;
+$nickel: #808080;
+$aluminum: #999999;
+$magnesium: #B3B3B3;
+$dark-silver: darken(#CCCCCC, 8%);
+$silver: #CCCCCC;
+$mercury: #E6E6E6;
+$white-94: darken(white, 6%);
+$white-96: darken(white, 4%);
+$white-97: darken(white, 3%);
+$white-98: darken(white, 2%);
+$white-99: darken(white, 1%);
+
+/* Other colors */
+$facebook-blue: #4c66a4;
+$facebook-blue-lighten: lighten($facebook-blue, 30%);
+$ios7-blue: #157efb;
+$ios7-red: #fc3e39;
+$ios7-orange: #F92E32;
+$my-orange: #ee6557;
+$ios7-green: #53d769;
+$icloud-reminders-purple: #b14bc9;
+$i-purple: $icloud-reminders-purple;
+$my-purple: #790F5B;
+$ios7-blue-lighten: lighten($ios7-blue, 30%);
+$ios7-red-lighten: lighten($ios7-red, 30%);
+$ios7-orange-lighten: lighten($ios7-orange, 30%);
+$ios7-green-lighten: lighten($ios7-green, 30%);
+$icloud-reminders-purple-lighten: lighten($icloud-reminders-purple, 30%);
+$i-purple-lighten: $icloud-reminders-purple-lighten;
+$my-purple-lighten: lighten($my-purple, 30%);
+$my-purple-orange: lighten($my-orange, 30%);
+$ios7-music-pink: #F01F73;
+$ios7-music-pink-r: 240;
+$ios7-music-pink-g: 31;
+$ios7-music-pink-b: 115;
+$ios7-music-red: #EC2154;
+$ios7-music-red-r: 236;
+$ios7-music-red-g: 33;
+$ios7-music-red-b: 84;
+$ios7-music-red-lighten: lighten($ios7-music-red, 30%);
+$my-green: #40c19c;
+$my-green-r: 64;
+$my-green-g: 193;
+$my-green-b: 156;
+/* http://codepen.io/cobblucas/pen/iGpIf */
+$alizarin: #E74C3C;
+$alizarin-r: 231;
+$alizarin-g: 76;
+$alizarin-b: 60;
+$peterriver: #3498DB;
+$peterriver-r: 52;
+$peterriver-g: 152;
+$peterriver-b: 219;
+$wetasphalt: #34495E;
+$wetasphalt-r: 52;
+$wetasphalt-g: 73;
+$wetasphalt-b: 94;
+
+/* Default theme colors */
+$default-theme-color: $ios7-music-pink;
+$default-theme-color-r: $ios7-music-pink-r;
+$default-theme-color-g: $ios7-music-pink-g;
+$default-theme-color-b: $ios7-music-pink-b;
+$default-theme-background-color: white;
+$default-theme-transparency-opacity: 0;
+$default-theme-translucency-opacity: 0.7;
+$default-background-color: white;
+$default-darker-background-color: $white-96;
+$default-border-width: 1px;
+$default-border-style: solid;
+$default-border-color: $silver;
+
+/* Default colors on pressed and such events */
+$default-color-normal: $silver;
+$default-color-active: $default-theme-color;
+$default-color-variance: 10%;
+
+/* Default layer reduction percent */
+$layer-reduction-percent: 1.5%;
+
+/* Default heights */
+$default-toolbar-height: 3.2em;
+
+/* Default font */
+$default-font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, Arial, 'BBAlpha Sans', sans-serif;
+$default-font-weight: 400;
+$default-font-ultralight-weight: 300;
+$default-font-color: $nickel;
+$default-font-size: 1em;
+/* Compass variables */
+$default-text-shadow-color: transparent;
+$default-text-shadow-blur: 0px;
+$default-text-shadow-v-offset: 0px;
+/* Defaut icon font family */
+$default-icon-font-family: 'ionicons';
+
+/* Compass transitions */
+$default-transition-duration: 400ms;
+$default-transition-function: ease-in-out;
+
+/* Fieldsets */
+$default-margin-for-fieldsets: $default-toolbar-height;
+$default-border-color-for-fieldsets: $default-border-color;
+$default-border-color-for-fields: $default-border-color;
+
+/*
+Listview 
+*/
+$list-color: black; /* Core */
+$list-active-color: $default-theme-color; /* Core */
+$list-pressed-color: lighten($list-color, $default-color-variance); /* Core */
+$list-background-color: transparent;
+$list-active-background-color: $list-background-color;
+$list-pressed-background-color: $list-background-color;
+$list-disclosure-icon-font-family: $default-icon-font-family;
+$list-disclosure-icon-font-size: 1.5em;
+$list-disclosure-icon-font-line-height: 0.9em;
+/* Core */
+$list-zebrastripe: false;
+$list-bg-color: $list-background-color;
+
+/*
+Mask
+*/
+$mask-background-color: lighten($default-theme-color, 45%);
+$mask-border-color: transparent;
+$mask-border-radius: 500px;
+$mask-color: $default-theme-color;
+$mask-font-weight: $default-font-weight;
+$mask-spinner-font-size: 170%;
+
+/*
+Buttons
+*/
+/*$default-button-border-width: $default-border-width;
+$default-button-border-style: $default-border-style;
+$default-button-border-color: $default-border-color;
+
+
+$default-button-height: $default-line-item-component-height;
+$default-button-margin: $default-margin;
+$default-button-border-radius: $default-border-radius;
+$default-button-background-color: $default-darker-background-color;*/
+
+/* Default margins */
+/*$default-margin: 1em;*/
+
+/* Default borders */
+/*$default-border-radius: 0;*/
+
+/* Other defaults */
+/*$default-line-item-component-height: 2.5em;
+$default-toolbar-like-component-height: 2.9em;
+$default-toolbar-like-component-width: 2.9em;*/
+
+/*
+Buttons
+*/
+/*$default-button-border-width: $default-border-width;
+$default-button-border-style: $default-border-style;
+$default-button-border-color: $default-border-color;
+
+
+$default-button-height: $default-line-item-component-height;
+$default-button-margin: $default-margin;
+$default-button-border-radius: $default-border-radius;
+$default-button-background-color: $default-darker-background-color;*/
+
+
+
+/*$default-button-font-size: $default-font-size;*/
+/* Core */
+/*$button-height: $default-button-height;*/
+/*$button-radius: $default-button-border-radius;
+$button-stroke-weight: $default-button-border-width;*/
+/*$toolbar-icon-size: 2.5em;*/
+/* Iconned buttons */
+/*$default-iconned-button-border-width: 0;
+$default-iconned-button-border-style: solid;
+$default-iconned-button-border-color: transparent;
+$default-iconned-button-border-radius: $default-button-border-radius;
+$default-iconned-button-font-size: 2.5em;
+$default-iconned-button-line-height: 1.2em;
+$default-iconned-button-color-variance: 80%;
+$default-iconned-button-color: $silver;
+$default-iconned-button-pressed-color: darken($default-iconned-button-color, $default-iconned-button-color-variance);
+$default-iconned-button-active-color: $default-theme-color;
+$default-iconned-button-borer-color: transparent;
+$default-iconned-button-borer-active-color: transparent;
+$default-iconned-button-borer-pressed-color: transparent;
+$default-iconned-button-background-color: transparent;
+$default-iconned-button-active-background-color: transparent;
+$default-iconned-button-pressed-background-color: transparent;
+$default-iconned-button-outer-container-opacity: $default-theme-transparency-opacity;*/
+
+/*
+Tabbar
+*/
+/* Tabbar */
+/*$tabbar-min-height: $default-toolbar-like-component-height;
+$tabbar-height: $default-toolbar-like-component-height;
+$tabbar-margin: 0;
+$tabbar-margin-from-edge: 0;
+$tabbar-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
+$tabbar-border-width: 0;
+$tabbar-border-style: solid;
+$tabbar-border-color: transparent;
+$tabbar-border-visible-edge-width: $default-border-width;
+$tabbar-border-visible-edge-style: $default-border-style;
+$tabbar-border-visible-edge-color: $default-border-color;*/
+/* Tabbar > Tab */
+/*$tabbar-tab-min-width: $default-toolbar-like-component-width;
+$tabbar-tab-width: $default-toolbar-like-component-width;
+$tabbar-tab-border-radius: $default-iconned-button-border-radius;
+$tabbar-tab-border-width: 0;
+$tabbar-tab-border-style: solid;
+$tabbar-tab-border-color: transparent;
+$tabbar-tab-active-border-color: $default-iconned-button-borer-active-color;
+$tabbar-tab-pressed-border-color: $default-iconned-button-borer-pressed-color;
+$tabbar-tab-background-color: $default-iconned-button-background-color;
+$tabbar-tab-active-background-color: $default-iconned-button-active-background-color;
+$tabbar-tab-pressed-background-color: $default-iconned-button-pressed-background-color;*/
+/* Tabbar > Tab > Button */
+/*$tabbar-tab-button-border-width: 0;
+$tabbar-tab-button-border-style: solid;
+$tabbar-tab-button-border-color: transparent;
+$tabbar-tab-button-font-size: $default-iconned-button-font-size;
+$tabbar-tab-button-line-height: $default-iconned-button-line-height;
+$tabbar-tab-button-color: $default-iconned-button-color;
+$tabbar-tab-button-pressed-color: $default-iconned-button-pressed-color;
+$tabbar-tab-button-active-color: $default-iconned-button-active-color;*/
+
+/* Toolbar */
+/*$toolbar-min-height: $tabbar-min-height;
+$toolbar-height: $tabbar-height;
+$toolbar-border-width: $tabbar-border-width;
+$toolbar-border-style: $tabbar-border-style;
+$toolbar-border-color: $tabbar-border-color;
+$toolbar-border-visible-edge-width: $toolbar-border-width;
+$toolbar-border-visible-edge-style: $toolbar-border-style;
+$toolbar-border-visible-edge-color: $toolbar-border-color;
+$toolbar-margin: $tabbar-margin;
+$toolbar-margin-from-edge: $tabbar-margin-from-edge;
+$toolbar-background-color: $tabbar-background-color;*/
+/* Toolbar > Button */
+/*$toolbar-button-border-width: $tabbar-tab-border-width;
+$toolbar-button-border-style: $tabbar-tab-border-style;
+$toolbar-button-border-color: $tabbar-tab-border-color;
+$toolbar-button-min-height: $toolbar-min-height;
+$toolbar-button-height: $toolbar-height;
+$toolbar-button-min-width: $tabbar-tab-min-width;
+$toolbar-button-width: $tabbar-tab-width;
+$toolbar-button-font-size: 1.8em;
+$toolbar-button-line-height: 0.9em;*/
+/* Toolbar > Title */
+/*$toolbar-title-border-width: $toolbar-button-border-width;
+$toolbar-title-border-style: $toolbar-button-border-style;
+$toolbar-title-border-color: $toolbar-button-border-color;
+$toolbar-title-padding: 0.9em;
+$toolbar-title-font-weight: $default-font-weight;
+$toolbar-title-font-size: 1em;
+$toolbar-title-color: $default-theme-color;*/
+
+/*$default-absolute-top-margin: 20px;
+
+$default-opacity-on-floating-foreground-element: 0.95;
+$default-background-color-on-floating-foreground-element: white;*/
+
+/*
+Box shadow
+*/
+/* Core */
+$default-box-shadow-color: $aluminum;
+
+/*$list-item-selected-color: $white-97;
+$list-item-pressed-color: $white-97;
+$list-disclosure-size: 10px;
+
+$default-background-color-on-separated-sections-panel: $white-94;*/

@@ -1,0 +1,74 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+@import 'core/formpanel';
+
+.user-account-form-panel {
+    
+    .x-form-fieldset:first-child {
+        
+        margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;
+    }
+    
+    .logout-button {
+        
+        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+    }
+}
+
+.user-group-add-form-panel {
+    
+    .x-form-fieldset:first-child {
+        
+        margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;
+    }
+    
+    .submit-button {
+        
+        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+    }
+}
+
+.user-group-edit-form-panel {
+    
+    .x-form-fieldset:first-child {
+        
+        margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;
+    }
+    
+    .delete-button {
+        
+        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+    }
+}
+
+.message-form-panel {
+    
+    .x-form-fieldset {
+        
+        @include no-margin;
+        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        
+        .message-textarea-field {
+            
+            &:before {
+                
+                @include no-border;
+            }
+        }
+    }
+}
+
+
+.user-signup-form-panel, .user-login-form-panel {
+    
+    
+    
+/*    background-color: $default-background-color;
+    border-top: 1px solid $default-border-color;
+    .submit-button {
+        margin-top: $default-margin-for-fieldsets !important;
+        border-top-color: $default-border-color-for-fieldsets;
+        border-bottom-color: $default-border-color-for-fieldsets;
+    }*/
+}

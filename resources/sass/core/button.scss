@@ -1,0 +1,24 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+$button-background-color: $default-darker-background-color;
+$button-border-width: 0;
+$button-border-style: solid;
+$button-border-color: transparent;
+$button-border-visible-edge-width: $default-border-width;
+$button-border-visible-edge-style: $default-border-style;
+$button-border-visible-edge-color: $default-border-color;
+
+.x-button {
+    
+    @include no-background;
+    background-color: $button-background-color !important;
+    
+    @include no-border-radius;
+    
+    @include no-border;
+    border: $button-border-width $button-border-style $button-border-color !important;
+    border-top: $button-border-visible-edge-width $button-border-visible-edge-style $button-border-visible-edge-color !important;
+    border-bottom: $button-border-visible-edge-width $button-border-visible-edge-style $button-border-visible-edge-color !important;
+}

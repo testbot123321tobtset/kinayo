@@ -1,0 +1,13 @@
+@import 'compass';
+@import '_variables';
+@import '_mixins';
+
+body {
+    background: white;
+    font-weight: $default-font-weight !important;
+    font-color: $default-font-color !important;
+    
+    .x-scroll-indicator {
+        opacity: 0 !important;
+    }
+}

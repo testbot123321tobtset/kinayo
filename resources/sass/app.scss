@@ -1,0 +1,101 @@
+$include-pictos-font: false;
+$include-default-icons: false;
+
+@import 'sencha-touch/cupertino';
+@import 'sencha-touch/cupertino/all';
+
+/* http://pictos.cc/font/ */
+/*
+@include icon('camera', 'v');
+@include icon('video', 'V');
+@include icon('home', 'H');
+@include icon('more', '.');
+@include icon('news', 'N');
+@include icon('add', '&');
+*/
+
+/* Ion Icons */
+@include font-face('ionicons', inline-font-files('ionicons/ionicons.svg', svg));
+/* Non-filled fonts */
+@include icon('home', '\f144', 'ionicons');
+@include icon('add', '\f1c9', 'ionicons');
+@include icon('close', '\f2bd', 'ionicons');
+@include icon('cross', '\f2bd', 'ionicons');
+@include icon('arrowright', '\f280', 'ionicons');
+@include icon('arrowdown', '\f151', 'ionicons');
+/* Filled and non-filled fonts */
+@include icon('camerafilled', '\f165', 'ionicons');
+@include icon('camera', '\f164', 'ionicons');
+@include icon('videofilled', '\f1f4', 'ionicons');
+@include icon('video', '\f1f3', 'ionicons');
+@include icon('dotdotdotfilled', '\f1b4', 'ionicons');
+@include icon('dotdotdot', '\f1b3', 'ionicons');
+@include icon('groupsfilled', '\f1c0', 'ionicons');
+@include icon('groups', '\f1bf', 'ionicons');
+@include icon('chatbubblefilled', '\f16b', 'ionicons');
+@include icon('chatbubble', '\f16a', 'ionicons');
+@include icon('chatboxesfilled', '\f169', 'ionicons');
+@include icon('chatboxes', '\f168', 'ionicons');
+@include icon('userfilled', '\f1c2', 'ionicons');
+@include icon('user', '\f1c1', 'ionicons');
+@include icon('albumsfilled', '\f14f', 'ionicons');
+@include icon('albums', '\f14e', 'ionicons');
+@include icon('circledclosefilled', '\f2bc', 'ionicons');
+@include icon('circledclose', '\f2bb', 'ionicons');
+@include icon('circledplusfilled', '\f1cb', 'ionicons');
+@include icon('circledplus', '\f1ca', 'ionicons');
+@include icon('personaddfilled', '\f1c4', 'ionicons');
+@include icon('personadd', '\f1c3', 'ionicons');
+@include icon('plusfilled', '\f1cb', 'ionicons');
+@include icon('circledplus', '\f1ca', 'ionicons');
+@include icon('circledplusfilled', '\f1cb', 'ionicons');
+@include icon('plus', '\f1c9', 'ionicons');
+@include icon('minusfilled', '\f1ae', 'ionicons');
+@include icon('minusoutline', '\f1ad', 'ionicons');
+@include icon('minus', '\f1ac', 'ionicons');
+@include icon('arrowforwardthick', '\f152', 'ionicons');
+@include icon('arrowforward', '\f154', 'ionicons');
+@include icon('circlefilled', '\f16f', 'ionicons');
+@include icon('circle', '\f170', 'ionicons');
+@include icon('composefilled', '\f17e', 'ionicons');
+@include icon('compose', '\f17d', 'ionicons');
+@include icon('checkmark', '\f16c', 'ionicons');
+@include icon('circledcheckmark', '\f16d', 'ionicons');
+@include icon('circledcheckmarkfilled', '\f16e', 'ionicons');
+@include icon('mic', '\f1aa', 'ionicons');
+@include icon('micfilled', '\f1ab', 'ionicons');
+@include icon('micmuted', '\f1a9', 'ionicons');
+
+@import 'shell';
+
+@import 'core/container';
+@import 'core/field';
+@import 'core/listview';
+@import 'core/fieldset';
+@import 'core/formpanel';
+@import 'core/textarea';
+@import 'core/panel';
+@import 'core/mask';
+@import 'core/button';
+@import 'core/tabpanel';
+@import 'core/picker';
+@import 'core/sheet';
+@import 'core/toolbar';
+@import 'core/messagebox';
+@import 'core/image';
+
+@import 'custom/container';
+@import 'custom/field';
+@import 'custom/listview';
+@import 'custom/fieldset';
+@import 'custom/formpanel';
+@import 'custom/textarea';
+@import 'custom/panel';
+@import 'custom/mask';
+@import 'custom/button';
+@import 'custom/tabpanel';
+@import 'custom/picker';
+@import 'custom/sheet';
+@import 'custom/toolbar';
+@import 'custom/messagebox';
+@import 'custom/image';

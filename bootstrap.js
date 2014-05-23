@@ -17,7 +17,9 @@ Ext.Loader.addClassPathMappings({
   "Ext.device.sqlite.SQLResultSetRowList": "touch/src/device/sqlite/Sencha.js",
   "Ext.device.sqlite.SQLTransaction": "touch/src/device/sqlite/Sencha.js",
   "Ext.draw.engine.SvgContext.Gradient": "touch/src/draw/engine/SvgContext.js",
-  "X": "app"
+  "X": "app",
+  "X.config.Config": "app/config/config.js",
+  "overrides": "app/overrides"
 });
 Ext.ClassManager.addNameAlternateMappings({
   "Ext.AbstractComponent": [],
@@ -743,7 +745,73 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.viewport.WindowsPhone": [
     "Ext.viewport.WP"
   ],
-  "X.view.Main": []
+  "X.config.Config": [],
+  "X.config.DummyData": [],
+  "X.controller.Boot": [],
+  "X.controller.Groups": [],
+  "X.controller.Main": [],
+  "X.controller.Messages": [],
+  "X.controller.Preflight": [],
+  "X.controller.Users": [],
+  "X.controller.mixin.Common": [],
+  "X.controller.mixin.DeviceContact": [],
+  "X.controller.mixin.Factory": [],
+  "X.controller.mixin.Group": [],
+  "X.controller.mixin.Page": [],
+  "X.controller.mixin.Parse": [],
+  "X.controller.mixin.User": [],
+  "X.controller.mixin.Util": [],
+  "X.controller.phone.Main": [],
+  "X.model.Application": [],
+  "X.model.AuthenticatedUser": [],
+  "X.model.DeviceContact": [],
+  "X.model.Friend": [],
+  "X.model.Group": [],
+  "X.model.Message": [],
+  "X.model.ParseSession": [],
+  "X.model.User": [],
+  "X.model.validation.UserLogin": [],
+  "X.profile.Base": [],
+  "X.profile.Phone": [],
+  "X.store.Application": [],
+  "X.store.AuthenticatedUser": [],
+  "X.store.DeviceContacts": [],
+  "X.store.Groups": [],
+  "X.store.ParseSession": [],
+  "X.store.Users": [],
+  "X.view.Main": [],
+  "X.view.core.Container": [],
+  "X.view.core.FormPanel": [],
+  "X.view.core.Msg": [],
+  "X.view.core.Panel": [],
+  "X.view.page.Login": [],
+  "X.view.page.user.Root": [],
+  "X.view.phone.Main": [],
+  "X.view.plugandplay.CameraTriggerPanel": [],
+  "X.view.plugandplay.DeviceContactsUsersList": [],
+  "X.view.plugandplay.MessageFormPanel": [],
+  "X.view.plugandplay.PhotoMessageInputContainer": [],
+  "X.view.plugandplay.UserAccountFormPanel": [],
+  "X.view.plugandplay.UserEditGroupContainer": [],
+  "X.view.plugandplay.UserFriendFormPanel": [],
+  "X.view.plugandplay.UserGroupAddFormPanel": [],
+  "X.view.plugandplay.UserGroupContainer": [],
+  "X.view.plugandplay.UserGroupEditFormPanel": [],
+  "X.view.plugandplay.UserGroupsList": [],
+  "X.view.plugandplay.UserGroupsTabPanel": [],
+  "X.view.plugandplay.UserLoginFormPanel": [],
+  "X.view.plugandplay.UserMoreTabPanel": [],
+  "X.view.plugandplay.UserSignupFormPanel": [],
+  "X.view.plugandplay.UsersList": [],
+  "X.view.ux.FullScreenTextArea": [],
+  "X.view.ux.ToggleableButton": [],
+  "X.view.ux.plugin.SlideToRemove": [],
+  "overrides.Component": [],
+  "overrides.LoadMask": [],
+  "overrides.TabPanel": [],
+  "overrides.TitleBar": [],
+  "overrides.dataview.List": [],
+  "overrides.tab.Bar": []
 });
 Ext.ClassManager.addNameAliasMappings({
   "Ext.AbstractComponent": [],
@@ -1687,7 +1755,121 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.viewport.Ios": [],
   "Ext.viewport.Viewport": [],
   "Ext.viewport.WindowsPhone": [],
-  "X.view.Main": [
-    "widget.main"
-  ]
+  "X.config.Config": [],
+  "X.config.DummyData": [],
+  "X.controller.Boot": [],
+  "X.controller.Groups": [],
+  "X.controller.Main": [],
+  "X.controller.Messages": [],
+  "X.controller.Preflight": [],
+  "X.controller.Users": [],
+  "X.controller.mixin.Common": [],
+  "X.controller.mixin.DeviceContact": [],
+  "X.controller.mixin.Factory": [],
+  "X.controller.mixin.Group": [],
+  "X.controller.mixin.Page": [],
+  "X.controller.mixin.Parse": [],
+  "X.controller.mixin.User": [],
+  "X.controller.mixin.Util": [],
+  "X.controller.phone.Main": [],
+  "X.model.Application": [],
+  "X.model.AuthenticatedUser": [],
+  "X.model.DeviceContact": [],
+  "X.model.Friend": [],
+  "X.model.Group": [],
+  "X.model.Message": [],
+  "X.model.ParseSession": [],
+  "X.model.User": [],
+  "X.model.validation.UserLogin": [],
+  "X.profile.Base": [],
+  "X.profile.Phone": [],
+  "X.store.Application": [],
+  "X.store.AuthenticatedUser": [],
+  "X.store.DeviceContacts": [],
+  "X.store.Groups": [],
+  "X.store.ParseSession": [],
+  "X.store.Users": [],
+  "X.view.Main": [],
+  "X.view.core.Container": [
+    "widget.corecontainer"
+  ],
+  "X.view.core.FormPanel": [
+    "widget.coreformpanel"
+  ],
+  "X.view.core.Msg": [
+    "widget.coremsg"
+  ],
+  "X.view.core.Panel": [
+    "widget.corepanel"
+  ],
+  "X.view.page.Login": [
+    "widget.pagelogin"
+  ],
+  "X.view.page.user.Root": [
+    "widget.pageuserroot"
+  ],
+  "X.view.phone.Main": [],
+  "X.view.plugandplay.CameraTriggerPanel": [
+    "widget.cameratriggerpanel"
+  ],
+  "X.view.plugandplay.DeviceContactsUsersList": [
+    "widget.devicecontactsuserslist"
+  ],
+  "X.view.plugandplay.MessageFormPanel": [
+    "widget.messageformpanel"
+  ],
+  "X.view.plugandplay.PhotoMessageInputContainer": [
+    "widget.photomessageinputcontainer"
+  ],
+  "X.view.plugandplay.UserAccountFormPanel": [
+    "widget.useraccountformpanel"
+  ],
+  "X.view.plugandplay.UserEditGroupContainer": [
+    "widget.usereditgroupcontainer"
+  ],
+  "X.view.plugandplay.UserFriendFormPanel": [
+    "widget.userfriendformpanel"
+  ],
+  "X.view.plugandplay.UserGroupAddFormPanel": [
+    "widget.usergroupaddformpanel"
+  ],
+  "X.view.plugandplay.UserGroupContainer": [
+    "widget.usergroupcontainer"
+  ],
+  "X.view.plugandplay.UserGroupEditFormPanel": [
+    "widget.usergroupeditformpanel"
+  ],
+  "X.view.plugandplay.UserGroupsList": [
+    "widget.usergroupslist"
+  ],
+  "X.view.plugandplay.UserGroupsTabPanel": [
+    "widget.usergroupstabpanel"
+  ],
+  "X.view.plugandplay.UserLoginFormPanel": [
+    "widget.userloginformpanel"
+  ],
+  "X.view.plugandplay.UserMoreTabPanel": [
+    "widget.usermoretabpanel"
+  ],
+  "X.view.plugandplay.UserSignupFormPanel": [
+    "widget.usersignupformpanel"
+  ],
+  "X.view.plugandplay.UsersList": [
+    "widget.userslist"
+  ],
+  "X.view.ux.FullScreenTextArea": [
+    "widget.fullscreentextarea"
+  ],
+  "X.view.ux.ToggleableButton": [
+    "widget.togglebutton"
+  ],
+  "X.view.ux.plugin.SlideToRemove": [
+    "plugin.slidetoremove"
+  ],
+  "overrides.Component": [],
+  "overrides.LoadMask": [],
+  "overrides.TabPanel": [],
+  "overrides.TitleBar": [],
+  "overrides.dataview.List": [],
+  "overrides.tab.Bar": []
 });

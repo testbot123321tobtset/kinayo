@@ -2,6 +2,7 @@
 @import '_variables';
 @import '_mixins';
 @import 'core/formpanel';
+@import 'core/button';
 
 .user-account-form-panel {
     
@@ -62,13 +63,12 @@
 
 .user-signup-form-panel, .user-login-form-panel {
     
-    
-    
-/*    background-color: $default-background-color;
-    border-top: 1px solid $default-border-color;
     .submit-button {
-        margin-top: $default-margin-for-fieldsets !important;
-        border-top-color: $default-border-color-for-fieldsets;
-        border-bottom-color: $default-border-color-for-fieldsets;
-    }*/
+        
+/*        
+        For some reason if the width of 1px is used here, then the actual rendering is invisible i.e. 0px width
+        Using a width of 2px renders 1px border
+*/
+        /*border-bottom-width: 2px !important;*/
+    }
 }

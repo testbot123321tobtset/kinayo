@@ -58,6 +58,14 @@ Ext.define('X.controller.mixin.Factory', {
         });
         return me;
     },
+    generateUserSuccessfullyLoggedInWindow: function(callback) {
+        var me = this;
+        var message = (Ext.isObject(callback) && Ext.isString(callback.message)) ? callback.message : X.XConfig.getMESSAGES().USER_SUCCESSFULLY_LOGGED_IN;
+        Ext.Msg.alert(X.XConfig.getMESSAGES().SUCCESS, message, function() {
+            me.executeCallback(callback);
+        });
+        return me;
+    },
     generateUserSuccessfullyCreatedWindow: function(callback) {
         var me = this;
         var message = (Ext.isObject(callback) && Ext.isString(callback.message)) ? callback.message : X.XConfig.getMESSAGES().USER_SUCCESSFULLY_CREATED;

@@ -95,6 +95,8 @@ $tabbar-tab-button-active-color: $default-color-active;
     }
 
     .x-tab {
+        
+        @include no-background;
 
         .x-button-icon {
 

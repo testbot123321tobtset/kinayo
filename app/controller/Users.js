@@ -237,10 +237,10 @@ Ext.define('X.controller.Users', {
         }
         var formPanel = button.up('coreformpanel');
         var formData = formPanel.getValues();
-        var email = formData.email;
+        var username = formData.username;
         var password = formData.password;
         var modelValidationUserLogin = Ext.create('X.model.validation.UserLogin', {
-            email: email,
+            username: username,
             password: password
         });
         var errors = modelValidationUserLogin.validate();
@@ -263,52 +263,75 @@ Ext.define('X.controller.Users', {
             console.log('Debug: X.controller.Users.xhrSignup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         
+//        Parse: https://www.parse.com/docs/rest#users-signup
         var parseMetaData = me.getParseMetaData({
             typeOfRequest: 'signup'
         }),
-                url = parseMetaData.url,
-                method = parseMetaData.method,
-                headers = parseMetaData.headers;
+                shouldMakeRequest = parseMetaData.shouldMakeRequest;
         
-        form.submit({
-//            Parse
-            url: url,
-            method: method,
-            headers: headers,
+        if (Ext.isBoolean(shouldMakeRequest) && shouldMakeRequest) {
+            var url = parseMetaData.url,
+                    method = parseMetaData.method,
+                    headers = parseMetaData.headers;
             
-            success: function(form, action) {
-                if (me.getDebug()) {
-                    console.log('Debug: X.controller.Users.xhrSignup(): Successful: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                }
-                form.reset();
-                me.generateUserSuccessfullyCreatedWindow({
-                    message: false,
-                    fn: function() {
-                        me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
-                    },
-                    scope: me
-                });
-            },
-            failure: function(form, serverResponse) {
-                if (me.getDebug()) {
-                    console.log('Debug: X.controller.Users.xhrSignup(): Failed. Received serverResponse:');
-                    console.log(serverResponse);
-                    console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+//            Don't use formpanel's submit method – it always url encodes the params, and
+//            Parse expects json encoded params
+            var formValues = form.getValues();
+            Ext.Ajax.request({
+//                Parse
+                url: url,
+                method: method,
+                headers: headers,
+                
+                jsonData: formValues,
+                
+                success: function(serverResponse) {
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.Users.xhrSignup(): Successful. Received serverResponse:');
+                        console.log(serverResponse);
+                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                    
+                    me.generateUserSuccessfullyCreatedWindow({
+                        message: false,
+                        fn: function() {
+                            me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
+                        },
+                        scope: me
+                    });
+                },
+                failure: function(serverResponse) {
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.Users.xhrSignup(): Failed. Received serverResponse:');
+                        console.log(serverResponse);
+                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                    
+                    var operationStatus = serverResponse.status,
+                            operationStatusText = serverResponse.statusText;
+
+                    var serverResponseText = Ext.decode(serverResponse.responseText),
+                            serverResponseCode = serverResponseText.code,
+                            serverResponseError = serverResponseText.error;
+                    
                     me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
+                    
+                    me.generateFailedAuthenticationWindow({
+////                        Don't show the server response error because this might expose the password that the user had entered
+////                        which will definitely freak her out! This is going to be replaced by Twilio's phone number
+////                        verification logic anyway, but do keep this in mind!
+//                        message: serverResponseError
+                        message: 'Could not complete this request! Write some user-friendly message in here!'
+                    });
                 }
-                
-                var operationStatus = serverResponse.status,
-                        operationStatusText = serverResponse.statusText;
-                
-                var serverResponseText = Ext.decode(serverResponse.responseText),
-                        serverResponseCode = serverResponseText.code,
-                        serverResponseError = serverResponseText.error;
-                
-                me.generateFailedAuthenticationWindow({
-                    message: serverResponseError
-                });
-            }
-        });
+            });
+        }
+        else {
+            me.generateFailedAuthenticationWindow({
+                message: parseMetaData.message
+            });
+        }
+        
         return me;
     },
     // Show login form
@@ -334,9 +357,11 @@ Ext.define('X.controller.Users', {
         }
         var formPanel = button.up('coreformpanel');
         var formData = formPanel.getValues();
+        var username = formData.username;
+        var password = formData.password;
         var modelValidationUserLogin = Ext.create('X.model.validation.UserLogin', {
-            email: formData.email,
-            password: formData.password
+            username: username,
+            password: password
         });
         var errors = modelValidationUserLogin.validate();
         if (!errors.isValid()) {
@@ -358,77 +383,144 @@ Ext.define('X.controller.Users', {
             console.log('Debug: X.controller.Users.xhrLogin(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         
+//        Parse: https://www.parse.com/docs/rest#users-login
         var parseMetaData = me.getParseMetaData({
             typeOfRequest: 'login'
         }),
-                url = parseMetaData.url,
-                method = parseMetaData.method,
-                headers = parseMetaData.headers;
-        
-        form.submit({
-            url: url,
-            method: method,
-            headers: headers,
+                shouldMakeRequest = parseMetaData.shouldMakeRequest;
+
+        if (Ext.isBoolean(shouldMakeRequest) && shouldMakeRequest) {
+            var url = parseMetaData.url,
+                    method = parseMetaData.method,
+                    headers = parseMetaData.headers;
             
-            success: function(form, serverResponse) {
-                if (me.getDebug()) {
-                    console.log('Debug: X.controller.Users.xhrLogin(): Successful. Received serverResponse:');
-                    console.log(serverResponse);
-                    console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            var formValues = form.getValues();
+            
+            Ext.Ajax.request({
+//                Parse
+                url: url,
+                method: method,
+                headers: headers,
+                
+                params: formValues,
+                
+                success: function(serverResponse) {
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.Users.xhrLogin(): Successful. Received serverResponse:');
+                        console.log(serverResponse);
+                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                    
+                    me.generateUserSuccessfullyLoggedInWindow({
+                        message: false,
+                        fn: function() {
+                            me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
+                        },
+                        scope: me
+                    });
+                },
+                failure: function(serverResponse) {
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.Users.xhrLogin(): Failed. Received serverResponse:');
+                        console.log(serverResponse);
+                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                    
+                    var operationStatus = serverResponse.status,
+                            operationStatusText = serverResponse.statusText;
+
+                    var serverResponseText = Ext.decode(serverResponse.responseText),
+                            serverResponseCode = serverResponseText.code,
+                            serverResponseError = serverResponseText.error;
+                    
+                    me.generateFailedAuthenticationWindow({
+////                        Don't show the server response error because this might expose the password that the user had entered
+////                        which will definitely freak her out! This is going to be replaced by Twilio's phone number
+////                        verification logic anyway, but do keep this in mind!
+//                        message: serverResponseError
+                        message: 'Could not complete this request! Write some user-friendly message in here!'
+                    });
                 }
-                form.reset();
-//                me.loadAuthenticatedUserStore({
-////                    Callback if authenticated user exists
-//                    fn: function() {
-////                        Don\'t remember why we reset authenticated entitiy
-////                        Update this comment when you find out
-////                        var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
-////                        authenticatedUserStore.setAutoSync(false);
-////                        authenticatedUserStore.removeAll();
-////                        authenticatedUserStore.setAutoSync(true);
-////                        me.resetAuthenticatedEntity();
-//                        Ext.create('Ext.util.DelayedTask', function() {
-//                            me.generateUserDeviceContactsAccessRequestWindow();
-//                            me.redirectTo(X.XConfig.getDEFAULT_USER_PAGE());
-////                            This destruction seems to be permanent i.e. if the 
-////                            view gets destroyed and the user logs out, the view
-////                            isn't being regenerated successfully
-////                            me.destroyGivenView({
-////                                view: me.getPageLogin()
-////                            });
-//                        }).
-//                                delay(500);
-//                        
-//                        Ext.Viewport.fireEvent('authenticateduserloggedin', {
-//                            silent: true
-//                        });
-//                    },
-//                    scope: me
-//                });
-            },
-            failure: function(form, serverResponse) {
-                if (me.getDebug()) {
-                    console.log('Debug: X.controller.Users.xhrLogin(): Failed. Received serverResponse:');
-                    console.log(serverResponse);
-                    console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                }
-                
-                var operationStatus = serverResponse.status,
-                        operationStatusText = serverResponse.statusText;
-                
-                var serverResponseText = Ext.decode(serverResponse.responseText),
-                        serverResponseCode = serverResponseText.code,
-                        serverResponseError = serverResponseText.error;
-                
-                me.generateFailedAuthenticationWindow({
-                    message: serverResponseError,
-                    fn: function() {
-                        me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
-                    },
-                    scope: me
-                });
-            }
-        });
+            });
+
+//          Parse has to have a username for its users, and that is what it uses to authenticate them
+//          Ideally, we'd like to have a system that only needs a phone number and never has to log out
+//          For now, we use username and password, but before releasing it, we'll need to transition
+//          into a Twilio+Parse solution
+//            form.submit({
+//                url: url,
+//                method: method,
+//                headers: headers,
+//                success: function(form, serverResponse) {
+//                    if (me.getDebug()) {
+//                        console.log('Debug: X.controller.Users.xhrLogin(): Successful. Received serverResponse:');
+//                        console.log(serverResponse);
+//                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+//                    }
+//                    form.reset();
+////                me.loadAuthenticatedUserStore({
+//////                    Callback if authenticated user exists
+////                    fn: function() {
+//////                        Don\'t remember why we reset authenticated entitiy
+//////                        Update this comment when you find out
+//////                        var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
+//////                        authenticatedUserStore.setAutoSync(false);
+//////                        authenticatedUserStore.removeAll();
+//////                        authenticatedUserStore.setAutoSync(true);
+//////                        me.resetAuthenticatedEntity();
+////                        Ext.create('Ext.util.DelayedTask', function() {
+////                            me.generateUserDeviceContactsAccessRequestWindow();
+////                            me.redirectTo(X.XConfig.getDEFAULT_USER_PAGE());
+//////                            This destruction seems to be permanent i.e. if the 
+//////                            view gets destroyed and the user logs out, the view
+//////                            isn't being regenerated successfully
+//////                            me.destroyGivenView({
+//////                                view: me.getPageLogin()
+//////                            });
+////                        }).
+////                                delay(500);
+////                        
+////                        Ext.Viewport.fireEvent('authenticateduserloggedin', {
+////                            silent: true
+////                        });
+////                    },
+////                    scope: me
+////                });
+//                },
+//                failure: function(form, serverResponse) {
+//                    if (me.getDebug()) {
+//                        console.log('Debug: X.controller.Users.xhrLogin(): Failed. Received serverResponse:');
+//                        console.log(serverResponse);
+//                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+//                    }
+//
+//                    var operationStatus = serverResponse.status,
+//                            operationStatusText = serverResponse.statusText;
+//
+//                    var serverResponseText = Ext.decode(serverResponse.responseText),
+//                            serverResponseCode = serverResponseText.code,
+//                            serverResponseError = serverResponseText.error;
+//
+//                    me.generateFailedAuthenticationWindow({
+//////                        Don't show the server response error because this might expose the password that the user had entered
+//////                        which will definitely freak her out! This is going to be replaced by Twilio's phone number
+//////                        verification logic anyway, but do keep this in mind!
+////                        message: serverResponseError
+//                        message: 'Could not complete this request! Write some user-friendly message in here!',
+//                        fn: function() {
+//                            me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
+//                        },
+//                        scope: me
+//                    });
+//                }
+//            });
+        }
+        else {
+            me.generateFailedAuthenticationWindow({
+                message: parseMetaData.message
+            });
+        }
+        
         return me;
     },
     addFriendsFromDeviceContacts: function() {

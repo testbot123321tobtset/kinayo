@@ -239,49 +239,58 @@ Ext.define('X.controller.mixin.User', {
 //        So, use: https://www.parse.com/docs/rest#users-validating
 //        And, set appropriate headers
         var parseMetaData = me.getParseMetaData({
-            typeOfRequest: 'readMe'
+            typeOfRequest: 'me'
         }),
-                headers = parseMetaData.headers;
-        authenticatedUserStoreProxy.setHeaders(headers);
+                shouldMakeRequest = parseMetaData.shouldMakeRequest;
+
+        if (Ext.isBoolean(shouldMakeRequest) && shouldMakeRequest) {
+            var headers = parseMetaData.headers;
+            authenticatedUserStoreProxy.setHeaders(headers);
 
 //        Load the store
-        authenticatedUserStore.load({
-            callback: function(records, operation, success) {
-                if (success) {
-                    if (me.getDebug()) {
-                        console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation succeeded: Here are the records received: ');
-                        console.log(records);
-                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                    }
-
-                    if (Ext.isArray(records) && records.length > 0) {
-                        var authenticatedUser = records[0];
+            authenticatedUserStore.load({
+                callback: function(records, operation, success) {
+                    if (success) {
                         if (me.getDebug()) {
-                            console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Authenticated user:');
-                            console.log(authenticatedUser);
+                            console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation succeeded: Here are the records received: ');
+                            console.log(records);
                             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
-                        X.authenticated = true;
-                        X.authenticatedEntity = authenticatedUser;
-                        me.loadGroupsStore();
-                        me.executeCallback(existsCallback);
-                    }
-                }
-                else {
-                    if (me.getDebug()) {
-                        console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation failed: Here is the error object received: ');
-//                        Use operation.error and operation.error.status and operation.error.statusText to see what the server sent
-                        console.log(operation.error);
-                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                    }
 
-                    X.authenticated = false;
-                    X.authenticatedEntity = false;
-                    me.executeCallback(doesNotExistCallback);
-                }
-            },
-            scope: me
-        });
+                        if (Ext.isArray(records) && records.length > 0) {
+                            var authenticatedUser = records[0];
+                            if (me.getDebug()) {
+                                console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Authenticated user:');
+                                console.log(authenticatedUser);
+                                console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                            }
+                            X.authenticated = true;
+                            X.authenticatedEntity = authenticatedUser;
+                            me.loadGroupsStore();
+                            me.executeCallback(existsCallback);
+                        }
+                    }
+                    else {
+                        if (me.getDebug()) {
+                            console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation failed: Here is the error object received: ');
+//                        Use operation.error and operation.error.status and operation.error.statusText to see what the server sent
+                            console.log(operation.error);
+                            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                        }
+
+                        X.authenticated = false;
+                        X.authenticatedEntity = false;
+                        me.executeCallback(doesNotExistCallback);
+                    }
+                },
+                scope: me
+            });
+        }
+        else {
+            X.authenticated = false;
+            X.authenticatedEntity = false;
+            me.executeCallback(doesNotExistCallback);
+        }
 
         return me;
     }

@@ -2,7 +2,7 @@ Ext.define('X.view.plugandplay.UserLoginFormPanel', {
     extend: 'X.view.core.FormPanel',
     requires: [
         'Ext.form.FieldSet',
-        'Ext.field.Hidden',
+        'Ext.field.Text',
         'Ext.field.Email',
         'Ext.field.Password'
     ],
@@ -21,13 +21,6 @@ Ext.define('X.view.plugandplay.UserLoginFormPanel', {
                 itemId: 'loginFormFieldSet',
                 cls: 'login-form-fieldset',
                 items: [
-                    {
-                        xtype: 'hiddenfield',
-                        itemId: 'usernameField',
-                        cls: 'username-field',
-                        name: 'username',
-                        placeHolder: 'Username'
-                    },
 ////                  App Store guidelines say that we can't make emails 
 ////                  mandatory – meaning that authentication by email 
 ////                  is out of the window. We should ask for a user's email
@@ -41,6 +34,13 @@ Ext.define('X.view.plugandplay.UserLoginFormPanel', {
 //                        placeHolder: 'Email'
 //                    },
 //                    We will need to add the phone # field here
+                    {
+                        xtype: 'textfield',
+                        itemId: 'usernameField',
+                        cls: 'username-field',
+                        name: 'username',
+                        placeHolder: 'Username'
+                    },
                     {
                         xtype: 'passwordfield',
                         itemId: 'passwordField',
@@ -59,7 +59,7 @@ Ext.define('X.view.plugandplay.UserLoginFormPanel', {
             }
         ]
     },
-    resetLoginFields: function() {
+    resetAllFields: function() {
         var me = this;
         me.resetUsernameField().resetPasswordField();
         return me;

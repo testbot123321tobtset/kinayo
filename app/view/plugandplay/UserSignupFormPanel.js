@@ -2,6 +2,7 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
     extend: 'X.view.core.FormPanel',
     requires: [
         'Ext.form.FieldSet',
+        'Ext.field.Text',,
         'Ext.field.Email',
         'Ext.field.Password'
     ],
@@ -34,6 +35,13 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
 //                    },
 //                    We will need to add the phone # field here,
                     {
+                        xtype: 'textfield',
+                        itemId: 'usernameField',
+                        cls: 'username-field',
+                        name: 'username',
+                        placeHolder: 'Username'
+                    },
+                    {
                         xtype: 'passwordfield',
                         itemId: 'passwordField',
                         cls: 'password-field',
@@ -51,7 +59,7 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
             }
         ]
     },
-    resetLoginFields: function() {
+    resetAllFields: function() {
         var me = this;
         me.resetUsernameField().resetPasswordField();
         return me;

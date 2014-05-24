@@ -19,48 +19,64 @@ Ext.define('X.controller.mixin.Parse', {
                         restApiKey = parseConfig.REST_API_KEY,
                         sessionToken = Ext.getStore('ParseSessionStore').getToken();
                 
-                var url = null, 
+                var shouldMakeRequest = true, // Set this to false if any of the conditions are not met in the switch underneath
+                        message = null;
+                
+                if(Ext.isString(applicationId) && applicationId.length > 0 && Ext.isString(restApiKey) && restApiKey.length > 0) {
+                    var url = null, 
                         method = null,
                         headers = null;
                 
-                switch (typeOfRequest) {
+                    switch (typeOfRequest) {
 //                    https://www.parse.com/docs/rest#users-signup
-                    case 'signup':
-                        url = parseConfigEndpoint + parseConfig.SIGNUP.ENDPOINT;
-                        method = parseConfig.SIGNUP.METHOD,
-                        headers = {
-                            'Content-Type': 'application/json',
-                            'X-Parse-Application-Id': applicationId,
-                            'X-Parse-REST-API-Key': restApiKey,
-                            'X-Parse-Session-Token': sessionToken
-                        };
-                        break;
+                        case 'signup':
+                            url = parseConfigEndpoint + parseConfig.SIGNUP.ENDPOINT;
+                            method = parseConfig.SIGNUP.METHOD,
+                                    headers = {
+                                        'Content-Type': 'application/json;charset=utf-8',
+                                        'X-Parse-Application-Id': applicationId,
+                                        'X-Parse-REST-API-Key': restApiKey
+                                    };
+                            break;
 //                    https://www.parse.com/docs/rest#users-login
-                    case 'login':
-                        url = parseConfigEndpoint + parseConfig.LOGIN.ENDPOINT;
-                        method = parseConfig.LOGIN.METHOD,
-                        headers = {
-                            'X-Parse-Application-Id': applicationId,
-                            'X-Parse-REST-API-Key': restApiKey
-                        };
-                        break;
+                        case 'login':
+                            url = parseConfigEndpoint + parseConfig.LOGIN.ENDPOINT;
+                            method = parseConfig.LOGIN.METHOD,
+                                    headers = {
+                                        'X-Parse-Application-Id': applicationId,
+                                        'X-Parse-REST-API-Key': restApiKey
+                                    };
+                            break;
 //                    https://www.parse.com/docs/rest#users-validating
-                    case 'me':
-                        url = parseConfigEndpoint + parseConfig.ME.ENDPOINT;
-                        method = parseConfig.ME.METHOD,
-                        headers = {
-                            'X-Parse-Application-Id': applicationId,
-                            'X-Parse-REST-API-Key': restApiKey,
-                            'X-Parse-Session-Token': sessionToken
-                        };
-                        break;
-                    default:
-                        break;
+                        case 'me':
+                            if (Ext.isString(sessionToken)) {
+                                url = parseConfigEndpoint + parseConfig.ME.ENDPOINT;
+                                method = parseConfig.ME.METHOD,
+                                        headers = {
+                                            'X-Parse-Application-Id': applicationId,
+                                            'X-Parse-REST-API-Key': restApiKey,
+                                            'X-Parse-Session-Token': sessionToken
+                                        };
+                            }
+                            else {
+                                shouldMakeRequest = false;
+                                message = 'X-Parse-Session-Token not found: no point making a call to "me" endpoint';
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    shouldMakeRequest = false;
+                    message = 'One or both of X-Parse-Application-Id and X-Parse-REST-API-Key not found';
                 }
                 return {
                     url: url,
                     method: method,
-                    headers: headers
+                    headers: headers,
+                    shouldMakeRequest: shouldMakeRequest,
+                    message: message
                 };
             }
         }

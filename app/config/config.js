@@ -33,7 +33,7 @@ Ext.define('X.config.Config', {
 //            https://www.parse.com/docs/rest#users-login
             LOGIN: {
                 ENDPOINT: 'login',
-                METHOD: 'GEt'
+                METHOD: 'GET'
             },
 //            https://www.parse.com/docs/rest#users-validating
             ME: {
@@ -67,6 +67,8 @@ Ext.define('X.config.Config', {
             
             // Message box title
             MESSAGE_BOX_CONFIRM_TITLE: 'Just making sure',
+            
+            USER_SUCCESSFULLY_LOGGED_IN: 'This user was successfully logged in.', 
             
             MODEL_SUCCESSFULLY_CREATED: 'This model was successfully created.',
             MODEL_SUCCESSFULLY_UPDATED: 'This model was successfully updated.',

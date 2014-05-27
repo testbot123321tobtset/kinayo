@@ -60,12 +60,17 @@ Ext.define('X.store.AuthenticatedUser', {
 //        return false;
 //    }
 
+//    This expects:
+//    {
+//      user: <'AuthenticatedUser' model instance>
+//    }
     locallySetGivenUserAsAutheticatedUser: function(options) {
         var me = this;
         if (X.config.Config.getDEBUG()) {
-            console.log('Debug: X.store.AuthenticatedUser.locallySetGivenUser(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.store.AuthenticatedUser.locallySetGivenUserAsAutheticatedUser(): Options:');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
         options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
         if(Ext.isObject(options)) {
             var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
@@ -77,10 +82,59 @@ Ext.define('X.store.AuthenticatedUser', {
                 me.add(user);
                 user.commit();
                 
+                me.setSessionHeader(user.get('sessionToken'));
+                me.setUrlPostfixEndpoint(user.get('objectId'));
+                
                 return me;
             }
         }
         
         return false;
+    },
+    setSessionHeader: function(sessionToken) {
+        var me = this;
+        
+        var proxy = me.getProxy();
+        var proxyHeaders = proxy.getHeaders();
+        proxyHeaders['X-Parse-Session-Token'] = sessionToken;
+        proxy.setHeaders(proxyHeaders);
+        
+        return me;
+    },
+    resetSessionHeader: function() {
+        var me = this;
+        
+        var proxy = me.getProxy();
+        var proxyHeaders = proxy.getHeaders();
+        proxyHeaders['X-Parse-Session-Token'] = null;
+        proxy.setHeaders(proxyHeaders);
+        
+        return me;
+    },
+    setUrlPostfixEndpoint: function(endpoint) {
+        var me = this;
+        
+        me.getProxy().setUrl(X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().USERS.ENDPOINT + '/' + endpoint);
+        
+        return me;
+    },
+    resetUrlPostfixEndpoint: function() {
+        var me = this;
+        
+        me.getProxy().setUrl(X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().USERS.ENDPOINT);
+        
+        return me;
+    },
+    reset: function() {
+        var me = this;
+        
+        me.resetSessionHeader().resetUrlPostfixEndpoint();
+        var authenticatedUser = me.getAt(0);
+        if(Ext.isObject(authenticatedUser)) {
+            authenticatedUser.destroy();
+            authenticatedUser.commit();
+        }
+        
+        return me;
     }
 });

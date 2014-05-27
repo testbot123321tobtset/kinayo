@@ -23,6 +23,13 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
                 },
                 items: [
                     {
+                        itemId: 'usernamefield',
+                        cls: 'username-textfield',
+                        placeHolder: 'Username',
+                        name: 'username',
+                        readOnly: true
+                    },
+                    {
                         itemId: 'firstNameTextfield',
                         cls: 'firstname-textfield',
                         placeHolder: 'First Name',
@@ -38,8 +45,7 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
                         itemId: 'usernameEmailfield',
                         cls: 'username-emailfield',
                         placeHolder: 'Email',
-                        name: 'usernameEmail',
-                        readOnly: true
+                        name: 'usernameEmail'
                     }
                 ]
             },
@@ -81,14 +87,18 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
     },
     onUserRecordChange: function(field, newValue, oldValue, eOpts) {
         var me = this;
-        var authenticatedEntity = X.authenticatedEntity;
+        
+        var authenticatedUser = X.authenticatedUser;
         var fieldName = field.getName();
-        var authenticatedEntityFieldValue = authenticatedEntity.get(fieldName);
-        if(authenticatedEntityFieldValue !== newValue) {
-            authenticatedEntity.set(fieldName, newValue);
+        var authenticatedUserFieldValue = authenticatedUser.get(fieldName);
+        if(authenticatedUserFieldValue !== newValue) {
+            authenticatedUser.set(fieldName, newValue);
             Ext.Viewport.fireEvent('authenticateduserdataedit', {
-                silent: true
+                silent: true,
+                authenticatedUser: authenticatedUser
             });
         }
+        
+        return me;
     }
 });

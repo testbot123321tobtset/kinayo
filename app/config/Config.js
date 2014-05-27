@@ -35,6 +35,10 @@ Ext.define('X.config.Config', {
                 ENDPOINT: 'login',
                 METHOD: 'GET'
             },
+//            https://www.parse.com/docs/rest#users
+            USERS: {
+                ENDPOINT: 'users'
+            },
 //            https://www.parse.com/docs/rest#users-validating
             ME: {
                 ENDPOINT: 'users/me'

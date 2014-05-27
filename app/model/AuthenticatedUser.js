@@ -74,11 +74,17 @@ Ext.define('X.model.AuthenticatedUser', {
         ],
         proxy: {
             type: 'rest',
-            url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().ME.ENDPOINT,
+            url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().USERS.ENDPOINT,
+            appendId: false,
             batchActions: true,
             reader: {
                 type: 'json',
-                rootProperty: 'result'
+                rootProperty: ''
+            },
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'X-Parse-Application-Id': X.config.Config.getPARSE().APPLICATION_ID,
+                'X-Parse-REST-API-Key': X.config.Config.getPARSE().REST_API_KEY
             },
             exception: function(proxy, response, operation, eOpts) {
                 Ext.Viewport.fireEvent('authenticateduserproxyexception', {
@@ -89,6 +95,7 @@ Ext.define('X.model.AuthenticatedUser', {
             }
         }
     }
+    
 //    ,
 ////    TODO: This should have the code to subscribe to a Parse channel
 //    joinRoom: function(xSocket) {

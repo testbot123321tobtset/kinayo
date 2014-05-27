@@ -148,18 +148,20 @@ Ext.define('X.controller.mixin.Factory', {
         });
         return me;
     },
+//    Signup
     generateAndFillViewportWithUserSignupWindow: function() {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithUserSignupWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         if (!Ext.isObject(me.getPageLogin())) {
-            Ext.Viewport.removeAll(false, false).
+            var loginPage = Ext.Viewport.removeAll(false, false).
                     add(me.createView({
                         xtype: 'pagelogin'
-                    }).
-                            setDimensionsToFillScreen().
-                            setActiveItem('#userSignup'));
+                    }));
+            loginPage.setDimensionsToFillScreen().
+                    show(X.config.Config.getSHOW_ANIMATION_CONFIG());
+            loginPage.setActiveItem('#userSignup');
         }
         else {
             if (me.getPageLogin().
@@ -168,7 +170,7 @@ Ext.define('X.controller.mixin.Factory', {
                         add(me.getPageLogin());
                 me.getPageLogin().
                         setDimensionsToFillScreen().
-                        show();
+                        show(X.config.Config.getSHOW_ANIMATION_CONFIG());
                 me.getPageLogin().
                         setActiveItem('#userSignup');
             }
@@ -179,18 +181,20 @@ Ext.define('X.controller.mixin.Factory', {
         }
         return me;
     },
+//    Login
     generateAndFillViewportWithUserLoginWindow: function() {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         if (!Ext.isObject(me.getPageLogin())) {
-            Ext.Viewport.removeAll(false, false).
+            var loginPage = Ext.Viewport.removeAll(false, false).
                     add(me.createView({
                         xtype: 'pagelogin'
-                    }).
-                            setDimensionsToFillScreen().
-                            setActiveItem('#userLogin'));
+                    }));
+            loginPage.setDimensionsToFillScreen().
+                    show(X.config.Config.getSHOW_ANIMATION_CONFIG());
+            loginPage.setActiveItem('#userLogin');
         }
         else {
             if (me.getPageLogin().
@@ -199,7 +203,7 @@ Ext.define('X.controller.mixin.Factory', {
                         add(me.getPageLogin());
                 me.getPageLogin().
                         setDimensionsToFillScreen().
-                        show();
+                        show(X.config.Config.getSHOW_ANIMATION_CONFIG());
                 me.getPageLogin().
                         setActiveItem('#userLogin');
             }

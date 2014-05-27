@@ -312,8 +312,16 @@ Ext.define('X.controller.Users', {
                     me.generateUserSuccessfullyCreatedWindow({
                         message: false,
                         fn: function() {
-//                            Don't direct user to login page; log him in automatically after successful signup
-                            me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
+                            var createdUser = Ext.decode(serverResponse.responseText);
+//                            username is not sent by Parse, so grab it from form values
+                            createdUser.username = formValues.username;
+                            if (Ext.isObject(createdUser) && !Ext.isEmpty(createdUser) && me.logUserIn({
+                                user: createdUser
+                            })) {
+                                me.getPageLogin().
+                                        hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+                                me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                            }
                         },
                         scope: me
                     });
@@ -425,7 +433,6 @@ Ext.define('X.controller.Users', {
             var formValues = form.getValues();
             
             Ext.Ajax.request({
-//                Parse
                 url: url,
                 method: method,
                 headers: headers,
@@ -439,12 +446,12 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
                     
-                    var userCreated = Ext.decode(serverResponse.responseText);
-                    if (Ext.isObject(userCreated) && !Ext.isEmpty(userCreated) && me.logUserIn({
-                        user: userCreated
+                    var loggedInUser = Ext.decode(serverResponse.responseText);
+                    if (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser) && me.logUserIn({
+                        user: loggedInUser
                     })) {
-                        console.log('>>>>>>>');
-//                        me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                        me.getPageLogin().hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+                        me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
                     }
                 },
                 failure: function(serverResponse) {
@@ -454,90 +461,19 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
                     
-                    var operationStatus = serverResponse.status,
-                            operationStatusText = serverResponse.statusText;
-
-                    var serverResponseText = Ext.decode(serverResponse.responseText),
-                            serverResponseCode = serverResponseText.code,
-                            serverResponseError = serverResponseText.error;
-                    
-                    me.generateFailedAuthenticationWindow({
-                        message: serverResponseError
-                    });
-                }
-            });
-
-//          Parse has to have a username for its users, and that is what it uses to authenticate them
-//          Ideally, we'd like to have a system that only needs a phone number and never has to log out
-//          For now, we use username and password, but before releasing it, we'll need to transition
-//          into a Twilio+Parse solution
-//            form.submit({
-//                url: url,
-//                method: method,
-//                headers: headers,
-//                success: function(form, serverResponse) {
-//                    if (me.getDebug()) {
-//                        console.log('Debug: X.controller.Users.xhrLogin(): Successful. Received serverResponse:');
-//                        console.log(serverResponse);
-//                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-//                    }
-//                    form.reset();
-////                me.loadAuthenticatedUserStore({
-//////                    Callback if authenticated user exists
-////                    fn: function() {
-//////                        Don\'t remember why we reset authenticated entitiy
-//////                        Update this comment when you find out
-//////                        var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
-//////                        authenticatedUserStore.setAutoSync(false);
-//////                        authenticatedUserStore.removeAll();
-//////                        authenticatedUserStore.setAutoSync(true);
-//////                        me.resetAuthenticatedEntity();
-////                        Ext.create('Ext.util.DelayedTask', function() {
-////                            me.generateUserDeviceContactsAccessRequestWindow();
-////                            me.redirectTo(X.XConfig.getDEFAULT_USER_PAGE());
-//////                            This destruction seems to be permanent i.e. if the 
-//////                            view gets destroyed and the user logs out, the view
-//////                            isn't being regenerated successfully
-//////                            me.destroyGivenView({
-//////                                view: me.getPageLogin()
-//////                            });
-////                        }).
-////                                delay(500);
-////                        
-////                        Ext.Viewport.fireEvent('authenticateduserloggedin', {
-////                            silent: true
-////                        });
-////                    },
-////                    scope: me
-////                });
-//                },
-//                failure: function(form, serverResponse) {
-//                    if (me.getDebug()) {
-//                        console.log('Debug: X.controller.Users.xhrLogin(): Failed. Received serverResponse:');
-//                        console.log(serverResponse);
-//                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-//                    }
-//
+//                    TEMPLATE: Use this as a template to extract information from Parse's response
 //                    var operationStatus = serverResponse.status,
 //                            operationStatusText = serverResponse.statusText;
 //
 //                    var serverResponseText = Ext.decode(serverResponse.responseText),
 //                            serverResponseCode = serverResponseText.code,
 //                            serverResponseError = serverResponseText.error;
-//
-//                    me.generateFailedAuthenticationWindow({
-//////                        Don't show the server response error because this might expose the password that the user had entered
-//////                        which will definitely freak her out! This is going to be replaced by Twilio's phone number
-//////                        verification logic anyway, but do keep this in mind!
-////                        message: serverResponseError
-//                        message: 'Could not complete this request! Write some user-friendly message in here!',
-//                        fn: function() {
-//                            me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
-//                        },
-//                        scope: me
-//                    });
-//                }
-//            });
+                    
+                    me.generateFailedAuthenticationWindow({
+                        message: serverResponseError
+                    });
+                }
+            });
         }
         else {
             me.generateFailedAuthenticationWindow({
@@ -673,26 +609,10 @@ Ext.define('X.controller.Users', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.doLogout(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        Ext.Ajax.request({
-            method: 'POST',
-            url: X.XConfig.getAPI_ENDPOINT() + X.XConfig.getDEFAULT_USER_LOGOUT_PAGE(),
-            success: function(response) {
-                if (me.getDebug()) {
-                    console.log('Debug: X.controller.Users.doLogout(): User successfully logged out. Will redirect to X.XConfig.getDEFAULT_USER_LOGIN_PAGE(). Response received from server:');
-                    console.log(response.responseText);
-                    console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                }
-                var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
-                authenticatedUserStore.setAutoSync(false);
-                authenticatedUserStore.removeAll(true);
-                authenticatedUserStore.setAutoSync(true);
-                me.resetAuthenticatedEntity();
-                Ext.create('Ext.util.DelayedTask', function() {
-                    me.redirectTo(X.XConfig.getDEFAULT_USER_LOGIN_PAGE());
-                }).
-                        delay(500);
-            }
-        });
+        
+        me.logUserOut().
+                redirectTo(X.XConfig.getDEFAULT_USER_LOGIN_PAGE());
+        
         return me;
     },
     init: function() {

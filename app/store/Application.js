@@ -25,6 +25,8 @@ Ext.define('X.store.Application', {
 //            }
         }
     },
+    
+//    Event Handlers
     onBeforeLoad: function(store, operation, eOpts) {
         var me = this;
         if (X.config.Config.getDEBUG()) {
@@ -77,6 +79,12 @@ Ext.define('X.store.Application', {
         
         return me;
     },
+    
+//    Helper methods
+    isEmpty: function() {
+        return this.getAllCount() === 0;
+    },
+    
     // Assumes that the store is either loading or has already loaded
     // This will not attempt to load a store if found to be otherwise
     waitWhileLoadingAndCallbackOnLoad: function(callbackOnLoad) {

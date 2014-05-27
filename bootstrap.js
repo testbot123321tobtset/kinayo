@@ -18,7 +18,6 @@ Ext.Loader.addClassPathMappings({
   "Ext.device.sqlite.SQLTransaction": "touch/src/device/sqlite/Sencha.js",
   "Ext.draw.engine.SvgContext.Gradient": "touch/src/draw/engine/SvgContext.js",
   "X": "app",
-  "X.config.Config": "app/config/config.js",
   "overrides": "app/overrides"
 });
 Ext.ClassManager.addNameAlternateMappings({

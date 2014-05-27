@@ -230,30 +230,47 @@ Ext.define('X.controller.Users', {
         }
         return me;
     },
+    // Validate sign up form
+    isSignupFormValid: function(formPanel) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Users.isSignupFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserSignupFormPanel();
+        
+        if(Ext.isObject(formPanel)) {
+            var formData = formPanel.getValues();
+
+            var errors = Ext.create('X.model.validation.UserLogin', {
+                username: formData.username,
+                password: formData.password
+            }).
+                    validate();
+            
+            if (!errors.isValid()) {
+                me.generateInvalidAuthenticationWindow({
+                    message: errors.getAt(0).
+                            getMessage()
+                });
+                
+                return false;
+            }
+        }
+        
+        return true;
+    },
     doSignup: function(button) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.doSignup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
         var formPanel = button.up('coreformpanel');
-        var formData = formPanel.getValues();
-        var username = formData.username;
-        var password = formData.password;
-        var modelValidationUserLogin = Ext.create('X.model.validation.UserLogin', {
-            username: username,
-            password: password
-        });
-        var errors = modelValidationUserLogin.validate();
-        if (!errors.isValid()) {
-            me.generateInvalidAuthenticationWindow({
-                message: errors.getAt(0).
-                        getMessage()
-            });
-            return false;
-        }
-        else {
+        if(me.isSignupFormValid(formPanel)) {
             me.xhrSignup(formPanel);
         }
+        
         return me;
     },
     // Ajax sign up: This assumes that the passed user object is valid
@@ -295,6 +312,7 @@ Ext.define('X.controller.Users', {
                     me.generateUserSuccessfullyCreatedWindow({
                         message: false,
                         fn: function() {
+//                            Don't direct user to login page; log him in automatically after successful signup
                             me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
                         },
                         scope: me
@@ -314,14 +332,8 @@ Ext.define('X.controller.Users', {
                             serverResponseCode = serverResponseText.code,
                             serverResponseError = serverResponseText.error;
                     
-                    me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
-                    
                     me.generateFailedAuthenticationWindow({
-////                        Don't show the server response error because this might expose the password that the user had entered
-////                        which will definitely freak her out! This is going to be replaced by Twilio's phone number
-////                        verification logic anyway, but do keep this in mind!
-//                        message: serverResponseError
-                        message: 'Could not complete this request! Write some user-friendly message in here!'
+                        message: serverResponseError
                     });
                 }
             });
@@ -349,34 +361,50 @@ Ext.define('X.controller.Users', {
         }
         return me;
     },
-    // Validate login form on submit and initiate login over ajax
+    // Validate login form
+    isLoginFormValid: function(formPanel) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Users.isLoginFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserLoginFormPanel();
+        
+        if(Ext.isObject(formPanel)) {
+            var formData = formPanel.getValues();
+
+            var errors = Ext.create('X.model.validation.UserLogin', {
+                username: formData.username,
+                password: formData.password
+            }).
+                    validate();
+            
+            if (!errors.isValid()) {
+                me.generateInvalidAuthenticationWindow({
+                    message: errors.getAt(0).
+                            getMessage()
+                });
+                
+                return false;
+            }
+        }
+        
+        return true;
+    },
     doLogin: function(button, e, eOpts) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.doLogin(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
         var formPanel = button.up('coreformpanel');
-        var formData = formPanel.getValues();
-        var username = formData.username;
-        var password = formData.password;
-        var modelValidationUserLogin = Ext.create('X.model.validation.UserLogin', {
-            username: username,
-            password: password
-        });
-        var errors = modelValidationUserLogin.validate();
-        if (!errors.isValid()) {
-            me.generateInvalidAuthenticationWindow({
-                message: errors.getAt(0).
-                        getMessage()
-            });
-            return false;
-        }
-        else {
+        if(me.isLoginFormValid(formPanel)) {
             me.xhrLogin(formPanel);
         }
+        
         return me;
     },
-    // Ajax login
+    // Ajax login: This assumes that the passed user object is valid
     xhrLogin: function(form) {
         var me = this;
         if (me.getDebug()) {
@@ -411,13 +439,13 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
                     
-                    me.generateUserSuccessfullyLoggedInWindow({
-                        message: false,
-                        fn: function() {
-                            me.redirectTo(X.config.Config.getDEFAULT_USER_LOGIN_PAGE());
-                        },
-                        scope: me
-                    });
+                    var userCreated = Ext.decode(serverResponse.responseText);
+                    if (Ext.isObject(userCreated) && !Ext.isEmpty(userCreated) && me.logUserIn({
+                        user: userCreated
+                    })) {
+                        console.log('>>>>>>>');
+//                        me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                    }
                 },
                 failure: function(serverResponse) {
                     if (me.getDebug()) {
@@ -434,11 +462,7 @@ Ext.define('X.controller.Users', {
                             serverResponseError = serverResponseText.error;
                     
                     me.generateFailedAuthenticationWindow({
-////                        Don't show the server response error because this might expose the password that the user had entered
-////                        which will definitely freak her out! This is going to be replaced by Twilio's phone number
-////                        verification logic anyway, but do keep this in mind!
-//                        message: serverResponseError
-                        message: 'Could not complete this request! Write some user-friendly message in here!'
+                        message: serverResponseError
                     });
                 }
             });

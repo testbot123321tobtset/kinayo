@@ -5,6 +5,7 @@ Ext.define('X.store.Application', {
     ],
     config: {
         autoLoad: false,
+        autoSync: false,
         mustBeEmptiedOnApplicationShutDown: true,
         useDefaultXhrHeader: false,
         idsOfRecordsBeforeLoad: [],

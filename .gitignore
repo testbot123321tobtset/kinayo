@@ -44,16 +44,16 @@ nbproject/
 dist
 
 # App specific
-buildlog.txt
-.sencha/
-.sencha_backup/
-resources/.sass-cache/
-resources/sass/.sass-cache/
-resources/css
+# buildlog.txt
+# .sencha/
+# .sencha_backup/
+# resources/.sass-cache/
+# resources/sass/.sass-cache/
+# resources/css
 # build folder is dynamically generated on running sencha build app
-build/
+# build/
 # Ignore generated phonegap folder – this folder gets dynamically generated when you initialize Phonegap inside of Sencha Touch
-phonegap/
-phonegap.local.properties
-js/
-js/core/models.js
+# phonegap/
+# phonegap.local.properties
+# js/
+# js/core/models.js

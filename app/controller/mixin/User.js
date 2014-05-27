@@ -1,4 +1,215 @@
 Ext.define('X.controller.mixin.User', {
+    
+//    This expects:
+//    {
+//      user: <Object>
+//    }
+//    This does: 
+//      1. sets session: calls setSession()
+//      2. sets authenticated user: calls setAuthenticatedUser()
+    logUserIn: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.User.logUserIn(): Options:');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(Ext.isObject(options)) {
+            var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
+            if(Ext.isObject(user)) {
+                var unSyncedAuthenticatedUser = Ext.create('X.model.AuthenticatedUser', user);
+                if(Ext.isObject(unSyncedAuthenticatedUser) && 'isValid' in unSyncedAuthenticatedUser && unSyncedAuthenticatedUser.isValid()) {
+                    return me.setSession({
+                        user: unSyncedAuthenticatedUser
+                    }) && me.setAuthenticatedUser({
+                        user: unSyncedAuthenticatedUser
+                    });
+                }
+            }
+        }
+        
+        return false;
+    },
+    
+//    This expects:
+//    {
+//      user: <'AuthenticatedUser' model instance>
+//    }
+//    Updates session localstorage
+    setSession: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.User.setSession(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if (Ext.isObject(options)) {
+            var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
+            if (Ext.isObject(user)) {
+                var objectId = user.get('objectId'),
+                        userId = (Ext.isString(objectId) && !Ext.isEmpty(objectId)) ? objectId : false;
+                if (userId) {
+                    var sessionToken = user.get('sessionToken');
+                    sessionToken = (Ext.isString(sessionToken) && !Ext.isEmpty(sessionToken)) ? sessionToken : false;
+                    if (sessionToken) {
+                        var parseSessionStore = Ext.getStore('ParseSessionStore');
+                        if (Ext.isObject(parseSessionStore)) {
+                            parseSessionStore.setSession({
+                                userId: userId,
+                                sessionToken: sessionToken
+                            });
+                            
+                            return me;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return false;
+    },
+    
+//    This expects:
+//    {
+//      user: <'AuthenticatedUser' model instance>
+//    }
+//    This does: 
+//      1. updates authenticated user store
+//      2. sets X.authenticatedUser
+    setAuthenticatedUser: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.User.setAuthenticatedUser(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(Ext.isObject(options)) {
+            var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
+            if(Ext.isObject(user) && !Ext.isEmpty(user)) {
+                var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
+                if(Ext.isObject(authenticatedUserStore)) {
+                    if (authenticatedUserStore.locallySetGivenUserAsAutheticatedUser(user)) {
+                        X.authenticatedUser = user;
+//                        Retire authenticatedEntity and use only authenticatedUser
+                        X.authenticatedEntity = user;
+                        
+                        return me;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    },
+    
+    
+    
+    syncLocalAuthenticatedUserFromServer: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.User.updatedSaveAuthenticatedUser(): Options:');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        options = Ext.isObject(options) ? options : false;
+        if (Ext.isObject(options)) {
+            var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? option.user : false;
+            if (Ext.isObject(user)) {
+                var errors = user.validate();
+                if (!errors.isValid()) {
+                    user.reject();
+                    me.generateUserFailedUpdatedWindow({
+                        message: errors.getAt(0).
+                                getMessage()
+                    });
+                    return false;
+                }
+                else {
+                    var silent = (Ext.isObject(options) && Ext.isBoolean(options.silent)) ? options.silent : false;
+                    authenticatedUser.save({
+                        success: function(record, operation) {
+                            if (me.getDebug()) {
+                                console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Success. Received serverResponse:');
+                                console.log(operation.getResponse());
+                                console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                            }
+                            if (Ext.isString(operation.getResponse().responseText)) {
+                                var serverResponse = Ext.decode(operation.getResponse().responseText);
+                                var serverResponseSuccess = Ext.isBoolean(serverResponse.success) ? serverResponse.success : false;
+                                var serverResponseMessage = Ext.isString(serverResponse.message) ? serverResponse.message : false;
+                                var serverResponseResult = Ext.isObject(serverResponse.result) ? serverResponse.result : false;
+                                if (serverResponseSuccess) {
+                                    if (me.getDebug()) {
+                                        console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Success: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                                    }
+                                }
+                                else {
+                                    if (!serverResponseMessage) {
+                                        if (me.getDebug()) {
+                                            console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Failed. Received no failure message from server: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                                        }
+                                    }
+                                    else {
+                                        if (me.getDebug()) {
+                                            console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Failed. Received failure message from server: ' + serverResponseMessage + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                                        }
+                                    }
+                                }
+                            }
+                            me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
+                                operation: operation,
+                                model: authenticatedUser,
+                                message: serverResponseMessage,
+                                silent: silent
+                            });
+                        },
+                        failure: function(record, operation) {
+                            if (me.getDebug()) {
+                                console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Failed. Received serverResponse:');
+                                console.log(operation.getResponse());
+                                console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                            }
+                            if (Ext.isString(operation.getResponse().responseText)) {
+                                var serverResponse = Ext.decode(operation.getResponse().responseText);
+                                var serverResponseSuccess = Ext.isBoolean(serverResponse.success) ? serverResponse.success : false;
+                                var serverResponseMessage = Ext.isString(serverResponse.message) ? serverResponse.message : false;
+                                var serverResponseResult = Ext.isObject(serverResponse.result) ? serverResponse.result : false;
+                                if (!serverResponseSuccess) {
+                                    if (!serverResponseMessage) {
+                                        if (me.getDebug()) {
+                                            console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Failed. Received no failure message from server: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                                        }
+                                    }
+                                    else {
+                                        if (me.getDebug()) {
+                                            console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Failed. Received failure message from server: ' + serverResponseMessage + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (me.getDebug()) {
+                                        console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Success: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                                    }
+                                }
+                            }
+                            me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
+                                operation: operation,
+                                model: authenticatedUser,
+                                message: serverResponseMessage,
+                                silent: silent
+                            });
+                        }
+                    });
+                }
+            }
+        }
+        
+        return false;
+    },
+    
     saveAuthenticatedUser: function(options) {
         var me = this;
         var authenticatedUser = me.getAuthenticatedUser();
@@ -145,10 +356,6 @@ Ext.define('X.controller.mixin.User', {
     },
     checkLoginAndResumeIfExistsOrRedirectIfNotExists: function(action) {
         var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.User.checkLoginAndResumeIfExistsOrRedirectIfNotExists(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
         me.checkIfAuthenticatedUserExists({
             // Callback if authenticated user exists
             fn: function() {
@@ -190,7 +397,7 @@ Ext.define('X.controller.mixin.User', {
     },
     getAuthenticatedUser: function() {
         var me = this;
-        if (Ext.isBoolean(X.authenticated) && X.authenticated && Ext.isObject(X.authenticatedEntity)) {
+        if (Ext.isBoolean(X.isUser) && X.isUser && Ext.isBoolean(X.authenticated) && X.authenticated && Ext.isObject(X.authenticatedEntity)) {
             return X.authenticatedEntity;
         }
         else {
@@ -226,72 +433,61 @@ Ext.define('X.controller.mixin.User', {
         }
         return me;
     },
-    loadAuthenticatedUserStore: function(existsCallback, doesNotExistCallback) {
+    loadAuthenticatedUserStore: function(existsCallback, doesNotExistCallback, emptyAuthenticatedBrandStore) {
         var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.User.checkLoginAndResumeIfExistsOrRedirectIfNotExists(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
+        emptyAuthenticatedBrandStore = Ext.isBoolean(emptyAuthenticatedBrandStore) ? emptyAuthenticatedBrandStore : true;
         var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
-
-        var authenticatedUserStoreProxy = authenticatedUserStore.getProxy();
-//        Parse API: This will be validating session tokens and retrieving current user
-//        So, use: https://www.parse.com/docs/rest#users-validating
-//        And, set appropriate headers
-        var parseMetaData = me.getParseMetaData({
-            typeOfRequest: 'me'
-        }),
-                shouldMakeRequest = parseMetaData.shouldMakeRequest;
-
-        if (Ext.isBoolean(shouldMakeRequest) && shouldMakeRequest) {
-            var headers = parseMetaData.headers;
-            authenticatedUserStoreProxy.setHeaders(headers);
-
-//        Load the store
-            authenticatedUserStore.load({
-                callback: function(records, operation, success) {
-                    if (success) {
+        authenticatedUserStore.load(function(records, successful) {
+            if (!successful) {
+                if (me.getDebug()) {
+                    console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation failed: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                }
+                var rawResponse = authenticatedUserStore.getProxy().
+                        getReader().rawData;
+                if (!rawResponse.success) {
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Message from server: ' + rawResponse.message + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                }
+                X.isUser = false;
+                X.authenticated = false;
+                X.authenticatedEntity = false;
+                X.authenticatedEntityWebsocketToken = false;
+                me.executeCallback(doesNotExistCallback);
+            }
+            else {
+                if (me.getDebug()) {
+                    console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation succeeded: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                }
+                if (Ext.isArray(records) && records.length > 0) {
+                    var authenticatedUser = records[0];
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Authenticated user:');
+                        console.log(authenticatedUser);
+                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                    X.isUser = true;
+                    X.authenticated = true;
+                    X.authenticatedEntity = authenticatedUser;
+                    me.loadGroupsStore();
+                    me.executeCallback(existsCallback);
+                }
+                else {
+                    var rawResponse = authenticatedUserStore.getProxy().
+                            getReader().rawData;
+                    if (Ext.isObject(rawResponse) && !rawResponse.success) {
                         if (me.getDebug()) {
-                            console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation succeeded: Here are the records received: ');
-                            console.log(records);
-                            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                        }
-
-                        if (Ext.isArray(records) && records.length > 0) {
-                            var authenticatedUser = records[0];
-                            if (me.getDebug()) {
-                                console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Authenticated user:');
-                                console.log(authenticatedUser);
-                                console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                            }
-                            X.authenticated = true;
-                            X.authenticatedEntity = authenticatedUser;
-                            me.loadGroupsStore();
-                            me.executeCallback(existsCallback);
+                            console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Message from server: ' + rawResponse.message + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
                     }
-                    else {
-                        if (me.getDebug()) {
-                            console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Operation failed: Here is the error object received: ');
-//                        Use operation.error and operation.error.status and operation.error.statusText to see what the server sent
-                            console.log(operation.error);
-                            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                        }
-
-                        X.authenticated = false;
-                        X.authenticatedEntity = false;
-                        me.executeCallback(doesNotExistCallback);
-                    }
-                },
-                scope: me
-            });
-        }
-        else {
-            X.authenticated = false;
-            X.authenticatedEntity = false;
-            me.executeCallback(doesNotExistCallback);
-        }
-
+                    X.isUser = false;
+                    X.authenticated = false;
+                    X.authenticatedEntity = false;
+                    X.authenticatedEntityWebsocketToken = false;
+                    me.executeCallback(doesNotExistCallback);
+                }
+            }
+        });
         return me;
     }
 });

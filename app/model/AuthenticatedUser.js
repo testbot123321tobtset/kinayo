@@ -40,6 +40,12 @@ Ext.define('X.model.AuthenticatedUser', {
                     return (Ext.isString(record.get('firstName')) && Ext.isString(record.get('lastName'))) ? record.get('firstName') + ' ' + record.get('lastName') : null;
                 },
                 persist: false
+            },
+            {
+//                Use this to map users to their session tokens 
+                name: 'sessionToken',
+                type: 'string',
+                persist: false
             }
         ],
         hasMany: [
@@ -62,8 +68,8 @@ Ext.define('X.model.AuthenticatedUser', {
                 field: 'username'
             },
             {
-                type: 'email',
-                field: 'email'
+                type: 'presence',
+                field: 'sessionToken'
             }
         ],
         proxy: {

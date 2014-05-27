@@ -37,7 +37,7 @@ Ext.define('X.store.AuthenticatedUser', {
 //        });
         
         me.callParent(arguments);
-    }
+    },
 //    ,
 ////    Helper methods
 ////    TODO: This should subscribe to a Parse channel
@@ -59,4 +59,28 @@ Ext.define('X.store.AuthenticatedUser', {
 //        
 //        return false;
 //    }
+
+    locallySetGivenUserAsAutheticatedUser: function(options) {
+        var me = this;
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.store.AuthenticatedUser.locallySetGivenUser(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(Ext.isObject(options)) {
+            var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
+            if(Ext.isObject(user) && !Ext.isEmpty(user)) {
+                me.each(function(thisUser) {
+                    thisUser.destroy();
+                    thisUser.commit();
+                });
+                me.add(user);
+                user.commit();
+                
+                return me;
+            }
+        }
+        
+        return false;
+    }
 });

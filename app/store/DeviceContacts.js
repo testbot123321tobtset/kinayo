@@ -5,7 +5,6 @@ Ext.define('X.store.DeviceContacts', {
         storeId: 'DeviceContactStore',
         autoLoad: false,
         autoSync: false,
-        mustBeEmptiedOnApplicationShutDown: false,
         sorters: 'formattedName',
         grouper: {
             groupFn: function(record) {

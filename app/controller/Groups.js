@@ -42,11 +42,7 @@ Ext.define('X.controller.Groups', {
                 editgroupvalidationfailed: 'onEditGroupValidationFailed',
                 destroygroupmessageshow: 'onDestroyGroupMessageShow',
                 destroygroup: 'onDestroyGroup',
-                destroyedgroup: 'onDestroyedGroup',
-//                WebSockets
-//                xsocketconnection: 'onXSocketConnection'
-                xsocketupdategroup: 'onXSocketUpdateGroup',
-                xsocketdeletegroup: 'onXSocketDeleteGroup'
+                destroyedgroup: 'onDestroyedGroup'
             },
             // User :: Groups
             userGroupsTabPanel: {
@@ -109,21 +105,177 @@ Ext.define('X.controller.Groups', {
             userGroupCreateSubmitButton: '#userGroupAddFormPanel #submitButton'
         }
     },
-//    onOrientationchange: function(viewport, newOrientation, width, height, eOpts) {
-//        var me = this;
-//        var windows = [
-//            me.getUserGroupContainer(),
-//            me.getUserEditGroupContainer()
-//        ];
-//        Ext.each(windows, function(thisWindow) {
-//            if(Ext.isObject(thisWindow)) {
-//                thisWindow.setWidth(width);
-//                thisWindow.setHeight(height);
-//            }
-//        });
-//        return me;
-//    },
-    // UI EVENT HANDLERS
+    
+/*
+ *    VIEWPORT EVENT HANDLERS
+ */
+
+    onEditGroup: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.onEditGroup(): Options: ');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        return me.doUpdateGroup(options);
+    },
+    onEditGroupValidationFailed: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.onEditGroupValidationFailed(): Options: ');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        me.generateUserFailedUpdatedWindow({
+            message: options.errors.getAt(0).
+                    getMessage()
+        });
+        return me;
+    },
+    onDestroyGroupMessageShow: function(options) {
+        var me = this;
+        if(Ext.isObject(options) && !Ext.isEmpty(options) && 'containerToBeBlurred' in options && Ext.isObject(options.containerToBeBlurred)) {
+//            me.createOptimizedLayeredEffect(options.containerToBeBlurred);
+            options.containerToBeBlurred.createOptimizedLayeredEffect();
+        }
+        return me;
+    },
+    onDestroyGroup: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.onDestroyGroup(): Options: ');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        return me.doDestroyGroup(options);
+    },
+    onDestroyedGroup: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.onDestroyedGroup(): Options: ');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        return me;
+    },
+    
+/*
+ *    ROUTE HANDLERS
+ */
+
+//    User :: Groups :: Feeds
+    showGroupsList: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showGroupsList(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        var groupsStore = Ext.getStore('GroupsStore');
+        if(Ext.isObject(groupsStore)) {
+            groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
+                fn: function() {
+                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+                    me.getPageUserRoot().
+                            closeEverythingAboveMe();
+                },
+                scope: me
+            });
+        }
+
+        return me;
+    },
+//    User :: Groups :: Feed data
+    showFeedUiForGivenGroupId: function(groupId) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        var groupsStore = Ext.getStore('GroupsStore');
+        if (Ext.isObject(groupsStore)) {
+            groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
+                fn: function() {
+//                    Preload all UIs that go underneath this group feed UI
+                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+//                    Actually show group feed UI
+                    me.generateAndFillViewportWithGroupDataWindow({
+                        group: groupsStore.
+                                getById(groupId)
+                    }).
+                            closeEverythingAboveMe();
+                },
+                scope: me
+            });
+        }
+
+        return me;
+    },
+//    User :: Groups :: Create
+    showCreate: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showCreate(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        me.generateUserGroupsTabPanelAndActivateUserAddGroupTab();
+        return me;
+    },
+//    User :: Groups :: Edit
+    showEditGroupUiForGivenGroupId: function(groupId) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showEditFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        var groupsStore = Ext.getStore('GroupsStore');
+        groupsStore.
+                waitWhileLoadingAndCallbackOnLoad({
+                    fn: function() {
+                        // Preload all UIs that go underneath this edit group UI
+                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+                        var group = groupsStore.
+                                getById(groupId);
+                        me.generateAndFillViewportWithGroupDataWindow({
+                            group: group
+                        });
+                        // Actually show edit group UI
+                        if (me.generateAndFillViewportWithEditGroupWindow({
+                            group: group,
+                            showcontainer: true
+                        })) {
+//                            Retrieve all of the friends of the authenticated user
+//                            and display them here in a list
+//                            me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+//                            
+//                            For now, we show contacts list – once we are ready with friends API, 
+//                            we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+                            me.setDeviceContactsStoreAndCallback({
+                                successCallback: {
+                                    fn: function() {
+                                        me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
+                                    },
+                                    scope: me
+                                },
+                                failureCallback: {
+                                    fn: function() {
+                                        console.log('failed!');
+                                    },
+                                    scope: me
+                                }
+                            });
+                        }
+                        me.getUserEditGroupContainer().
+                                closeEverythingAboveMe();
+                    }
+                });
+        return me;
+    },
+    
+/*
+ *    OTHER EVENT HANDLERS
+ */
+
     onUserGroupsTabPanelPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
         if (Ext.isObject(tabPanel) && Ext.isObject(activeItem)) {
@@ -203,129 +355,51 @@ Ext.define('X.controller.Groups', {
                 getId());
         return me;
     },
-    onDestroyGroupMessageShow: function(options) {
-        var me = this;
-        if(Ext.isObject(options) && !Ext.isEmpty(options) && 'containerToBeBlurred' in options && Ext.isObject(options.containerToBeBlurred)) {
-//            me.createOptimizedLayeredEffect(options.containerToBeBlurred);
-            options.containerToBeBlurred.createOptimizedLayeredEffect();
-        }
-        return me;
-    },
-    // OTHER EVENT HANDLERS
-    onEditGroup: function(options) {
+
+//    User :: Groups :: Create
+    doCreateGroup: function(button) {
         var me = this;
         if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onEditGroup(): Options: ');
-            console.log(options);
-            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.controller.Groups.doCreateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        return me.doUpdateGroup(options);
-    },
-    onEditGroupValidationFailed: function(options) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onEditGroupValidationFailed(): Options: ');
-            console.log(options);
-            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        me.generateUserFailedUpdatedWindow({
-            message: options.errors.getAt(0).
-                    getMessage()
-        });
-        return me;
-    },
-    onDestroyGroup: function(options) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onDestroyGroup(): Options: ');
-            console.log(options);
-            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return me.doDestroyGroup(options);
-    },
-    onDestroyedGroup: function(options) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onDestroyedGroup(): Options: ');
-            console.log(options);
-            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return me;
-    },
-//    WEBSOCKET EVENT HANDLERS
-    onXSocketConnection: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onXSocketConnection(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        
-        return me;
-    },
-    onXSocketUpdateGroup: function(data) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onXSocketUpdateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        
-//        var groupsStore = Ext.getStore('GroupsStore');
-//        groupsStore.
-//                waitWhileLoadingAndCallbackOnLoad({
-//                    fn: function() {
-//                        me.loadGroupsStore();
-//                    }
-//                });
-        if(Ext.isObject(data) && 'groupId' in data && Ext.isString(data.groupId)) {
-            X.model.Group.load(data.groupId, {
-                success: function(record, operation) {
-                    me.updateViewsBoundToGivenRecord({
-                        modelName: 'Group',
-                        record: record,
-                        store: Ext.getStore('GroupsStore')
-                    });
-                }
+        var formPanel = button.up('coreformpanel');
+        var formData = formPanel.getValues();
+        var title = formData.title;
+        var description = formData.description;
+        var newGroup = {
+            title: title,
+            description: description,
+            createdById: X.authenticatedUser.get('objectId')
+        };
+//        var group = Ext.create('X.model.Group', newGroup);
+        var group = Ext.getStore('GroupsStore').add(newGroup);
+        console.log('>>>>>>>>>');
+        console.log(group);
+        return false;
+        var errors = group.validate();
+        if (!errors.isValid()) {
+            me.generateFailedWindow({
+                message: errors.getAt(0).
+                        getMessage()
             });
         }
-        
+        else {
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.Groups.doCreateGroup(): Will call saveGivenGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
+            me.addToGroupsCreatedByAUStoreAndToGroupsAUIsMemberOfStore(group);
+            me.saveGivenGroup({
+                group: group
+            });
+        }
         return me;
     },
-    onXSocketDeleteGroup: function(data) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onXSocketDeleteGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        
-        var groupsStore = Ext.getStore('GroupsStore');
-        if(Ext.isObject(groupsStore)) {
-            groupsStore.
-                    waitWhileLoadingAndCallbackOnLoad({
-                        fn: function() {
-                            me.loadGroupsStore({
-                                fn: function() {
-//                                    console.log('***********');
-//                                    me.updateViewsBoundToGivenRecord({
-//                                        store: groupsStore
-//                                    });
-                                },
-                                scope: me
-                            });
-                        }
-                    });
-        }
-//        if(Ext.isObject(data) && 'groupId' in data && Ext.isString(data.groupId)) {
-//            X.model.Group.load(data.groupId, {
-//                success: function(record, operation) {
-//                    me.updateViewsBoundToGivenRecord({
-//                        modelName: 'Group',
-//                        record: record,
-//                        store: Ext.getStore('GroupsStore')
-//                    });
-//                }
-//            });
-//        }
-        
-        return me;
-    },
-    // HELPERS
+    
+/*
+ *    HELPERS
+ */  
+    
+//    Calls setStore() on the user groups list view
     addGroupsListToGroupsFeedTabWithGivenGroupsStore: function(groupsStore) {
         var me = this;
         if (me.getDebug()) {
@@ -334,106 +408,12 @@ Ext.define('X.controller.Groups', {
         
         if (Ext.isObject(groupsStore)) {
             me.getUserGroupsList().
-                    setStore(Ext.getStore('GroupsStore'));
+                    setStore(groupsStore);
         }
         
         return me;
     },
-    // User :: Groups :: Feeds
-    showGroupsList: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showGroupsList(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        var groupsStore = Ext.getStore('GroupsStore');
-        groupsStore.
-                waitWhileLoadingAndCallbackOnLoad({
-                    fn: function() {
-                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
-                        me.getPageUserRoot().
-                                closeEverythingAboveMe();
-                    }
-                });
-
-        return me;
-    },
-    // User :: Groups :: Feed data
-    showFeedUiForGivenGroupId: function(groupId) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        var groupsStore = Ext.getStore('GroupsStore');
-        groupsStore.
-                waitWhileLoadingAndCallbackOnLoad({
-                    fn: function() {
-                        // Preload all UIs that go underneath this group feed UI
-                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
-                        // Actually show group feed UI
-                        me.generateAndFillViewportWithGroupDataWindow({
-                            group: groupsStore.
-                                    getById(groupId)
-                        }).
-                                closeEverythingAboveMe();
-                    }
-                });
-
-        return me;
-    },
-    // User :: Groups :: Group edit
-    showEditGroupUiForGivenGroupId: function(groupId) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showEditFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        var groupsStore = Ext.getStore('GroupsStore');
-        groupsStore.
-                waitWhileLoadingAndCallbackOnLoad({
-                    fn: function() {
-                        // Preload all UIs that go underneath this edit group UI
-                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
-                        var group = groupsStore.
-                                getById(groupId);
-                        me.generateAndFillViewportWithGroupDataWindow({
-                            group: group
-                        });
-                        // Actually show edit group UI
-                        if (me.generateAndFillViewportWithEditGroupWindow({
-                            group: group,
-                            showcontainer: true
-                        })) {
-//                            Retrieve all of the friends of the authenticated user
-//                            and display them here in a list
-//                            me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-//                            
-//                            For now, we show contacts list – once we are ready with friends API, 
-//                            we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-                            me.setDeviceContactsStoreAndCallback({
-                                successCallback: {
-                                    fn: function() {
-                                        me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
-                                    },
-                                    scope: me
-                                },
-                                failureCallback: {
-                                    fn: function() {
-                                        console.log('failed!');
-                                    },
-                                    scope: me
-                                }
-                            });
-                        }
-                        me.getUserEditGroupContainer().
-                                closeEverythingAboveMe();
-                    }
-                });
-        return me;
-    },
+    
     resetUserGroupEditFormPanelWithFriendsCheckboxes: function() {
         var me = this;
         if (me.getDebug()) {
@@ -522,49 +502,7 @@ Ext.define('X.controller.Groups', {
         }
         return me.saveGivenGroup(options);
     },
-    // User :: Groups :: Create
-    showCreate: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showCreate(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        me.generateUserGroupsTabPanelAndActivateUserAddGroupTab();
-        return me;
-    },
-    doCreateGroup: function(button) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.doCreateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        var formPanel = button.up('coreformpanel');
-        var formData = formPanel.getValues();
-        var title = formData.title;
-        var description = formData.description;
-        var newGroup = {
-            title: title,
-            description: description,
-            createdById: X.authenticatedEntity.get('id')
-        };
-        var group = Ext.create('X.model.Group', newGroup);
-        var errors = group.validate();
-        if (!errors.isValid()) {
-            me.generateFailedWindow({
-                message: errors.getAt(0).
-                        getMessage()
-            });
-        }
-        else {
-            if (me.getDebug()) {
-                console.log('Debug: X.controller.Groups.doCreateGroup(): Will call saveGivenGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-            }
-            var groupsStore = Ext.getStore('GroupsStore');
-            groupsStore.add(group);
-            me.saveGivenGroup({
-                group: group
-            });
-        }
-        return me;
-    },
+    
     updateAllUiWithGivenGroupData: function(group) {
         var me = this;
         if (me.getDebug()) {
@@ -582,6 +520,7 @@ Ext.define('X.controller.Groups', {
         }
         return me;
     },
+    
     init: function() {
         var me = this;
         me.setDebug(X.config.Config.getDEBUG());

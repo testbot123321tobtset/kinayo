@@ -3,7 +3,15 @@ Ext.define('X.model.AuthenticatedUser', {
     config: {
         fields: [
             {
-                name: 'objectId'
+                name: 'objectId',
+//                Don't persist this, because URLs to the server contain the resource to be updated
+//                and not the body of the data itself – Parse doesn't refer to the objectId passed inside
+//                of the data.
+//                Also, Parse doesn't like sending objectId at the time of creation, and Sencha Touch
+//                has to have one when a model is instantiated. Not sending the objectId is the 
+//                only solution to the problem. After the first create, the record is automatically
+//                updated with the data received from the server, and so the objectId is updated as well
+//                persist: false
             },
             {
                 name: 'createdAt',
@@ -75,10 +83,23 @@ Ext.define('X.model.AuthenticatedUser', {
         proxy: {
             type: 'rest',
             url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().USERS.ENDPOINT,
+//            objectId or Id will depend on which user is in session and is set dynamically by the AuthenticatedUser store
             appendId: false,
             batchActions: true,
             reader: {
                 type: 'json',
+//                There is always one authenticated user, and so the resultset returned by Parse will always be of the type:
+//                        {
+//                            ...
+//                        }
+//                and not:
+//                        {
+//                            results: [
+//                                {   
+//                                    ...
+//                                }
+//                            ]
+//                        }
                 rootProperty: ''
             },
             headers: {
@@ -95,23 +116,4 @@ Ext.define('X.model.AuthenticatedUser', {
             }
         }
     }
-    
-//    ,
-////    TODO: This should have the code to subscribe to a Parse channel
-//    joinRoom: function(xSocket) {
-//        var me = this;
-//        if(X.config.Config.getDEBUG()) {
-//            console.log('Debug: X.model.AuthenticatedUser.joinRoom(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-//        }
-//        
-//        xSocket = Ext.isObject(xSocket) ? xSocket : X.Socket;
-//        if(Ext.isObject(xSocket)) {
-//            xSocket.emit('enterRoom', {
-//                roomName: me.get('id')
-//            });
-//            return me;
-//        }
-//        
-//        return false;
-//    }
 });

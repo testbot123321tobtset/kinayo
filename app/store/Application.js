@@ -4,20 +4,27 @@ Ext.define('X.store.Application', {
         'Ext.util.DelayedTask'
     ],
     config: {
+        idProperty: 'objectId',
+        
         autoLoad: false,
         autoSync: false,
-        mustBeEmptiedOnApplicationShutDown: true,
+        
         useDefaultXhrHeader: false,
+        
         idsOfRecordsBeforeLoad: [],
         isFirstLoad: null,
         countOnLoad: 0,
         emptyOnLastLoad: true,
+        
         listeners: {
             beforeload: function(store, operation, options) {
                 this.onBeforeLoad(store, operation, options);
             },
             load: function(store, records, successful, operation, eOpts) {
                 this.onLoad(store, records, successful, operation, eOpts);
+            },
+            addrecords: function(store, records, successful, operation, eOpts) {
+                this.onAddRecords(store, records, eOpts);
             }
 //            ,
 //            updaterecord: function(store, record, newIndex, oldIndex, modifiedFieldNames, modifiedValues, eOpts) {
@@ -26,12 +33,17 @@ Ext.define('X.store.Application', {
         }
     },
     
-//    Event Handlers
+//    
+//    EVENT HANDLERS
+//
     onBeforeLoad: function(store, operation, eOpts) {
         var me = this;
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.Application: ' + me.getStoreId() + ': onBeforeLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+//        Set session if session exists in local storage
+        me.setSessionHeaderFromSession();
         
         if (me.getAllCount() > 0) {
             var idsOfRecordsBeforeLoad = [];
@@ -65,8 +77,12 @@ Ext.define('X.store.Application', {
             me.setIsFirstLoad(false);
         }
         
-        if (me.mustBeEmptiedOnApplicationShutDown && !me.isLoaded()) {
-            X.storesToBeEmptiedOnApplicationShutdown.push(me);
+        return me;
+    },
+    onAddRecords: function(store, records, eOpts) {
+        var me = this;
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.store.Application: ' + me.getStoreId() + ': onAddRecords(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         
         return me;
@@ -80,9 +96,80 @@ Ext.define('X.store.Application', {
         return me;
     },
     
-//    Helper methods
+//    
+//    HELPER METHODS
+//
     isEmpty: function() {
         return this.getAllCount() === 0;
+    },
+    
+//    Sets session header with the given session token
+    setSessionHeader: function(sessionToken) {
+        var me = this;
+        
+        var proxy = me.getProxy();
+        var proxyHeaders = proxy.getHeaders();
+        proxyHeaders['X-Parse-Session-Token'] = sessionToken;
+        proxy.setHeaders(proxyHeaders);
+        
+        return me;
+    },
+//    Resets session header to null
+    resetSessionHeader: function() {
+        var me = this;
+        
+        var proxy = me.getProxy();
+        var proxyHeaders = proxy.getHeaders();
+        proxyHeaders['X-Parse-Session-Token'] = null;
+        proxy.setHeaders(proxyHeaders);
+        
+        return me;
+    },
+//    This sets session headers from session stored in localstorage if any
+    setSessionHeaderFromSession: function() {
+        var me = this;
+        
+        var parseSessionStore = Ext.getStore('ParseSessionStore');
+        if (Ext.isObject(parseSessionStore)) {
+            var session = parseSessionStore.getSession();
+            if (Ext.isObject(session) && !Ext.isEmpty(session)) {
+                var userIdFromSession = ('userId' in session && Ext.isString(session.userId) && !Ext.isEmpty(session.userId)) ? session.userId : false;
+                if (userIdFromSession) {
+                    var sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
+                    if (sessionToken) {
+                        me.setSessionHeader(sessionToken);
+                    }
+                }
+            }
+        }
+        
+        return me;
+    },
+    
+//    This performs total reset
+//    This is extended by child stores to perform resets other than the default of resetting session header
+    reset: function() {
+        var me = this;
+        
+        me.resetSessionHeader();
+        
+        return me;
+    },
+    
+    getSyncableRecords: function() {
+        var me = this;
+        
+        return [
+            {
+                newRecords: me.getNewRecords()
+            },
+            {
+                updatedRecords: me.getUpdatedRecords()
+            },
+            {
+                removedRecords: me.getRemovedRecords()
+            }
+        ];
     },
     
     // Assumes that the store is either loading or has already loaded

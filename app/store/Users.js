@@ -3,7 +3,6 @@ Ext.define('X.store.Users', {
     config: {
         model: 'X.model.User',
         storeId: 'UsersStore',
-        autoLoad: false,
-        mustBeEmptiedOnApplicationShutDown: false
+        autoLoad: false
     }
 });

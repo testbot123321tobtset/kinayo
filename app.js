@@ -119,6 +119,8 @@ Ext.application({
         'Users',
         'AuthenticatedUser',
         'Groups',
+        'GroupsAUIsMemberOf',
+        'GroupsCreatedByAU',
         'DeviceContacts'
     ],
     controllers: [

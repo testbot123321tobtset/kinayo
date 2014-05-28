@@ -1,3 +1,23 @@
+//
+//NOTE
+//
+//1. Signup (CREATE User) is done independently by Ext.Ajax
+//      Signup returns the newly created user with session token
+//      and so login can be done immediately after a user signs up
+//      i.e. no need to make a newly signed up used log in through
+//      a login form again
+//2. Login is done independently by Ext.Ajax
+//      Login is done only when a session is not found in local storage
+//      When a session is not found in local storage, a user is made to log
+//      in using the login form
+//3. We don't expose the log out functionality: we assume that a device can
+//      only be used for a particular user, and we don't allow users to 
+//      switch accounts on the same device. Keeping log out functionality
+//      around is useful for development though
+//4. Eventually, Signup and Login functionalities should be merged into
+//      a phone number based authentication mechanism using Parse+Twilio
+//5. READ, UPDATE, and DESTROY AuthenticatedUser is done via its Store
+
 Ext.define('X.controller.Users', {
     extend: 'X.controller.Main',
     requires: [
@@ -109,7 +129,11 @@ Ext.define('X.controller.Users', {
             photoMessageInputContainerCancelButton:  '#photoMessageInputContainer #messageFormPanel #cancelButton'
         }
     },
-//    VIEWPORT EVENT HANDLERS
+    
+/*
+ *    VIEWPORT EVENT HANDLERS
+ */
+
     onAuthenticatedUserLoggedIn: function() {
         var me = this;
         if (me.getDebug()) {
@@ -150,7 +174,87 @@ Ext.define('X.controller.Users', {
         }
         return me.addFriendsFromDeviceContacts();
     },
-//    DIRECT EVENT HANDLERS
+    
+/*
+ *    ROUTE HANDLERS
+ */
+
+//    SIGNUP
+//    
+//    Show sign up form
+    showSignup: function() {
+        var me = this;
+        if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
+                isHidden() || !Ext.isObject(me.getPageLogin().
+                getActiveItem()) || me.getPageLogin().
+                getActiveItem().
+                getItemId() !== 'userSignup') {
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.Users.showSignup(): Current active item is not userLogin. Will call generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
+            return me.generateAndFillViewportWithUserSignupWindow();
+        }
+        return me;
+    },
+    
+//    LOGIN
+//    
+//    Show login form
+    showLogin: function() {
+        var me = this;
+        if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
+                isHidden() || !Ext.isObject(me.getPageLogin().
+                getActiveItem()) || me.getPageLogin().
+                getActiveItem().
+                getItemId() !== 'userLogin') {
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.Users.showLogin(): Current active item is not userLogin. Will call generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
+            return me.generateAndFillViewportWithUserLoginWindow();
+        }
+        return me;
+    },
+    
+    showAuthenticatedMoreAccountInformation: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Users.showAuthenticatedMoreAccountInformation(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        me.generateUserMoreTabPanelAndActivateUserAccountTab();
+        var userMoreTabPanel = me.getUserMoreTabPanel();
+        userMoreTabPanel.setRecordRecursive(X.authenticatedEntity);
+        return me;
+    },
+    
+//    LOGOUT
+//    
+//    With Parse REST API, logging out means not sending the session cookie with subsequent requests
+//    Then, when ready to log in, ask the user to fill in username and password, and the response will have the 'X-Parse-Session-Token' session header
+//    that can be used in all subsequent requests until log out; so logging out here means that you don't use that session token anymore
+//    on client side until the next log in event occurs
+//    See https://parse.com/questions/logging-users-out-with-rest-api
+//    So, when you sign someone in, store the session token received in LocalStorage using the LocalStorage proxy, so
+//    if the app crashes and the user restarts, the session can still be retrieved from the LocalStorage, which persists
+//    So, logging out means that any subsequent request to Parse's REST API should
+//    not contain the session key header, the authenticated user store's url should not have any user id
+//    as a postfix to its endpoint,  the authenticated user store must be emptied, and the 
+//    parse session localstorage store must be emptied
+    doLogout: function(button, e, eOpts) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Users.doLogout(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        me.logUserOut().
+                redirectTo(X.XConfig.getDEFAULT_USER_LOGIN_PAGE());
+        
+        return me;
+    },
+    
+/*
+ *    OTHER EVENT HANDLERS
+ */
+
     onPageLoginTabPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
         if (Ext.isObject(tabPanel) && Ext.isObject(activeItem)) {
@@ -215,51 +319,14 @@ Ext.define('X.controller.Users', {
 //        Reset photo message input container – reset photo and message form panel
         return me;
     },
-    // Show sign up form
-    showSignup: function() {
-        var me = this;
-        if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
-                isHidden() || !Ext.isObject(me.getPageLogin().
-                getActiveItem()) || me.getPageLogin().
-                getActiveItem().
-                getItemId() !== 'userSignup') {
-            if (me.getDebug()) {
-                console.log('Debug: X.controller.Users.showSignup(): Current active item is not userLogin. Will call generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-            }
-            return me.generateAndFillViewportWithUserSignupWindow();
-        }
-        return me;
-    },
-    // Validate sign up form
-    isSignupFormValid: function(formPanel) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Users.isSignupFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        
-        formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserSignupFormPanel();
-        
-        if(Ext.isObject(formPanel)) {
-            var formData = formPanel.getValues();
+    
+/*
+ *    HELPERS
+ */
 
-            var errors = Ext.create('X.model.validation.UserLogin', {
-                username: formData.username,
-                password: formData.password
-            }).
-                    validate();
-            
-            if (!errors.isValid()) {
-                me.generateInvalidAuthenticationWindow({
-                    message: errors.getAt(0).
-                            getMessage()
-                });
-                
-                return false;
-            }
-        }
-        
-        return true;
-    },
+//    SIGNUP
+//    
+//    Initiate validation and then actual signup
     doSignup: function(button) {
         var me = this;
         if (me.getDebug()) {
@@ -273,7 +340,7 @@ Ext.define('X.controller.Users', {
         
         return me;
     },
-    // Ajax sign up: This assumes that the passed user object is valid
+//    Ajax sign up: This assumes that the passed user object is valid
     xhrSignup: function(form) {
         var me = this;
         if (me.getDebug()) {
@@ -354,29 +421,14 @@ Ext.define('X.controller.Users', {
         
         return me;
     },
-    // Show login form
-    showLogin: function() {
-        var me = this;
-        if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
-                isHidden() || !Ext.isObject(me.getPageLogin().
-                getActiveItem()) || me.getPageLogin().
-                getActiveItem().
-                getItemId() !== 'userLogin') {
-            if (me.getDebug()) {
-                console.log('Debug: X.controller.Users.showLogin(): Current active item is not userLogin. Will call generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-            }
-            return me.generateAndFillViewportWithUserLoginWindow();
-        }
-        return me;
-    },
-    // Validate login form
-    isLoginFormValid: function(formPanel) {
+//    Utility: Validate sign up form
+    isSignupFormValid: function(formPanel) {
         var me = this;
         if (me.getDebug()) {
-            console.log('Debug: X.controller.Users.isLoginFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.controller.Users.isSignupFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         
-        formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserLoginFormPanel();
+        formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserSignupFormPanel();
         
         if(Ext.isObject(formPanel)) {
             var formData = formPanel.getValues();
@@ -399,6 +451,11 @@ Ext.define('X.controller.Users', {
         
         return true;
     },
+    
+  
+//    LOGIN
+//    
+//    Initiate validation and then actual login
     doLogin: function(button, e, eOpts) {
         var me = this;
         if (me.getDebug()) {
@@ -412,7 +469,7 @@ Ext.define('X.controller.Users', {
         
         return me;
     },
-    // Ajax login: This assumes that the passed user object is valid
+//    Ajax login: This assumes that the passed user object is valid
     xhrLogin: function(form) {
         var me = this;
         if (me.getDebug()) {
@@ -483,6 +540,41 @@ Ext.define('X.controller.Users', {
         
         return me;
     },
+//    Utility: Validate login form
+    isLoginFormValid: function(formPanel) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Users.isLoginFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserLoginFormPanel();
+        
+        if(Ext.isObject(formPanel)) {
+            var formData = formPanel.getValues();
+
+            var errors = Ext.create('X.model.validation.UserLogin', {
+                username: formData.username,
+                password: formData.password
+            }).
+                    validate();
+            
+            if (!errors.isValid()) {
+                me.generateInvalidAuthenticationWindow({
+                    message: errors.getAt(0).
+                            getMessage()
+                });
+                
+                return false;
+            }
+        }
+        
+        return true;
+    },
+    
+//    
+//    METHODS TO BE SORTED OUT
+// 
+
     addFriendsFromDeviceContacts: function() {
         var me = this;
         if (me.getDebug()) {
@@ -577,17 +669,11 @@ Ext.define('X.controller.Users', {
         }
         action.resume();
     },
-    // AUTHENTICATED FUNCTIONS
-    showAuthenticatedMoreAccountInformation: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Users.showAuthenticatedMoreAccountInformation(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        me.generateUserMoreTabPanelAndActivateUserAccountTab();
-        var userMoreTabPanel = me.getUserMoreTabPanel();
-        userMoreTabPanel.setRecordRecursive(X.authenticatedEntity);
-        return me;
-    },
+    
+    
+//    UPDATE
+//    
+//    Updates authenticated user by calling me.saveAuthenticatedUser()
     doUpdateAuthenticatedUser: function(options) {
         var me = this;
         if (me.getDebug()) {
@@ -595,26 +681,9 @@ Ext.define('X.controller.Users', {
         }
         return me.saveAuthenticatedUser(options);
     },
-//    Logout
-//    With Parse REST API, logging out means not sending the session cookie with subsequent requests
-//    Then, when ready to log in, ask the user to fill in username and password, and the response will have the 'X-Parse-Session-Token' session header
-//    that can be used in all subsequent requests until log out; so logging out here means that you don't use that session token anymore
-//    on client side until the next log in event occurs
-//    See https://parse.com/questions/logging-users-out-with-rest-api
-//    So, when you sign someone in, store the session token received in LocalStorage using the LocalStorage proxy, so
-//    if the app crashes and the user restarts, the session can still be retrieved from the LocalStorage, which persists
-//    And, when you log out, reset that data from from LocalStorage
-    doLogout: function(button, e, eOpts) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Users.doLogout(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        
-        me.logUserOut().
-                redirectTo(X.XConfig.getDEFAULT_USER_LOGIN_PAGE());
-        
-        return me;
-    },
+    
+
+    
     init: function() {
         var me = this;
         me.setDebug(X.config.Config.getDEBUG());

@@ -42,6 +42,9 @@ Ext.define('X.config.Config', {
 //            https://www.parse.com/docs/rest#users-validating
             ME: {
                 ENDPOINT: 'users/me'
+            },
+            GROUPS: {
+                ENDPOINT: 'classes/Group'
             }
         },
         

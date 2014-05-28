@@ -1,9 +1,23 @@
 Ext.define('X.controller.mixin.User', {
+//    This sets a variable on X that stores reference to the authenticated user for easy access
+//    Note that we are using X.authenticatedEntity for now; the plan is to retire that variable and use
+//    X.authenticatedUser exclusively
+    setReferencesOnXToGivenAuthenticatedUser: function(authenticatedUser) {
+        X.authenticatedUser = authenticatedUser;
+//        TODO: Retire authenticatedEntity and use only authenticatedUser
+        X.authenticatedEntity = authenticatedUser;
+    },
+//    Does opposite of what this.setReferencesOnXToGivenAuthenticatedUser() does
+    resetReferencesOnXToGivenAuthenticatedUser: function(authenticatedUser) {
+        X.authenticatedUser = null;
+//        TODO: Retire authenticatedEntity and use only authenticatedUser
+        X.authenticatedEntity = null;
+    },
 //    This expects:
 //    {
 //      user: <Object>
 //    }
-//    This does: 
+//    This: 
 //      1. sets session: calls setSession()
 //      2. sets authenticated user: calls setAuthenticatedUser()
     logUserIn: function(options) {
@@ -98,8 +112,8 @@ Ext.define('X.controller.mixin.User', {
 //    {
 //      user: <'AuthenticatedUser' model instance>
 //    }
-//    This does: 
-//      1. updates authenticated user store
+//    This: 
+//      1. locally updates authenticated user store
 //      2. sets variables on X that denote authenticated user
     setAuthenticatedUser: function(options) {
         var me = this;
@@ -113,7 +127,7 @@ Ext.define('X.controller.mixin.User', {
             if(Ext.isObject(user) && !Ext.isEmpty(user)) {
                 var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
                 if(Ext.isObject(authenticatedUserStore)) {
-                    if (authenticatedUserStore.locallySetGivenUserAsAutheticatedUser({
+                    if (authenticatedUserStore.locallySetGivenUserAsAuthenticatedUser({
                         user: user
                     })) {
                         me.setReferencesOnXToGivenAuthenticatedUser(user);
@@ -125,21 +139,6 @@ Ext.define('X.controller.mixin.User', {
         }
         
         return false;
-    },
-    
-//    This sets a variable on X that stores reference to the authenticated user for easy access
-//    Note that we are using X.authenticatedEntity for now; the plan is to retire that variable and use
-//    X.authenticatedUser exclusively
-    setReferencesOnXToGivenAuthenticatedUser: function(authenticatedUser) {
-        X.authenticatedUser = authenticatedUser;
-//        TODO: Retire authenticatedEntity and use only authenticatedUser
-        X.authenticatedEntity = authenticatedUser;
-    },
-//    Does opposite of what this.setReferencesOnXToGivenAuthenticatedUser() does
-    resetReferencesOnXToGivenAuthenticatedUser: function(authenticatedUser) {
-        X.authenticatedUser = null;
-//        TODO: Retire authenticatedEntity and use only authenticatedUser
-        X.authenticatedEntity = null;
     },
     
 //    This uses this.checkIfAuthenticatedUserExists() and this.loadAuthenticatedUserStoreFromSession() to perform the logic
@@ -254,45 +253,30 @@ Ext.define('X.controller.mixin.User', {
         if (Ext.isObject(parseSessionStore)) {
             var session = parseSessionStore.getSession();
             if (Ext.isObject(session) && !Ext.isEmpty(session)) {
-                var userIdFromSession = ('userId' in session && Ext.isString(session.userId) && !Ext.isEmpty(session.userId)) ? session.userId : false;
-                if (userIdFromSession) {
-                    var sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
-                    if (sessionToken) {
-                        var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
-                        if (Ext.isObject(authenticatedUserStore)) {
-                            var authenticatedUserStoreEmpty = authenticatedUserStore.isEmpty();
-                            if (!authenticatedUserStoreEmpty) {
-//                                When authenticated user store is not empty, check if the user in store
-//                                is the same as the one in the session. If it is, then proceed with refreshing
-//                                of the authenticated user store. If not, then remove the existing record from
-//                                the authenticated user store, and then proceed with the load
-                                var authenticatedUser = authenticatedUserStore.getAt(0);
-                                var authenticatedUserId = authenticatedUser.get('objectId');
-                                if(authenticatedUserId !== userIdFromSession) {
-                                    authenticatedUser.destroy();
-                                    authenticatedUser.commit();
-                                }
-                            }
-                            
-                            authenticatedUserStore.setSessionHeader(sessionToken);
-                            authenticatedUserStore.setUrlPostfixEndpoint(userIdFromSession);
-                            
-                            me.loadAuthenticatedUserStore(existsCallback, doesNotExistCallback);
-                        }
-                    }
-                }
+                
+//                Proceed with loading the store only if a session is found in local storage
+                me.loadAuthenticatedUserStore(existsCallback, doesNotExistCallback);
                 
 //                Return true/me only if the session store has a user in session i.e. a session token exists
                 return me;
             }
         }
         
+//        Don't proceed with the load if a session does not exist in local storage
+//        Ideally, when a session in local storage is not found, 
+//        redirect user to the login form
         me.executeCallback(doesNotExistCallback);
         
+//        Return true/me only if the session store has a user in session i.e. a session token exists
         return false;
     },
     
-//    This assumes that the session header and url endpoint have already been set up correctly
+//    Use this method to load the Authenticated User store; avoid loading
+//    the store directly from outside using store.load(). Use this wrapper
+//    instead
+//    
+//    Event handler 'onBeforeLoad' on the store will make sure that
+//    the session header and url endpoint get set up correctly
     loadAuthenticatedUserStore: function(existsCallback, doesNotExistCallback) {
         var me = this;
         
@@ -307,9 +291,13 @@ Ext.define('X.controller.mixin.User', {
                 
                 if(success) {
                     if (!Ext.isEmpty(records)) {
+//                        This sets up references on X e.g. X.authenticatedUser
                         me.setReferencesOnXToGivenAuthenticatedUser(records[0]);
-//                        Fix loadGroupsStore
-//                        me.loadGroupsStore();
+                        
+//                        This loads all groups now that we have the authenticated user
+//                        This is a method in the Group mixin
+                        me.loadAllGroups();
+                        
                         me.executeCallback(existsCallback);
                     }
                     else {

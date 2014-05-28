@@ -3,7 +3,15 @@ Ext.define('X.model.User', {
     config: {
         fields: [
             {
-                name: 'objectId'
+                name: 'objectId',
+//                Don't persist this, because URLs to the server contain the resource to be updated
+//                and not the body of the data itself – Parse doesn't refer to the objectId passed inside
+//                of the data.
+//                Also, Parse doesn't like sending objectId at the time of creation, and Sencha Touch
+//                has to have one when a model is instantiated. Not sending the objectId is the 
+//                only solution to the problem. After the first create, the record is automatically
+//                updated with the data received from the server, and so the objectId is updated as well
+//                persist: false
             },
             {
                 name: 'createdAt',

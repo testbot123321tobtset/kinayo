@@ -3,7 +3,15 @@ Ext.define('X.model.Group', {
     config: {
         fields: [
             {
-                name: 'id'
+                name: 'objectId',
+//                Don't persist this, because URLs to the server contain the resource to be updated
+//                and not the body of the data itself – Parse doesn't refer to the objectId passed inside
+//                of the data.
+//                Also, Parse doesn't like sending objectId at the time of creation, and Sencha Touch
+//                has to have one when a model is instantiated. Not sending the objectId is the 
+//                only solution to the problem. After the first create, the record is automatically
+//                updated with the data received from the server, and so the objectId is updated as well
+//                persist: false
             },
             {
                 name: 'createdAt',
@@ -54,7 +62,7 @@ Ext.define('X.model.Group', {
         validations: [
             {
                 type: 'presence',
-                field: 'id'
+                field: 'objectId'
             },
             {
                 type: 'presence',
@@ -64,13 +72,17 @@ Ext.define('X.model.Group', {
         ],
         proxy: {
             type: 'rest',
-            idParam: 'id',
+            url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().GROUPS.ENDPOINT,
             appendId: true,
-            url: X.config.Config.getPARSE().ENDPOINT + 'user/groups',
             batchActions: true,
             reader: {
                 type: 'json',
-                rootProperty: 'result'
+                rootProperty: 'results'
+            },
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'X-Parse-Application-Id': X.config.Config.getPARSE().APPLICATION_ID,
+                'X-Parse-REST-API-Key': X.config.Config.getPARSE().REST_API_KEY
             },
             exception: function(proxy, response, operation, eOpts) {
                 Ext.Viewport.fireEvent('groupproxyexception', {
@@ -82,7 +94,7 @@ Ext.define('X.model.Group', {
         }
     },
     isCreatedByMe: function() {
-        return this.get('createdById') === X.authenticatedEntity.get('id');
+        return this.get('createdById') === X.authenticatedUser.get('objectId');
     },
 //    Websocket
     joinRoom: function(xSocket) {

@@ -4,14 +4,14 @@ Ext.define('X.model.Group', {
         fields: [
             {
                 name: 'objectId',
-//                Don't persist this, because URLs to the server contain the resource to be updated
-//                and not the body of the data itself – Parse doesn't refer to the objectId passed inside
-//                of the data.
-//                Also, Parse doesn't like sending objectId at the time of creation, and Sencha Touch
-//                has to have one when a model is instantiated. Not sending the objectId is the 
-//                only solution to the problem. After the first create, the record is automatically
-//                updated with the data received from the server, and so the objectId is updated as well
-//                persist: false
+                //                Don't persist this, because URLs to the server contain the resource to be updated
+                //                and not the body of the data itself – Parse doesn't refer to the objectId passed inside
+                //                of the data.
+                //                Also, Parse doesn't like sending objectId at the time of creation, and Sencha Touch
+                //                has to have one when a model is instantiated. Not sending the objectId is the 
+                //                only solution to the problem. After the first create, the record is automatically
+                //                updated with the data received from the server, and so the objectId is updated as well
+                persist: false
             },
             {
                 name: 'createdAt',
@@ -39,20 +39,22 @@ Ext.define('X.model.Group', {
             }
         ],
         belongsTo: [
-//                We only show groups that are either created by the authenticated user
-//                or ones that the authenticated user is a member of. But, authenticated user
-//                can only be part of groups that are either created by the authenticated user
-//                himself/herself or created by his/her friends. So a friend can have groups as well
+            //                We only show groups that are either created by the authenticated user
+            //                or ones that the authenticated user is a member of. But, authenticated user
+            //                can only be part of groups that are either created by the authenticated user
+            //                himself/herself or created by his/her friends. So a friend can have groups as well
             {
                 model: 'X.model.AuthenticatedUser',
                 foreignKey: 'createdById',
                 getterName: 'getCreator'
-            },
-            {
-                model: 'X.model.Friend',
-                foreignKey: 'createdById',
-                getterName: 'getCreator'
             }
+            //            Can't have 2 associations with the same getterName!!
+            //            ,
+            //            {
+            //                model: 'X.model.Friend',
+            //                foreignKey: 'createdById',
+            //                getterName: 'getCreator'
+            //            }
         ],
         hasMany: [
             {
@@ -74,10 +76,10 @@ Ext.define('X.model.Group', {
             type: 'rest',
             url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().GROUPS.ENDPOINT,
             appendId: true,
-            batchActions: true,
+            batchActions: false,
             reader: {
                 type: 'json',
-                rootProperty: 'results'
+                rootProperty: ''
             },
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -95,22 +97,5 @@ Ext.define('X.model.Group', {
     },
     isCreatedByMe: function() {
         return this.get('createdById') === X.authenticatedUser.get('objectId');
-    },
-//    Websocket
-    joinRoom: function(xSocket) {
-        var me = this;
-        if(X.config.Config.getDEBUG()) {
-            console.log('Debug: X.model.Group.joinRoom(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        
-        xSocket = Ext.isObject(xSocket) ? xSocket : X.Socket;
-        if(Ext.isObject(xSocket)) {
-            xSocket.emit('enterRoom', {
-                roomName: me.get('id')
-            });
-            return me;
-        }
-        
-        return false;
     }
 });

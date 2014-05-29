@@ -50,7 +50,7 @@ Ext.define('X.model.Message', {
             idParam: 'id',
             appendId: false,
             url: X.config.Config.getPARSE().ENDPOINT + 'user/groups/',
-            batchActions: true,
+            batchActions: false,
             reader: {
                 type: 'json',
                 rootProperty: 'result'

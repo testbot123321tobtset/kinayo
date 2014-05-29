@@ -52,31 +52,19 @@ Ext.define('X.controller.Groups', {
             userGroupsList: {
                 itemtap: 'onUserGroupsListItemTap'
             },
-            // This is actually the Edit button for now
-            // Maybe in future we might need more features here
             // User :: Groups :: Feed data,
             userGroupContainerMoreButton: {
                 tap: 'onUserGroupContainerMoreButtonTap'
             },
-            userGroupContainer: {
-//                swipedown: 'onUserGroupContainerSwipeDown',
-//                beforehide: 'onUserGroupContainerBeforeHide',
-//                hide: 'onUserGroupContainerHide'
-            },
             userGroupContainerBackButton: {
                 tap: 'onUserGroupContainerBackButtonTap'
             },
-            // User :: Groups :: Group edit
-            userEditGroupContainer: {
-//                swipedown: 'onUserEditGroupContainerSwipeDown',
-//                hide: 'onUserEditGroupContainerHide'
+            // User :: Groups :: Create
+            userGroupCreateSubmitButton: {
+                tap: 'onUserGroupCreateSubmitButtonTap'
             },
             userEditGroupContainerBackButton: {
                 tap: 'onUserEditGroupContainerBackButtonTap'
-            },
-            // User :: Groups :: Create
-            userGroupCreateSubmitButton: {
-                tap: 'doCreateGroup'
             }
         },
         refs: {
@@ -105,11 +93,167 @@ Ext.define('X.controller.Groups', {
             userGroupCreateSubmitButton: '#userGroupAddFormPanel #submitButton'
         }
     },
-    
-/*
- *    VIEWPORT EVENT HANDLERS
- */
+    /*
+     *    ROUTE HANDLERS
+     */
+    //    User :: Groups :: Feeds
+    showGroupsList: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showGroupsList(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
 
+        var groupsStore = Ext.getStore('GroupsStore');
+        if (Ext.isObject(groupsStore)) {
+            groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
+                fn: function() {
+                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+                    me.getPageUserRoot().
+                            closeEverythingAboveMe();
+                },
+                scope: me
+            });
+        }
+
+        return me;
+    },
+    //    User :: Groups :: Feed data
+    showFeedUiForGivenGroupId: function(groupId) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        var groupsStore = Ext.getStore('GroupsStore');
+        if (Ext.isObject(groupsStore)) {
+            groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
+                fn: function() {
+                    //                    Preload all UIs that go underneath this group feed UI
+                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+                    //                    Actually show group feed UI
+                    me.generateAndFillViewportWithGroupDataWindow({
+                        group: groupsStore.
+                                getById(groupId)
+                    }).
+                            closeEverythingAboveMe();
+                },
+                scope: me
+            });
+        }
+
+        return me;
+    },
+    //    User :: Groups :: Create
+    showCreate: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showCreate(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        me.generateUserGroupsTabPanelAndActivateUserAddGroupTab();
+        return me;
+    },
+    //    User :: Groups :: Edit
+    showEditGroupUiForGivenGroupId: function(groupId) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.showEditFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        var groupsStore = Ext.getStore('GroupsStore');
+        if (Ext.isObject(groupsStore)) {
+            groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
+                fn: function() {
+                    // Preload all UIs that go underneath this edit group UI
+                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+                    var group = groupsStore.
+                            getById(groupId);
+                    me.generateAndFillViewportWithGroupDataWindow({
+                        group: group
+                    });
+                    // Actually show edit group UI
+                    if (me.generateAndFillViewportWithEditGroupWindow({
+                        group: group,
+                        showcontainer: true
+                    })) {
+                        // Retrieve all of the friends of the authenticated user
+                        // and display them here in a list
+                        // me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+                        // 
+                        // For now, we show contacts list – once we are ready with friends API, 
+                        // we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+//                        me.setDeviceContactsStoreAndCallback({
+//                            successCallback: {
+//                                fn: function() {
+//                                    me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
+//                                },
+//                                scope: me
+//                            },
+//                            failureCallback: {
+//                                fn: function() {
+//                                    console.log('failed!');
+//                                },
+//                                scope: me
+//                            }
+//                        });
+                    }
+                    me.getUserEditGroupContainer().
+                            closeEverythingAboveMe();
+                },
+                scope: me
+            });
+        }
+        
+//        var groupsStore = Ext.getStore('GroupsStore');
+//        groupsStore.
+//                waitWhileLoadingAndCallbackOnLoad({
+//                    fn: function() {
+//                        // Preload all UIs that go underneath this edit group UI
+//                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+//                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+//                        var group = groupsStore.
+//                                getById(groupId);
+//                        me.generateAndFillViewportWithGroupDataWindow({
+//                            group: group
+//                        });
+//                        // Actually show edit group UI
+//                        if (me.generateAndFillViewportWithEditGroupWindow({
+//                            group: group,
+//                            showcontainer: true
+//                        })) {
+//                            //                            Retrieve all of the friends of the authenticated user
+//                            //                            and display them here in a list
+//                            //                            me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+//                            //                            
+//                            //                            For now, we show contacts list – once we are ready with friends API, 
+//                            //                            we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+//                            me.setDeviceContactsStoreAndCallback({
+//                                successCallback: {
+//                                    fn: function() {
+//                                        me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
+//                                    },
+//                                    scope: me
+//                                },
+//                                failureCallback: {
+//                                    fn: function() {
+//                                        console.log('failed!');
+//                                    },
+//                                    scope: me
+//                                }
+//                            });
+//                        }
+//                        me.getUserEditGroupContainer().
+//                                closeEverythingAboveMe();
+//                    }
+//                });
+        
+        return me;
+    },
+    /*
+     *    VIEWPORT EVENT HANDLERS
+     */
     onEditGroup: function(options) {
         var me = this;
         if (me.getDebug()) {
@@ -134,8 +278,8 @@ Ext.define('X.controller.Groups', {
     },
     onDestroyGroupMessageShow: function(options) {
         var me = this;
-        if(Ext.isObject(options) && !Ext.isEmpty(options) && 'containerToBeBlurred' in options && Ext.isObject(options.containerToBeBlurred)) {
-//            me.createOptimizedLayeredEffect(options.containerToBeBlurred);
+        if (Ext.isObject(options) && !Ext.isEmpty(options) && 'containerToBeBlurred' in options && Ext.isObject(options.containerToBeBlurred)) {
+            //            me.createOptimizedLayeredEffect(options.containerToBeBlurred);
             options.containerToBeBlurred.createOptimizedLayeredEffect();
         }
         return me;
@@ -158,124 +302,9 @@ Ext.define('X.controller.Groups', {
         }
         return me;
     },
-    
-/*
- *    ROUTE HANDLERS
- */
-
-//    User :: Groups :: Feeds
-    showGroupsList: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showGroupsList(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        var groupsStore = Ext.getStore('GroupsStore');
-        if(Ext.isObject(groupsStore)) {
-            groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
-                fn: function() {
-                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
-                    me.getPageUserRoot().
-                            closeEverythingAboveMe();
-                },
-                scope: me
-            });
-        }
-
-        return me;
-    },
-//    User :: Groups :: Feed data
-    showFeedUiForGivenGroupId: function(groupId) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        var groupsStore = Ext.getStore('GroupsStore');
-        if (Ext.isObject(groupsStore)) {
-            groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
-                fn: function() {
-//                    Preload all UIs that go underneath this group feed UI
-                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
-//                    Actually show group feed UI
-                    me.generateAndFillViewportWithGroupDataWindow({
-                        group: groupsStore.
-                                getById(groupId)
-                    }).
-                            closeEverythingAboveMe();
-                },
-                scope: me
-            });
-        }
-
-        return me;
-    },
-//    User :: Groups :: Create
-    showCreate: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showCreate(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        me.generateUserGroupsTabPanelAndActivateUserAddGroupTab();
-        return me;
-    },
-//    User :: Groups :: Edit
-    showEditGroupUiForGivenGroupId: function(groupId) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.showEditFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        var groupsStore = Ext.getStore('GroupsStore');
-        groupsStore.
-                waitWhileLoadingAndCallbackOnLoad({
-                    fn: function() {
-                        // Preload all UIs that go underneath this edit group UI
-                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
-                        var group = groupsStore.
-                                getById(groupId);
-                        me.generateAndFillViewportWithGroupDataWindow({
-                            group: group
-                        });
-                        // Actually show edit group UI
-                        if (me.generateAndFillViewportWithEditGroupWindow({
-                            group: group,
-                            showcontainer: true
-                        })) {
-//                            Retrieve all of the friends of the authenticated user
-//                            and display them here in a list
-//                            me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-//                            
-//                            For now, we show contacts list – once we are ready with friends API, 
-//                            we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-                            me.setDeviceContactsStoreAndCallback({
-                                successCallback: {
-                                    fn: function() {
-                                        me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
-                                    },
-                                    scope: me
-                                },
-                                failureCallback: {
-                                    fn: function() {
-                                        console.log('failed!');
-                                    },
-                                    scope: me
-                                }
-                            });
-                        }
-                        me.getUserEditGroupContainer().
-                                closeEverythingAboveMe();
-                    }
-                });
-        return me;
-    },
-    
-/*
- *    OTHER EVENT HANDLERS
- */
-
+    /*
+     *    OTHER EVENT HANDLERS
+     */
     onUserGroupsTabPanelPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
         if (Ext.isObject(tabPanel) && Ext.isObject(activeItem)) {
@@ -317,14 +346,14 @@ Ext.define('X.controller.Groups', {
         me.redirectTo('user/profile/groups/feeds');
         return me;
     },
-    onUserGroupContainerSwipeDown: function(userGroupContainer, event) {
+    onUserGroupCreateSubmitButtonTap: function(button) {
         var me = this;
         if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onUserGroupContainerSwipeDown(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.controller.Groups.onUserGroupCreateSubmitButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        me.getUserGroupsList().
-                deselectAll();
-        me.redirectTo('user/profile/groups/feeds');
+
+        me.doCreateGroup()
+
         return me;
     },
     onUserEditGroupContainerBackButtonTap: function(button) {
@@ -337,47 +366,34 @@ Ext.define('X.controller.Groups', {
                 getId());
         return me;
     },
-    onUserEditGroupContainerHide: function(userEditGroupContainer, event) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onUserEditGroupContainerHide(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        userEditGroupContainer.down('#usersListContainer').removeAll(true, true);
-        return me;
-    },
-    onUserEditGroupContainerSwipeDown: function(userEditGroupContainer, event) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onUserEditGroupContainerSwipeDown(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        me.redirectTo('user/profile/groups/feeds/' + userEditGroupContainer.
-                getRecord().
-                getId());
-        return me;
-    },
-
-//    User :: Groups :: Create
+    /*
+     *    HELPERS
+     */
     doCreateGroup: function(button) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.doCreateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        var formPanel = button.up('coreformpanel');
+        var formPanel = me.getUserGroupAddFormPanel();
         var formData = formPanel.getValues();
         var title = formData.title;
         var description = formData.description;
+
         var newGroup = {
             title: title,
             description: description,
             createdById: X.authenticatedUser.get('objectId')
         };
-//        var group = Ext.create('X.model.Group', newGroup);
-        var group = Ext.getStore('GroupsStore').add(newGroup);
-        console.log('>>>>>>>>>');
-        console.log(group);
-        return false;
+        var group = Ext.create('X.model.Group', newGroup);
+
         var errors = group.validate();
         if (!errors.isValid()) {
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.Groups.doCreateGroup(): Group validation failed: Found errors:');
+                console.log(errors);
+                console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
+            group.reject();
             me.generateFailedWindow({
                 message: errors.getAt(0).
                         getMessage()
@@ -389,31 +405,40 @@ Ext.define('X.controller.Groups', {
             }
             me.addToGroupsCreatedByAUStoreAndToGroupsAUIsMemberOfStore(group);
             me.saveGivenGroup({
-                group: group
+                group: group,
+                validated: true
             });
         }
         return me;
     },
-    
-/*
- *    HELPERS
- */  
-    
-//    Calls setStore() on the user groups list view
+    doUpdateGroup: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.doUpdateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        return me.saveGivenGroup(options);
+    },
+    doDestroyGroup: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.doDestroyGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        return me.saveGivenGroup(options);
+    },
+    //    Calls setStore() on the user groups list view
     addGroupsListToGroupsFeedTabWithGivenGroupsStore: function(groupsStore) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.addGroupsListToGroupsFeedTabWithGivenGroupsStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         if (Ext.isObject(groupsStore)) {
             me.getUserGroupsList().
                     setStore(groupsStore);
         }
-        
+
         return me;
     },
-    
     resetUserGroupEditFormPanelWithFriendsCheckboxes: function() {
         var me = this;
         if (me.getDebug()) {
@@ -446,30 +471,30 @@ Ext.define('X.controller.Groups', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var deviceContactsStore = Ext.getStore('DeviceContactStore');
         var userGroupEditFormPanelUsersListContainer = me.getUserGroupEditFormPanelUsersListContainer();
         var group = userGroupEditFormPanelUsersListContainer.getRecord();
-//        Create this list if:
-//        1. existing list is created by you and the new list isn't
-//        2. existing list is not created by you and the new list is
-//        Baically, create this list every time the creator changes from you to someone else and vice versa.
-//        Because there seems to be an issue with setting onItemDisclosure on an already
-//        existing list and there might be groups that are not created by the authenticated user, so these groups should
-//        be read only to the authenticated user, so we will need to change the list on per group basis. And so since
-//        dynamically setting onItemDisclosure does not work, we just recreate the whole list every time the creator changes
-//        from the authenticated user to a friend and vice versa
+        //        Create this list if:
+        //        1. existing list is created by you and the new list isn't
+        //        2. existing list is not created by you and the new list is
+        //        Baically, create this list every time the creator changes from you to someone else and vice versa.
+        //        Because there seems to be an issue with setting onItemDisclosure on an already
+        //        existing list and there might be groups that are not created by the authenticated user, so these groups should
+        //        be read only to the authenticated user, so we will need to change the list on per group basis. And so since
+        //        dynamically setting onItemDisclosure does not work, we just recreate the whole list every time the creator changes
+        //        from the authenticated user to a friend and vice versa
         var isGroupCreatedByMe = group.isCreatedByMe();
         var shouldCreateNewUsersList = false;
         var userGroupEditFormPanelUsersList = me.getUserGroupEditFormPanelUsersList();
-        if (!Ext.isObject(userGroupEditFormPanelUsersList)) { 
+        if (!Ext.isObject(userGroupEditFormPanelUsersList)) {
             shouldCreateNewUsersList = true;
         }
-        else if(userGroupEditFormPanelUsersList.getOnItemDisclosure() !== isGroupCreatedByMe) {
+        else if (userGroupEditFormPanelUsersList.getOnItemDisclosure() !== isGroupCreatedByMe) {
             userGroupEditFormPanelUsersListContainer.remove(userGroupEditFormPanelUsersList);
             shouldCreateNewUsersList = true;
         }
-        if(shouldCreateNewUsersList) {
+        if (shouldCreateNewUsersList) {
             if (me.getDebug()) {
                 console.log('Debug: X.controller.Groups.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes(): A new users list will be created: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
@@ -485,42 +510,27 @@ Ext.define('X.controller.Groups', {
         }
         userGroupEditFormPanelUsersListContainer.
                 add(userGroupEditFormPanelUsersList);
-        
+
         return me;
     },
-    doUpdateGroup: function(options) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.doUpdateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return me.saveGivenGroup(options);
-    },
-    doDestroyGroup: function(options) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.doDestroyGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return me.saveGivenGroup(options);
-    },
-    
     updateAllUiWithGivenGroupData: function(group) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.updateAllUiWithGroupData(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         if (Ext.isObject(group)) {
-            var userGroupContainer = me.getUserGroupContainer();
-            var userEditGroupContainer = me.getUserEditGroupContainer();
-            if (Ext.isObject(userGroupContainer)) {
-                userGroupContainer.setRecordRecursive(group);
-            }
-            if (Ext.isObject(userEditGroupContainer)) {
-                userEditGroupContainer.setRecordRecursive(group);
-            }
+            //            This supposed to update ui with group data, but try out the method updateViewsBoundToGivenRecord in Common
+            //            var userGroupContainer = me.getUserGroupContainer();
+            //            var userEditGroupContainer = me.getUserEditGroupContainer();
+            //            if (Ext.isObject(userGroupContainer)) {
+            //                userGroupContainer.setRecordRecursive(group);
+            //            }
+            //            if (Ext.isObject(userEditGroupContainer)) {
+            //                userEditGroupContainer.setRecordRecursive(group);
+            //            }
         }
         return me;
     },
-    
     init: function() {
         var me = this;
         me.setDebug(X.config.Config.getDEBUG());

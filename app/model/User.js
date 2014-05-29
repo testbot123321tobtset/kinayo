@@ -3,7 +3,7 @@ Ext.define('X.model.User', {
     config: {
         fields: [
             {
-                name: 'objectId',
+                name: 'objectId'
 //                Don't persist this, because URLs to the server contain the resource to be updated
 //                and not the body of the data itself – Parse doesn't refer to the objectId passed inside
 //                of the data.
@@ -69,7 +69,7 @@ Ext.define('X.model.User', {
             idParam: 'objectId',
             appendId: true,
             url: X.config.Config.getPARSE().ENDPOINT + 'users',
-            batchActions: true,
+            batchActions: false,
             reader: {
                 type: 'json',
                 rootProperty: 'result'

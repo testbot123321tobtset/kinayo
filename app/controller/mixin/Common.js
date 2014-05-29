@@ -16,13 +16,67 @@ Ext.define('X.controller.mixin.Common', {
             console.log(options);
             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if (options) {
+            var model = ('model' in options && Ext.isObject(options.model) && !Ext.isEmpty(options.model)) ? options.model : false;
+            if (model) {
+                var operation = ('operation' in options && Ext.isObject(options.operation) && !Ext.isEmpty(options.operation)) ? options.operation : false;
+                if (operation) {
+                    var modelFullClassName = model.modelName,
+                            modelName = modelFullClassName.substr(modelFullClassName.lastIndexOf('.') + 1);
+
+                    var silent = ('silent' in options && Ext.isBoolean(options.silent)) ? options.silent : false;
+
+                    var action = operation.getAction(),
+                            camelizedActionName = action.title(),
+                            actionNameInPastTense = (camelizedActionName === 'Destroy') ? (camelizedActionName + 'ed') : (camelizedActionName + 'd');
+
+                    var wasSuccessful = operation.wasSuccessful(),
+                            successfullyOrFailedString = wasSuccessful ? 'Successfully' : 'Failed';
+
+                    var generateWindowFunctionName = 'generate' + modelName + successfullyOrFailedString + actionNameInPastTense + 'Window';
+
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.mixin.Factory: commitOrRejectModelAndGenerateUserFeedbackOnSavingModel(): action: ' + action + ', wasSuccessful: ' + wasSuccessful + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                        console.log('Debug: X.controller.mixin.Factory: Might call function name: ' + generateWindowFunctionName + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+
+                    //                    Fire an event for instanc: destroyedgroup
+                    Ext.Viewport.fireEvent((actionNameInPastTense + modelName).toLowerCase(), options);
+
+                    //                    Commit or reject
+                    if (wasSuccessful) {
+                        model.commit();
+                    }
+                    else {
+                        model.reject();
+                    }
+
+                    //                    If not silent, this will generate a confirmation window
+                    if (!silent) {
+                        me[generateWindowFunctionName].call(me, options);
+                    }
+                }
+            }
+        }
+
+        return me;
+    },
+    archivedCommitOrRejectModelAndGenerateUserFeedbackOnSavingModel: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.Factory: commitOrRejectModelAndGenerateUserFeedbackOnSavingModel(): Options: ');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
         var silent = (Ext.isObject(options) && Ext.isBoolean(options.silent)) ? options.silent : false;
         var model = Ext.isObject(options.model) ? options.model : false,
                 modelFullClassName = model.modelName,
                 modelName = modelFullClassName.substr(modelFullClassName.lastIndexOf('.') + 1);
         var operation = Ext.isObject(options.operation) ? options.operation : false;
-        if(operation && model) {
+        if (operation && model) {
             var action = operation.getAction(),
                     camelizedActionName = action.title(),
                     actionNameInPastTense = (camelizedActionName === 'Destroy') ? (camelizedActionName + 'ed') : (camelizedActionName + 'd');
@@ -33,31 +87,31 @@ Ext.define('X.controller.mixin.Common', {
                 console.log('Debug: X.controller.mixin.Factory: commitOrRejectModelAndGenerateUserFeedbackOnSavingModel(): action: ' + action + ', wasSuccessful: ' + wasSuccessful + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                 console.log('Debug: X.controller.mixin.Factory: Might call function name: ' + generateWindowFunctionName + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
-//            Actually do stuff
-//            For instance, this will fire destroyedgroup
+            //            Actually do stuff
+            //            For instance, this will fire destroyedgroup
             Ext.Viewport.fireEvent((actionNameInPastTense + modelName).toLowerCase(), options);
-            if(wasSuccessful) {
+            if (wasSuccessful) {
                 model.commit();
             }
             else {
                 model.reject();
             }
-//            If not silent, this will generate a confirmation window
+            //            If not silent, this will generate a confirmation window
             !silent && me[generateWindowFunctionName].call(me, options);
         }
-        
+
         return me;
     },
     updateViewsBoundToGivenRecord: function(options) {
         var me = this;
-        
+
         options = Ext.isObject(options) ? options : false;
-        if(Ext.isObject(options)) {
+        if (Ext.isObject(options)) {
             var modelName = ('modelName' in options && Ext.isString(options.modelName)) ? options.modelName : false;
             var record = ('record' in options && Ext.isObject(options.record)) ? options.record : false;
             var store = ('store' in options && Ext.isObject(options.store)) ? options.store : false;
-//            Update views that have records bound to them
-            if((Ext.isString(modelName) && Ext.isObject(record))) {
+            //            Update views that have records bound to them
+            if ((Ext.isString(modelName) && Ext.isObject(record))) {
                 var model = Ext.isString(modelName) ? X.model[modelName] : false;
                 var recordId = Ext.isObject(record) ? record.getId() : false;
                 var updateModel = model && recordId;
@@ -75,7 +129,7 @@ Ext.define('X.controller.mixin.Common', {
                     });
                 }
             }
-//            When a record loads, views with stores that have that record in them must also update
+            //            When a record loads, views with stores that have that record in them must also update
             if (store) {
                 var allComponentsToBeQueriedForStoreUpdates = Ext.ComponentQuery.query('list, dataview');
                 Ext.each(allComponentsToBeQueriedForStoreUpdates, function(thisComponent) {
@@ -85,7 +139,7 @@ Ext.define('X.controller.mixin.Common', {
                 });
             }
         }
-        
+
         return me;
     }
 });

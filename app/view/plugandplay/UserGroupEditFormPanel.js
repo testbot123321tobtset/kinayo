@@ -104,7 +104,7 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
     onGroupDataEdit: function(field, newValue, oldValue, eOpts) {
         var me = this;
         var groupRecord = me.getRecord();
-        var groupRecordId = groupRecord.get('id');
+        var groupRecordId = groupRecord.get('objectId');
         var fieldName = field.getName();
         var groupsStore = Ext.getStore('GroupsStore');
         var groupFromGroupsStore = groupsStore.getById(groupRecordId);

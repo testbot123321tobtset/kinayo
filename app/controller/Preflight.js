@@ -80,6 +80,13 @@ Ext.define('X.controller.Preflight', {
                 // Remove leading and trailing whitespace
                 normalize: function() {
                     return leadAndTrailWS.exec(this)[1] || '';
+                },
+                
+                getUrlPath: function() {
+                    return this.split('?')[0];
+                },
+                getUrlPathInArray: function() {
+                    return this.getUrlPath().split('/');
                 }
             };
         })());

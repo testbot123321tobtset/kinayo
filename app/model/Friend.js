@@ -75,7 +75,7 @@ Ext.define('X.model.Friend', {
             idParam: 'id',
             appendId: false,
             url: X.config.Config.getPARSE().ENDPOINT + 'user/friends',
-            batchActions: true,
+            batchActions: false,
             reader: {
                 type: 'json',
                 rootProperty: 'result'

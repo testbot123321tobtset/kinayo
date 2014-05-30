@@ -36,7 +36,7 @@ Ext.define('X.controller.mixin.Factory', {
     },
     generateGroupFailedCreatedWindow: function(callback) {
         var me = this;
-        var message = (Ext.isObject(callback) && Ext.isString(callback.message)) ? callback.message : X.XConfig.getMESSAGES().GROUP_SUCCESSFULLY_CREATED;
+        var message = (Ext.isObject(callback) && Ext.isString(callback.message)) ? callback.message : X.XConfig.getMESSAGES().GROUP_FAILED_CREATED;
         Ext.Msg.alert(X.XConfig.getMESSAGES().ALERT, message, function() {
             me.executeCallback(callback);
         });

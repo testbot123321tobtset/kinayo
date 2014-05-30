@@ -7,10 +7,10 @@ Ext.define('X.controller.mixin.Group', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Group.loadAllGroupsStores(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         me.loadGroupsCreatedByAUStore().
                 loadGroupsAUIsMemberOfStore();
-        
+
         return me;
     },
     loadGroupsCreatedByAUStore: function(existsCallback, doesNotExistCallback) {
@@ -18,7 +18,7 @@ Ext.define('X.controller.mixin.Group', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Group.loadGroupsCreatedByAUStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var groupsCreatedByAUStore = Ext.getStore('GroupsCreatedByAUStore');
         if (Ext.isObject(groupsCreatedByAUStore)) {
             groupsCreatedByAUStore.load(function(records, operation, success) {
@@ -27,7 +27,7 @@ Ext.define('X.controller.mixin.Group', {
                     console.log(records);
                     console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                 }
-                
+
                 if (success) {
                     if (!Ext.isEmpty(records)) {
                         me.executeCallback(existsCallback);
@@ -41,7 +41,7 @@ Ext.define('X.controller.mixin.Group', {
                 }
             });
         }
-        
+
         return me;
     },
     loadGroupsAUIsMemberOfStore: function(existsCallback, doesNotExistCallback) {
@@ -49,7 +49,7 @@ Ext.define('X.controller.mixin.Group', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Group.loadGroupsAUIsMemberOfStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var groupsAUIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
         if (Ext.isObject(groupsAUIsMemberOfStore)) {
             groupsAUIsMemberOfStore.load(function(records, operation, success) {
@@ -58,7 +58,7 @@ Ext.define('X.controller.mixin.Group', {
                     console.log(records);
                     console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                 }
-                
+
                 if (success) {
                     if (!Ext.isEmpty(records)) {
                         me.executeCallback(existsCallback);
@@ -72,7 +72,7 @@ Ext.define('X.controller.mixin.Group', {
                 }
             });
         }
-        
+
         return me;
     },
     /*
@@ -85,13 +85,13 @@ Ext.define('X.controller.mixin.Group', {
             console.log(options);
             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
         if (options) {
             var group = ('group' in options && Ext.isObject(options.group) && !Ext.isEmpty(options.group)) ? options.group : false;
             if (group) {
-                var typeOfSave = ('silent' in options && Ext.isString(options.typeOfSave) && !Ext.isEmpty(options.typeOfSave)) ? options.typeOfSave : 'edit';
-                
+                var typeOfSave = ('typeOfSave' in options && Ext.isString(options.typeOfSave) && !Ext.isEmpty(options.typeOfSave)) ? options.typeOfSave : 'edit';
+
                 var hasBeenValidated = ('validated' in options && Ext.isBoolean(options.validated)) ? options.validated : false;
                 if (typeOfSave !== 'destroy' && !hasBeenValidated) {
                     var errors = group.validate();
@@ -104,8 +104,9 @@ Ext.define('X.controller.mixin.Group', {
                         return false;
                     }
                 }
-                
+
                 var silent = ('silent' in options && Ext.isBoolean(options.silent)) ? options.silent : false;
+
                 var optionsToSaveOperation = {
                     success: function(record, operation) {
                         if (me.getDebug()) {
@@ -113,7 +114,7 @@ Ext.define('X.controller.mixin.Group', {
                             console.log(operation.getResponse());
                             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
-                        
+
                         me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
                             operation: operation,
                             model: group,
@@ -134,7 +135,7 @@ Ext.define('X.controller.mixin.Group', {
                             console.log(operation.getResponse());
                             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
-                        
+
                         me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
                             operation: operation,
                             model: group,
@@ -149,7 +150,8 @@ Ext.define('X.controller.mixin.Group', {
                         });
                     }
                 };
-                
+
+
                 switch (typeOfSave) {
                     case 'edit':
                         if (me.getDebug()) {
@@ -166,18 +168,22 @@ Ext.define('X.controller.mixin.Group', {
                     default:
                         break;
                 }
+
+                return me;
             }
         }
+
+        return false;
     },
     /*
      * HELPERS
      */
-    addToGroupsCreatedByAUStoreAndToGroupsAUIsMemberOfStore: function(groups) {
+    addToAllGroups: function(groups) {
         var me = this;
         if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.Group.addToGroupsCreatedByAUStoreAndToGroupsAUIsMemberOfStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.controller.mixin.Group.addToAllGroups(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         groups = Ext.isObject(groups) ? [
             groups
         ] : groups;
@@ -185,14 +191,16 @@ Ext.define('X.controller.mixin.Group', {
         if (groups) {
             var groupsAUIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
             var groupsCreatedByAUStore = Ext.getStore('GroupsCreatedByAUStore');
-            if (Ext.isObject(groupsAUIsMemberOfStore) && Ext.isObject(groupsCreatedByAUStore)) {
+            var groupsStore = Ext.getStore('GroupsStore');
+            if (Ext.isObject(groupsAUIsMemberOfStore) && Ext.isObject(groupsCreatedByAUStore) && Ext.isObject(groupsStore)) {
                 Ext.Array.each(groups, function(thisGroup) {
                     groupsAUIsMemberOfStore.add(thisGroup);
                     groupsCreatedByAUStore.add(thisGroup);
+                    groupsStore.add(thisGroup);
                 });
             }
         }
-        
+
         return me;
     }
 });

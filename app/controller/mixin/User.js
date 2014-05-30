@@ -134,7 +134,6 @@ Ext.define('X.controller.mixin.User', {
     /*
      * SAVE
      */
-    //    This assumes that the session header and url endpoint have already been set up correctly
     saveAuthenticatedUser: function(options) {
         var me = this;
         if (me.getDebug()) {
@@ -145,58 +144,68 @@ Ext.define('X.controller.mixin.User', {
 
         var authenticatedUser = X.authenticatedUser;
         if (Ext.isObject(authenticatedUser)) {
-            var errors = authenticatedUser.validate();
-            if (!errors.isValid()) {
-                authenticatedUser.reject();
-                me.generateUserFailedUpdatedWindow({
-                    message: errors.getAt(0).
-                            getMessage()
-                });
-                return false;
+            var typeOfSave = ('typeOfSave' in options && Ext.isString(options.typeOfSave) && !Ext.isEmpty(options.typeOfSave)) ? options.typeOfSave : 'edit';
+
+            var hasBeenValidated = ('validated' in options && Ext.isBoolean(options.validated)) ? options.validated : false;
+            if (typeOfSave !== 'destroy' && !hasBeenValidated) {
+                var errors = authenticatedUser.validate();
+                if (!errors.isValid()) {
+                    authenticatedUser.reject();
+                    me.generateUserFailedUpdatedWindow({
+                        message: errors.getAt(0).
+                                getMessage()
+                    });
+                    return false;
+                }
             }
-            else {
-                var silent = (Ext.isObject(options) && Ext.isBoolean(options.silent)) ? options.silent : false;
 
-                authenticatedUser.save({
-                    success: function(record, operation) {
-                        if (me.getDebug()) {
-                            console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Success. Received serverResponse:');
-                            console.log(operation.getResponse());
-                            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                        }
-
-                        me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
-                            operation: operation,
-                            recordFromServer: serverResponseObject,
-                            model: authenticatedUser,
-                            silent: silent
-                        });
-                    },
-                    failure: function(record, operation) {
-                        if (me.getDebug()) {
-                            console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Failed. Received serverResponse:');
-                            console.log(operation.getResponse());
-                            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                        }
-
-                        var serverResponse = operation.getResponse(),
-                        serverResponseText = Ext.decode(serverResponse.responseText),
-                        serverResponseError = serverResponseText.error;
-
-                        me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
-                            operation: operation,
-                            model: authenticatedUser,
-                            message: serverResponseError,
-                            silent: silent
-                        });
+            var silent = ('silent' in options && Ext.isBoolean(options.silent)) ? options.silent : false;
+            var optionsToSaveOperation = {
+                success: function(record, operation) {
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Success. Received serverResponse:');
+                        console.log(operation.getResponse());
+                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
-                });
+
+                    me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
+                        operation: operation,
+                        model: authenticatedUser,
+                        silent: silent
+                    });
+                },
+                failure: function(record, operation) {
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Failed. Received serverResponse:');
+                        console.log(operation.getResponse());
+                        console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+
+                    me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
+                        operation: operation,
+                        model: authenticatedUser,
+                        silent: silent
+                    });
+                }
+            };
+
+            switch (typeOfSave) {
+                case 'edit':
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Will call save(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                    authenticatedUser.save(optionsToSaveOperation);
+                    break;
+                case 'destroy':
+                    if (me.getDebug()) {
+                        console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Will call erase(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                    }
+                    authenticatedUser.erase(optionsToSaveOperation);
+                    break;
+                default:
+                    break;
             }
         }
-        else {
-            return false;
-        }
-        return me;
     },
     /*
      * HELPERS
@@ -231,7 +240,7 @@ Ext.define('X.controller.mixin.User', {
             var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
             if (Ext.isObject(user)) {
                 var objectId = user.get('objectId'),
-                userId = (Ext.isString(objectId) && !Ext.isEmpty(objectId)) ? objectId : false;
+                        userId = (Ext.isString(objectId) && !Ext.isEmpty(objectId)) ? objectId : false;
                 if (userId) {
                     var sessionToken = user.get('sessionToken');
                     sessionToken = (Ext.isString(sessionToken) && !Ext.isEmpty(sessionToken)) ? sessionToken : false;

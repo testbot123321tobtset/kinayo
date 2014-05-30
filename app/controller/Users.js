@@ -61,15 +61,15 @@ Ext.define('X.controller.Users', {
                 authenticateduserdataedit: 'onAuthenticatedUserDataEdit',
                 devicecontactsstorerefreshuserrequest: 'onDeviceContactsStoreRefreshUserRequest'
             },
-//            Login page
+            //            Login page
             pageLogin: {
                 activeitemchange: 'onPageLoginTabPanelActiveItemChange'
             },
-//            Signup
+            //            Signup
             userSignupFormSubmitButton: {
                 tap: 'doSignup'
             },
-//            Login
+            //            Login
             userLoginFormSubmitButton: {
                 tap: 'doLogin'
             },
@@ -91,8 +91,7 @@ Ext.define('X.controller.Users', {
             logoutButton: {
                 tap: 'doLogout'
             },
-            
-//            Messaging
+            //            Messaging
             photoMessageInputContainerSubmitButton: {
                 tap: 'onPhotoMessageInputContainerSubmitButtonTap'
             },
@@ -118,21 +117,20 @@ Ext.define('X.controller.Users', {
             importFriendsFromDeviceContactsButton: '#userMoreTabPanel #userAccountFormPanel #importFriendsFromDeviceContactsButton',
             // User :: Logout
             logoutButton: '#userAccountFormPanel #logoutButton',
-//            userLogoutPanel: '#userMoreTabPanel #userLogout',
-//            logoutButton: '#userMoreTabPanel #userLogout #logoutButton'
+            //            userLogoutPanel: '#userMoreTabPanel #userLogout',
+            //            logoutButton: '#userMoreTabPanel #userLogout #logoutButton'
 
-//            Messaging
+            //            Messaging
             photoMessageInputContainer: '#photoMessageInputContainer',
             photoMessageInputContainerFormPanel: '#photoMessageInputContainer #messageFormPanel',
             photoMessageInputContainerTextMessageField: '#photoMessageInputContainer #messageFormPanel #messageTextareaField',
-            photoMessageInputContainerSubmitButton:  '#photoMessageInputContainer #messageFormPanel #submitButton',
-            photoMessageInputContainerCancelButton:  '#photoMessageInputContainer #messageFormPanel #cancelButton'
+            photoMessageInputContainerSubmitButton: '#photoMessageInputContainer #messageFormPanel #submitButton',
+            photoMessageInputContainerCancelButton: '#photoMessageInputContainer #messageFormPanel #cancelButton'
         }
     },
-    
-/*
- *    VIEWPORT EVENT HANDLERS
- */
+    /*
+     *    VIEWPORT EVENT HANDLERS
+     */
 
     onAuthenticatedUserLoggedIn: function() {
         var me = this;
@@ -174,14 +172,13 @@ Ext.define('X.controller.Users', {
         }
         return me.addFriendsFromDeviceContacts();
     },
-    
-/*
- *    ROUTE HANDLERS
- */
+    /*
+     *    ROUTE HANDLERS
+     */
 
-//    SIGNUP
-//    
-//    Show sign up form
+    //    SIGNUP
+    //    
+    //    Show sign up form
     showSignup: function() {
         var me = this;
         if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
@@ -196,10 +193,9 @@ Ext.define('X.controller.Users', {
         }
         return me;
     },
-    
-//    LOGIN
-//    
-//    Show login form
+    //    LOGIN
+    //    
+    //    Show login form
     showLogin: function() {
         var me = this;
         if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
@@ -214,7 +210,6 @@ Ext.define('X.controller.Users', {
         }
         return me;
     },
-    
     showAuthenticatedMoreAccountInformation: function() {
         var me = this;
         if (me.getDebug()) {
@@ -225,35 +220,33 @@ Ext.define('X.controller.Users', {
         userMoreTabPanel.setRecordRecursive(X.authenticatedEntity);
         return me;
     },
-    
-//    LOGOUT
-//    
-//    With Parse REST API, logging out means not sending the session cookie with subsequent requests
-//    Then, when ready to log in, ask the user to fill in username and password, and the response will have the 'X-Parse-Session-Token' session header
-//    that can be used in all subsequent requests until log out; so logging out here means that you don't use that session token anymore
-//    on client side until the next log in event occurs
-//    See https://parse.com/questions/logging-users-out-with-rest-api
-//    So, when you sign someone in, store the session token received in LocalStorage using the LocalStorage proxy, so
-//    if the app crashes and the user restarts, the session can still be retrieved from the LocalStorage, which persists
-//    So, logging out means that any subsequent request to Parse's REST API should
-//    not contain the session key header, the authenticated user store's url should not have any user id
-//    as a postfix to its endpoint,  the authenticated user store must be emptied, and the 
-//    parse session localstorage store must be emptied
+    //    LOGOUT
+    //    
+    //    With Parse REST API, logging out means not sending the session cookie with subsequent requests
+    //    Then, when ready to log in, ask the user to fill in username and password, and the response will have the 'X-Parse-Session-Token' session header
+    //    that can be used in all subsequent requests until log out; so logging out here means that you don't use that session token anymore
+    //    on client side until the next log in event occurs
+    //    See https://parse.com/questions/logging-users-out-with-rest-api
+    //    So, when you sign someone in, store the session token received in LocalStorage using the LocalStorage proxy, so
+    //    if the app crashes and the user restarts, the session can still be retrieved from the LocalStorage, which persists
+    //    So, logging out means that any subsequent request to Parse's REST API should
+    //    not contain the session key header, the authenticated user store's url should not have any user id
+    //    as a postfix to its endpoint,  the authenticated user store must be emptied, and the 
+    //    parse session localstorage store must be emptied
     doLogout: function(button, e, eOpts) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.doLogout(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         me.logUserOut().
                 redirectTo(X.XConfig.getDEFAULT_USER_LOGIN_PAGE());
-        
+
         return me;
     },
-    
-/*
- *    OTHER EVENT HANDLERS
- */
+    /*
+     *    OTHER EVENT HANDLERS
+     */
 
     onPageLoginTabPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
@@ -308,7 +301,7 @@ Ext.define('X.controller.Users', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.onPhotoMessageInputContainerSubmitButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-//        Trigger display of groups and stories so the user can pick where to post
+        //        Trigger display of groups and stories so the user can pick where to post
         return me;
     },
     onPhotoMessageInputContainerCancelButtonTap: function() {
@@ -316,71 +309,68 @@ Ext.define('X.controller.Users', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.onPhotoMessageInputContainerCancelButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-//        Reset photo message input container – reset photo and message form panel
+        //        Reset photo message input container – reset photo and message form panel
         return me;
     },
-    
-/*
- *    HELPERS
- */
+    /*
+     *    HELPERS
+     */
 
-//    SIGNUP
-//    
-//    Initiate validation and then actual signup
+    //    SIGNUP
+    //    
+    //    Initiate validation and then actual signup
     doSignup: function(button) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.doSignup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var formPanel = button.up('coreformpanel');
-        if(me.isSignupFormValid(formPanel)) {
+        if (me.isSignupFormValid(formPanel)) {
             me.xhrSignup(formPanel);
         }
-        
+
         return me;
     },
-//    Ajax sign up: This assumes that the passed user object is valid
+    //    Ajax sign up: This assumes that the passed user object is valid
     xhrSignup: function(form) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.xhrSignup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
-//        Parse: https://www.parse.com/docs/rest#users-signup
+
+        //        Parse: https://www.parse.com/docs/rest#users-signup
         var parseMetaData = me.getParseMetaData({
             typeOfRequest: 'signup'
         }),
                 shouldMakeRequest = parseMetaData.shouldMakeRequest;
-        
+
         if (Ext.isBoolean(shouldMakeRequest) && shouldMakeRequest) {
             var url = parseMetaData.url,
                     method = parseMetaData.method,
                     headers = parseMetaData.headers;
-            
-//            Don't use formpanel's submit method – it always url encodes the params, and
-//            Parse expects json encoded params
+
+            //            Don't use formpanel's submit method – it always url encodes the params, and
+            //            Parse expects json encoded params
             var formValues = form.getValues();
             Ext.Ajax.request({
-//                Parse
+                //                Parse
                 url: url,
                 method: method,
                 headers: headers,
-                
                 jsonData: formValues,
-                
                 success: function(serverResponse) {
                     if (me.getDebug()) {
                         console.log('Debug: X.controller.Users.xhrSignup(): Successful. Received serverResponse:');
                         console.log(serverResponse);
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
-                    
+
                     me.generateUserSuccessfullyCreatedWindow({
                         message: false,
                         fn: function() {
                             var createdUser = Ext.decode(serverResponse.responseText);
-//                            username is not sent by Parse, so grab it from form values
+                            //                            username is not sent by Parse, so grab it from form values
                             createdUser.username = formValues.username;
                             if (Ext.isObject(createdUser) && !Ext.isEmpty(createdUser) && me.logUserIn({
                                 user: createdUser
@@ -399,14 +389,14 @@ Ext.define('X.controller.Users', {
                         console.log(serverResponse);
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
-                    
+
                     var operationStatus = serverResponse.status,
                             operationStatusText = serverResponse.statusText;
 
                     var serverResponseText = Ext.decode(serverResponse.responseText),
                             serverResponseCode = serverResponseText.code,
                             serverResponseError = serverResponseText.error;
-                    
+
                     me.generateFailedAuthenticationWindow({
                         message: serverResponseError
                     });
@@ -418,19 +408,19 @@ Ext.define('X.controller.Users', {
                 message: parseMetaData.message
             });
         }
-        
+
         return me;
     },
-//    Utility: Validate sign up form
+    //    Utility: Validate sign up form
     isSignupFormValid: function(formPanel) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.isSignupFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserSignupFormPanel();
-        
-        if(Ext.isObject(formPanel)) {
+
+        if (Ext.isObject(formPanel)) {
             var formData = formPanel.getValues();
 
             var errors = Ext.create('X.model.validation.UserLogin', {
@@ -438,45 +428,43 @@ Ext.define('X.controller.Users', {
                 password: formData.password
             }).
                     validate();
-            
+
             if (!errors.isValid()) {
                 me.generateInvalidAuthenticationWindow({
                     message: errors.getAt(0).
                             getMessage()
                 });
-                
+
                 return false;
             }
         }
-        
+
         return true;
     },
-    
-  
-//    LOGIN
-//    
-//    Initiate validation and then actual login
+    //    LOGIN
+    //    
+    //    Initiate validation and then actual login
     doLogin: function(button, e, eOpts) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.doLogin(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var formPanel = button.up('coreformpanel');
-        if(me.isLoginFormValid(formPanel)) {
+        if (me.isLoginFormValid(formPanel)) {
             me.xhrLogin(formPanel);
         }
-        
+
         return me;
     },
-//    Ajax login: This assumes that the passed user object is valid
+    //    Ajax login: This assumes that the passed user object is valid
     xhrLogin: function(form) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.xhrLogin(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
-//        Parse: https://www.parse.com/docs/rest#users-login
+
+        //        Parse: https://www.parse.com/docs/rest#users-login
         var parseMetaData = me.getParseMetaData({
             typeOfRequest: 'login'
         }),
@@ -486,28 +474,27 @@ Ext.define('X.controller.Users', {
             var url = parseMetaData.url,
                     method = parseMetaData.method,
                     headers = parseMetaData.headers;
-            
+
             var formValues = form.getValues();
-            
+
             Ext.Ajax.request({
                 url: url,
                 method: method,
                 headers: headers,
-                
                 params: formValues,
-                
                 success: function(serverResponse) {
                     if (me.getDebug()) {
                         console.log('Debug: X.controller.Users.xhrLogin(): Successful. Received serverResponse:');
                         console.log(serverResponse);
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
-                    
+
                     var loggedInUser = Ext.decode(serverResponse.responseText);
                     if (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser) && me.logUserIn({
                         user: loggedInUser
                     })) {
-                        me.getPageLogin().hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+                        me.getPageLogin().
+                                hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
                         me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
                     }
                 },
@@ -517,15 +504,15 @@ Ext.define('X.controller.Users', {
                         console.log(serverResponse);
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
-                    
-//                    TEMPLATE: Use this as a template to extract information from Parse's response
-//                    var operationStatus = serverResponse.status,
-//                            operationStatusText = serverResponse.statusText;
-//
-//                    var serverResponseText = Ext.decode(serverResponse.responseText),
-//                            serverResponseCode = serverResponseText.code,
-//                            serverResponseError = serverResponseText.error;
-                    
+
+                    //                    TEMPLATE: Use this as a template to extract information from Parse's response
+                    //                    var operationStatus = serverResponse.status,
+                    //                            operationStatusText = serverResponse.statusText;
+                    //
+                    //                    var serverResponseText = Ext.decode(serverResponse.responseText),
+                    //                            serverResponseCode = serverResponseText.code,
+                    //                            serverResponseError = serverResponseText.error;
+
                     me.generateFailedAuthenticationWindow({
                         message: serverResponseError
                     });
@@ -537,19 +524,19 @@ Ext.define('X.controller.Users', {
                 message: parseMetaData.message
             });
         }
-        
+
         return me;
     },
-//    Utility: Validate login form
+    //    Utility: Validate login form
     isLoginFormValid: function(formPanel) {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.isLoginFormValid(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         formPanel = Ext.isObject(formPanel) ? formPanel : me.getUserLoginFormPanel();
-        
-        if(Ext.isObject(formPanel)) {
+
+        if (Ext.isObject(formPanel)) {
             var formData = formPanel.getValues();
 
             var errors = Ext.create('X.model.validation.UserLogin', {
@@ -557,23 +544,22 @@ Ext.define('X.controller.Users', {
                 password: formData.password
             }).
                     validate();
-            
+
             if (!errors.isValid()) {
                 me.generateInvalidAuthenticationWindow({
                     message: errors.getAt(0).
                             getMessage()
                 });
-                
+
                 return false;
             }
         }
-        
+
         return true;
     },
-    
-//    
-//    METHODS TO BE SORTED OUT
-// 
+    //    
+    //    METHODS TO BE SORTED OUT
+    // 
 
     addFriendsFromDeviceContacts: function() {
         var me = this;
@@ -583,8 +569,8 @@ Ext.define('X.controller.Users', {
         me.setDeviceContactsStoreAndCallback({
             successCallback: {
                 fn: function() {
-//                    var args = arguments[0];
-//                    args.contacts should have all contacts
+                    //                    var args = arguments[0];
+                    //                    args.contacts should have all contacts
                     me.xhrAddFriendsFromDeviceContacts();
                 },
                 scope: me
@@ -604,7 +590,7 @@ Ext.define('X.controller.Users', {
         var deviceContactsStoreCount = deviceContactsStore.getCount();
         if (deviceContactsStoreCount > 0) {
             var emails = deviceContactsStore.getEmails();
-            if(Ext.isArray(emails) && !Ext.isEmpty(emails)) {
+            if (Ext.isArray(emails) && !Ext.isEmpty(emails)) {
                 Ext.Ajax.request({
                     url: '/friendships/usingemails',
                     method: 'POST',
@@ -612,11 +598,11 @@ Ext.define('X.controller.Users', {
                         emails: emails.join(';')
                     },
                     success: function(response) {
-//                        When you get this response, either refresh authenticated user store
-//                        that should now give you the authenticated user with all of the contacts
-//                        whom he/she can see or have POST to /friendships/usingemails send back the
-//                        this data and update authenticated user store locally, so we get all friends back
-//                        See: http://www.sencha.com/forum/showthread.php?284514-How-to-mimic-store.load()-with-local-data&p=1040738#post1040738
+                        //                        When you get this response, either refresh authenticated user store
+                        //                        that should now give you the authenticated user with all of the contacts
+                        //                        whom he/she can see or have POST to /friendships/usingemails send back the
+                        //                        this data and update authenticated user store locally, so we get all friends back
+                        //                        See: http://www.sencha.com/forum/showthread.php?284514-How-to-mimic-store.load()-with-local-data&p=1040738#post1040738
                         console.log(response);
                     }
                 });
@@ -625,35 +611,35 @@ Ext.define('X.controller.Users', {
         return me;
     },
     doAddFriend: function(button, e, eOpts) {
-      var me = this;
-      if (me.getDebug()) {
-        console.log('Debug: X.controller.Users.doAddFriend()');
-      }
-      var formPanel = button.up('coreformpanel');
-      me.xhrAddFriend(formPanel);
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Users.doAddFriend()');
+        }
+        var formPanel = button.up('coreformpanel');
+        me.xhrAddFriend(formPanel);
     },
     xhrAddFriend: function(form) {
-      var me = this;
-      form.submit({
-        url: '/friendships',
-        method: 'POST',
-        success: function(form, action, serverResponse) {
-          if (me.getDebug()) {
-            console.log('Debug: X.controller.Users.xhrAddFriend(): Successful');
-          }
-          form.reset();
-          me.generateFriendshipSuccessfullyCreatedWindow({
-            message: "Successfully friended this user!"
-          });
-        },
-        failure: function(form, serverResponse) {
-          form.reset();
-          var serverResponseMessage = (Ext.isObject(serverResponse) && Ext.isString(serverResponse.message)) ? serverResponse.message : false;
-          me.generateFailedWindow({
-            message: serverResponseMessage
-          });
-        }
-      });
+        var me = this;
+        form.submit({
+            url: '/friendships',
+            method: 'POST',
+            success: function(form, action, serverResponse) {
+                if (me.getDebug()) {
+                    console.log('Debug: X.controller.Users.xhrAddFriend(): Successful');
+                }
+                form.reset();
+                me.generateFriendshipSuccessfullyCreatedWindow({
+                    message: "Successfully friended this user!"
+                });
+            },
+            failure: function(form, serverResponse) {
+                form.reset();
+                var serverResponseMessage = (Ext.isObject(serverResponse) && Ext.isString(serverResponse.message)) ? serverResponse.message : false;
+                me.generateFailedWindow({
+                    message: serverResponseMessage
+                });
+            }
+        });
     },
     show: function(id) {
         var me = this;
@@ -669,11 +655,9 @@ Ext.define('X.controller.Users', {
         }
         action.resume();
     },
-    
-    
-//    UPDATE
-//    
-//    Updates authenticated user by calling me.saveAuthenticatedUser()
+    //    UPDATE
+    //    
+    //    Updates authenticated user by calling me.saveAuthenticatedUser()
     doUpdateAuthenticatedUser: function(options) {
         var me = this;
         if (me.getDebug()) {
@@ -681,9 +665,6 @@ Ext.define('X.controller.Users', {
         }
         return me.saveAuthenticatedUser(options);
     },
-    
-
-    
     init: function() {
         var me = this;
         me.setDebug(X.config.Config.getDEBUG());

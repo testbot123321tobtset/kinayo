@@ -13,13 +13,16 @@ Ext.define('X.store.Application', {
         isFirstLoad: null,
         countOnLoad: 0,
         emptyOnLastLoad: true,
-        //        Parse does not send "results" node with every one of its responses
+        //        
+//        Parse does not send "results" node with every one of its responses
         //        It only uses the node "results" when you are doing a GET to a Parse Class
         //        For instance, /classes/Group will use "results" but
         //        /classes/Group/dad657sd will not
-        proxyReaderRootPropertyOnParseGETOnClass: 'results',
-        //        Use this as a buffer when you set and reset the root property on the proxy's reader
-        originalReaderRootProperty: null,
+        proxyReaderRootPropertyForParseCollectionOfObjects: 'results',
+        //        This is the original root property that the proxy on the model
+        //        was configured with
+        originalReaderRootProperty: '',
+        
         listeners: {
             beforeload: function(store, operation, options) {
                 this.onBeforeLoad(store, operation, options);
@@ -47,7 +50,7 @@ Ext.define('X.store.Application', {
 
         //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
         //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
-        me.checkAndSetProxyReaderRootProperty();
+//        me.checkAndSetProxyReaderRootProperty();
 
         //        Set session if session exists in local storage
         me.setSessionHeaderFromSession();
@@ -78,7 +81,7 @@ Ext.define('X.store.Application', {
 
         //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
         //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
-        me.checkAndResetProxyReaderRootProperty();
+//        me.checkAndResetProxyReaderRootProperty();
 
         me.setCountOnLoad(me.getAllCount());
 
@@ -121,6 +124,8 @@ Ext.define('X.store.Application', {
         var proxyHeaders = proxy.getHeaders();
         proxyHeaders['X-Parse-Session-Token'] = sessionToken;
         proxy.setHeaders(proxyHeaders);
+        console.log('!!!!!!!!!!!!!!!!');
+        console.log(proxy.getHeaders());
 
         return me;
     },
@@ -274,7 +279,7 @@ Ext.define('X.store.Application', {
                 };
         localRunTask(task);
     },
-    checkAndSetProxyReaderRootProperty: function() {
+    shouldSetProxyReaderRootPropertyToRootPropertyForParseCollectionOfObjects: function() {
         var me = this;
 
         //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
@@ -282,6 +287,7 @@ Ext.define('X.store.Application', {
         var proxy = me.getProxy();
         var url = proxy.
                 getUrl();
+
         var urlPathInArray = url.getUrlPathInArray();
         if (Ext.Array.contains(urlPathInArray, 'users')) {
             //            The url is going to be:
@@ -291,7 +297,7 @@ Ext.define('X.store.Application', {
             var indexOfUsersKey = Ext.Array.indexOf(urlPathInArray, 'users');
             var itemAfterUsersKey = urlPathInArray[indexOfUsersKey + 1];
             if (!Ext.isString(itemAfterUsersKey)) {
-                me.setProxyRootReaderProperty();
+                return true;
             }
         }
         else {
@@ -301,7 +307,41 @@ Ext.define('X.store.Application', {
             var indexOfClassesKey = Ext.Array.indexOf(urlPathInArray, 'classes');
             var itemAfterClassesKey = urlPathInArray[indexOfClassesKey + 2];
             if (!Ext.isString(itemAfterClassesKey)) {
-                me.setProxyRootReaderProperty();
+                return true;
+            }
+        }
+        
+        return false;
+    },
+    checkAndSetProxyReaderRootProperty: function() {
+        var me = this;
+
+        //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
+        //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
+        var proxy = me.getProxy();
+        var url = proxy.
+                getUrl();
+
+        var urlPathInArray = url.getUrlPathInArray();
+        if (Ext.Array.contains(urlPathInArray, 'users')) {
+            //            The url is going to be:
+            //              1. /users/ – we are concerned with case, or
+            //              3. /users/me, or
+            //              2. /users/adsa657
+            var indexOfUsersKey = Ext.Array.indexOf(urlPathInArray, 'users');
+            var itemAfterUsersKey = urlPathInArray[indexOfUsersKey + 1];
+            if (!Ext.isString(itemAfterUsersKey)) {
+                me.setProxyReaderRootPropertyToRootPropertyForParseCollectionOfObjects();
+            }
+        }
+        else {
+            //            The url if 'classes' is present:
+            //              1. /classes/<Model/Class Name> – we are concerned with case, or
+            //              2. /classes/<Model/Class Name>/<Model Id>
+            var indexOfClassesKey = Ext.Array.indexOf(urlPathInArray, 'classes');
+            var itemAfterClassesKey = urlPathInArray[indexOfClassesKey + 2];
+            if (!Ext.isString(itemAfterClassesKey)) {
+                me.setProxyReaderRootPropertyToRootPropertyForParseCollectionOfObjects();
             }
         }
 
@@ -314,49 +354,69 @@ Ext.define('X.store.Application', {
     checkAndResetProxyReaderRootProperty: function() {
         var me = this;
 
+        me.resetProxyRootReaderProperty();
+        
         var proxy = me.getProxy();
-        var reader = proxy.
-                getReader();
-        var originalRootProperty = reader.getRootProperty();
-        var originalReaderRootProperty = me.getOriginalReaderRootProperty();
-        if (Ext.isString(originalReaderRootProperty) && originalRootProperty !== originalReaderRootProperty) {
-            me.resetProxyRootReaderProperty();
-        }
-
-        console.log('$$$$$$$$$$AFTER LOAD$$$$$$$$$$');
-        console.log(proxy.
-                getUrl() + ' :: ' + proxy.getReader().
+        var url = proxy.
+                getUrl();
+        console.log('*******AFTER LOAD********');
+        console.log(url + ' :: ' + proxy.getReader().
                 getRootProperty());
 
         return me;
     },
-    setProxyRootReaderProperty: function() {
+    setProxyReaderRootPropertyToRootPropertyForParseCollectionOfObjects: function() {
         var me = this;
 
         var proxy = me.getProxy();
         var reader = proxy.
                 getReader();
-        var originalRootProperty = reader.getRootProperty();
-        //        We are temporarily setting the proxy's reader's rootProperty
-        //        After we are done loading the store, we will need to set it back
-        //        to what the reader's original rootProperty was. Use me.originalReaderRootProperty
-        //        to track that change
-        me.setOriginalReaderRootProperty(originalRootProperty);
-        reader.setRootProperty(me.getProxyReaderRootPropertyOnParseGETOnClass());
+
+        var readerRootProperty = reader.getRootProperty();
+        var proxyReaderRootPropertyForParseCollectionOfObjects = me.getProxyReaderRootPropertyForParseCollectionOfObjects();
+
+        if (readerRootProperty !== proxyReaderRootPropertyForParseCollectionOfObjects) {
+            //        We are temporarily setting the proxy's reader's rootProperty
+            //        After we are done loading the store, we will need to set it back
+            //        to what the reader's original rootProperty was. Use me.originalReaderRootProperty
+            //        to track that change
+            reader.setRootProperty(proxyReaderRootPropertyForParseCollectionOfObjects);
+        }
 
         return me;
     },
     resetProxyRootReaderProperty: function() {
         var me = this;
 
-        var reader = me.getProxy().
+        var proxy = me.getProxy();
+        var reader = proxy.
                 getReader();
-        reader.setRootProperty(me.getOriginalReaderRootProperty());
-        //        We are temporarily setting the proxy's reader's rootProperty
-        //        After we are done loading the store, we will need to set it back
-        //        to what the reader's original rootProperty was. Use me.originalReaderRootProperty
-        //        to track that change
-        me.setOriginalReaderRootProperty(null);
+
+        var readerRootProperty = reader.getRootProperty();
+        var originalReaderRootProperty = me.getOriginalReaderRootProperty();
+        
+        if(readerRootProperty !== originalReaderRootProperty) {
+            //        We are temporarily setting the proxy's reader's rootProperty
+            //        After we are done loading the store, we will need to set it back
+            //        to what the reader's original rootProperty was. Use me.originalReaderRootProperty
+            //        to track that change
+            reader.setRootProperty(originalReaderRootProperty);
+        }
+        
+        return me;
+    },
+    updateViews: function() {
+        var me = this;
+
+        console.log('*********** UPDATE VIEW TO THIS STORE:');
+        console.log(me.getData());
+
+        var allComponentsToBeQueriedForStoreUpdates = Ext.ComponentQuery.query('list, dataview');
+        Ext.each(allComponentsToBeQueriedForStoreUpdates, function(thisComponent) {
+            if ('getStore' in thisComponent && Ext.isFunction(thisComponent.getStore) && Ext.isObject(thisComponent.getStore()) && 'refresh' in thisComponent && Ext.isFunction(thisComponent.refresh) && thisComponent.getStore() === me) {
+                thisComponent.refresh();
+            }
+        });
 
         return me;
     }

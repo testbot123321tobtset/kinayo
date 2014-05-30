@@ -30,6 +30,7 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
                 cls: 'user-group-feeds',
                 iconCls: 'chatbubblefilled',
                 title: 'Chats',
+                scrollable: true,
                 items: [
                     {
                         xtype: 'usergroupslist'

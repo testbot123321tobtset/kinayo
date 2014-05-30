@@ -40,6 +40,7 @@ Ext.define('X.controller.Groups', {
             viewport: {
                 editgroup: 'onEditGroup',
                 editgroupvalidationfailed: 'onEditGroupValidationFailed',
+                updatedgroup: 'onUpdatedGroup',
                 destroygroupmessageshow: 'onDestroyGroupMessageShow',
                 destroygroup: 'onDestroyGroup',
                 destroyedgroup: 'onDestroyedGroup'
@@ -160,7 +161,7 @@ Ext.define('X.controller.Groups', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.showEditFeedUiForGivenGroupId(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var groupsStore = Ext.getStore('GroupsStore');
         if (Ext.isObject(groupsStore)) {
             groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
@@ -184,20 +185,20 @@ Ext.define('X.controller.Groups', {
                         // 
                         // For now, we show contacts list – once we are ready with friends API, 
                         // we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-//                        me.setDeviceContactsStoreAndCallback({
-//                            successCallback: {
-//                                fn: function() {
-//                                    me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
-//                                },
-//                                scope: me
-//                            },
-//                            failureCallback: {
-//                                fn: function() {
-//                                    console.log('failed!');
-//                                },
-//                                scope: me
-//                            }
-//                        });
+                        //                        me.setDeviceContactsStoreAndCallback({
+                        //                            successCallback: {
+                        //                                fn: function() {
+                        //                                    me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
+                        //                                },
+                        //                                scope: me
+                        //                            },
+                        //                            failureCallback: {
+                        //                                fn: function() {
+                        //                                    console.log('failed!');
+                        //                                },
+                        //                                scope: me
+                        //                            }
+                        //                        });
                     }
                     me.getUserEditGroupContainer().
                             closeEverythingAboveMe();
@@ -205,50 +206,50 @@ Ext.define('X.controller.Groups', {
                 scope: me
             });
         }
-        
-//        var groupsStore = Ext.getStore('GroupsStore');
-//        groupsStore.
-//                waitWhileLoadingAndCallbackOnLoad({
-//                    fn: function() {
-//                        // Preload all UIs that go underneath this edit group UI
-//                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-//                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
-//                        var group = groupsStore.
-//                                getById(groupId);
-//                        me.generateAndFillViewportWithGroupDataWindow({
-//                            group: group
-//                        });
-//                        // Actually show edit group UI
-//                        if (me.generateAndFillViewportWithEditGroupWindow({
-//                            group: group,
-//                            showcontainer: true
-//                        })) {
-//                            //                            Retrieve all of the friends of the authenticated user
-//                            //                            and display them here in a list
-//                            //                            me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-//                            //                            
-//                            //                            For now, we show contacts list – once we are ready with friends API, 
-//                            //                            we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-//                            me.setDeviceContactsStoreAndCallback({
-//                                successCallback: {
-//                                    fn: function() {
-//                                        me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
-//                                    },
-//                                    scope: me
-//                                },
-//                                failureCallback: {
-//                                    fn: function() {
-//                                        console.log('failed!');
-//                                    },
-//                                    scope: me
-//                                }
-//                            });
-//                        }
-//                        me.getUserEditGroupContainer().
-//                                closeEverythingAboveMe();
-//                    }
-//                });
-        
+
+        //        var groupsStore = Ext.getStore('GroupsStore');
+        //        groupsStore.
+        //                waitWhileLoadingAndCallbackOnLoad({
+        //                    fn: function() {
+        //                        // Preload all UIs that go underneath this edit group UI
+        //                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+        //                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+        //                        var group = groupsStore.
+        //                                getById(groupId);
+        //                        me.generateAndFillViewportWithGroupDataWindow({
+        //                            group: group
+        //                        });
+        //                        // Actually show edit group UI
+        //                        if (me.generateAndFillViewportWithEditGroupWindow({
+        //                            group: group,
+        //                            showcontainer: true
+        //                        })) {
+        //                            //                            Retrieve all of the friends of the authenticated user
+        //                            //                            and display them here in a list
+        //                            //                            me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+        //                            //                            
+        //                            //                            For now, we show contacts list – once we are ready with friends API, 
+        //                            //                            we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
+        //                            me.setDeviceContactsStoreAndCallback({
+        //                                successCallback: {
+        //                                    fn: function() {
+        //                                        me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
+        //                                    },
+        //                                    scope: me
+        //                                },
+        //                                failureCallback: {
+        //                                    fn: function() {
+        //                                        console.log('failed!');
+        //                                    },
+        //                                    scope: me
+        //                                }
+        //                            });
+        //                        }
+        //                        me.getUserEditGroupContainer().
+        //                                closeEverythingAboveMe();
+        //                    }
+        //                });
+
         return me;
     },
     /*
@@ -276,6 +277,16 @@ Ext.define('X.controller.Groups', {
         });
         return me;
     },
+    onUpdatedGroup: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.onUpdatedGroup(): Options: ');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        console.log('********************UPDATE:SHOULD UPDATE VIEW!');
+        return me;
+    },
     onDestroyGroupMessageShow: function(options) {
         var me = this;
         if (Ext.isObject(options) && !Ext.isEmpty(options) && 'containerToBeBlurred' in options && Ext.isObject(options.containerToBeBlurred)) {
@@ -300,6 +311,7 @@ Ext.define('X.controller.Groups', {
             console.log(options);
             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        console.log('********************DESTROY: SHOULD UPDATE VIEW!');
         return me;
     },
     /*
@@ -403,7 +415,7 @@ Ext.define('X.controller.Groups', {
             if (me.getDebug()) {
                 console.log('Debug: X.controller.Groups.doCreateGroup(): Will call saveGivenGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
-            me.addToGroupsCreatedByAUStoreAndToGroupsAUIsMemberOfStore(group);
+            me.addToAllGroups(group);
             me.saveGivenGroup({
                 group: group,
                 validated: true
@@ -513,24 +525,25 @@ Ext.define('X.controller.Groups', {
 
         return me;
     },
-    updateAllUiWithGivenGroupData: function(group) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.updateAllUiWithGroupData(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        if (Ext.isObject(group)) {
-            //            This supposed to update ui with group data, but try out the method updateViewsBoundToGivenRecord in Common
-            //            var userGroupContainer = me.getUserGroupContainer();
-            //            var userEditGroupContainer = me.getUserEditGroupContainer();
-            //            if (Ext.isObject(userGroupContainer)) {
-            //                userGroupContainer.setRecordRecursive(group);
-            //            }
-            //            if (Ext.isObject(userEditGroupContainer)) {
-            //                userEditGroupContainer.setRecordRecursive(group);
-            //            }
-        }
-        return me;
-    },
+    //    This seems like its working without having to update the UI explicitly
+    //    updateAllUiWithGivenGroupData: function(group) {
+    //        var me = this;
+    //        if (me.getDebug()) {
+    //            console.log('Debug: X.controller.Groups.updateAllUiWithGroupData(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+    //        }
+    //        if (Ext.isObject(group)) {
+    //            //            This supposed to update ui with group data, but try out the method updateViewsBoundToGivenRecord in Common
+    //            //            var userGroupContainer = me.getUserGroupContainer();
+    //            //            var userEditGroupContainer = me.getUserEditGroupContainer();
+    //            //            if (Ext.isObject(userGroupContainer)) {
+    //            //                userGroupContainer.setRecordRecursive(group);
+    //            //            }
+    //            //            if (Ext.isObject(userEditGroupContainer)) {
+    //            //                userEditGroupContainer.setRecordRecursive(group);
+    //            //            }
+    //        }
+    //        return me;
+    //    },
     init: function() {
         var me = this;
         me.setDebug(X.config.Config.getDEBUG());

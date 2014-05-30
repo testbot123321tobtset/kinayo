@@ -38,14 +38,14 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                     }
                 ]
             },
-//            {
-//                xtype: 'container',
-//                itemId: 'groupEditMembersFormFieldSet',
-//                cls: 'group-edit-members-form-fieldset',
-//                defaults: {
-//                    xtype: 'checkboxfield'
-//                }
-//            },
+            //            {
+            //                xtype: 'container',
+            //                itemId: 'groupEditMembersFormFieldSet',
+            //                cls: 'group-edit-members-form-fieldset',
+            //                defaults: {
+            //                    xtype: 'checkboxfield'
+            //                }
+            //            },
             {
                 xtype: 'fieldset',
                 itemId: 'usersListContainer',
@@ -53,14 +53,14 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                 layout: 'fit',
                 title: X.config.Config.getLABELS().SELECT_FRIENDS_TO_ADD_TO_GROUP
             }
-//            ,
-//            {
-//                xtype: 'button',
-//                itemId: 'deleteButton',
-//                cls: 'delete-button',
-//                text: 'Delete',
-//                ui: 'decline'
-//            }
+            //            ,
+            //            {
+            //                xtype: 'button',
+            //                itemId: 'deleteButton',
+            //                cls: 'delete-button',
+            //                text: 'Delete',
+            //                ui: 'decline'
+            //            }
         ],
         listeners: [
             {
@@ -125,6 +125,7 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                 groupRecord.set(fieldName, newValue);
                 Ext.Viewport.fireEvent('editgroup', {
                     group: groupRecord,
+                    validated: true,
                     silent: true
                 });
             }
@@ -152,7 +153,7 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
     },
     setReadOnly: function(isReadOnly) {
         var me = this;
-        
+
         isReadOnly = Ext.isBoolean(isReadOnly) ? isReadOnly : true;
         var fields = me.query('field');
         var noOfFieldsWithReadOnlyAttribute = fields.length;
@@ -170,7 +171,7 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
             var listLabel = isReadOnly ? X.config.Config.getLABELS().SEE_FRIENDS_IN_THE_GROUP : X.config.Config.getLABELS().SELECT_FRIENDS_TO_ADD_TO_GROUP;
             usersListContainer.setTitle(listLabel);
         }
-        
+
         return me;
     }
 });

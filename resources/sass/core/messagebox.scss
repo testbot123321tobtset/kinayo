@@ -40,6 +40,14 @@ $messagebox-width-percent: 100%;
         }
     }
     
+    .x-msgbox-text {
+        
+        .x-innerhtml:first-letter {
+        
+            text-transform: uppercase !important;
+        }
+    }
+    
     .x-toolbar.x-msgbox-buttons {
         
         @include no-border;

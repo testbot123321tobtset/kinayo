@@ -3,22 +3,50 @@ Ext.define('X.store.Groups', {
     config: {
         model: 'X.model.Group',
         storeId: 'GroupsStore',
-        autoLoad: false,
-        autoSync: false,
-        
         hasDataSetOnce: null
     },
-    
+    //    
+    //    EVENT HANDLERS
+
+    //    Before the store loads, this makes sure that the store is configured with the 
+    //    where clause needed for Parse to return only groups that are created by the
+    //    authenticated user
+    onBeforeLoad: function(me, operation, eOpts) {
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.store.Groups.onBeforeLoad(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        me.callParent(arguments);
+        return me;
+    },
+    onLoad: function(me, records, successful, operation, eOpts) {
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.store.Groups.onLoad(): Will call waitForGroupsAUCreatedByStoreAndGroupsCreatedByAUStoreToLoadThenLocallyLoad() on GroupsStore: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        me.callParent(arguments);
+        return me;
+    },
+    onAddRecords: function(me, records, eOpts) {
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.store.Groups.onAddRecords(): Records added:');
+            console.log(records);
+            console.log('Debug: Will call add() on GroupsStore: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        me.callParent(arguments);
+        return me;
+    },
     waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad: function(callback) {
         var me = this;
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.Groups.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var groupsAUIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
         var groupsCreatedByAUStore = Ext.getStore('GroupsCreatedByAUStore');
-        if(Ext.isObject(groupsAUIsMemberOfStore) && Ext.isObject(groupsCreatedByAUStore)) {
-            if(!groupsAUIsMemberOfStore.isLoading() && groupsAUIsMemberOfStore.isLoaded() && !groupsCreatedByAUStore.isLoading() && groupsCreatedByAUStore.isLoaded()) {
+        if (Ext.isObject(groupsAUIsMemberOfStore) && Ext.isObject(groupsCreatedByAUStore)) {
+            if (!groupsAUIsMemberOfStore.isLoading() && groupsAUIsMemberOfStore.isLoaded() && !groupsCreatedByAUStore.isLoading() && groupsCreatedByAUStore.isLoaded()) {
                 me.setDataFromGroupsAUCreatedByAndGroupsMemberOfStores();
                 if (Ext.isObject(callback)) {
                     me.executeCallback(callback);
@@ -71,7 +99,7 @@ Ext.define('X.store.Groups', {
                 });
             }
         }
-        
+
         return me;
     },
     setDataFromGroupsAUCreatedByAndGroupsMemberOfStores: function() {
@@ -79,28 +107,29 @@ Ext.define('X.store.Groups', {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.Groups.setDataFromGroupsAUCreatedByAndGroupsMemberOfStores(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var groupsAUIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
         var groupsCreatedByAUStore = Ext.getStore('GroupsCreatedByAUStore');
-        if(Ext.isObject(groupsAUIsMemberOfStore) && Ext.isObject(groupsCreatedByAUStore)) {
+        if (Ext.isObject(groupsAUIsMemberOfStore) && Ext.isObject(groupsCreatedByAUStore)) {
             var dataFromGroupsAUIsMemberOfStore = groupsAUIsMemberOfStore.getData();
             var dataFromGroupsCreatedByAUStore = groupsCreatedByAUStore.getData();
-            
-            var combinedData = [];
+
+            var combinedData = [
+            ];
             dataFromGroupsAUIsMemberOfStore.each(function(thisGroup) {
                 combinedData.push(thisGroup);
             });
             dataFromGroupsCreatedByAUStore.each(function(thisGroup) {
-                if(Ext.Array.contains(combinedData, thisGroup)) {
+                if (Ext.Array.contains(combinedData, thisGroup)) {
                     combinedData.push(thisGroup);
                 }
             });
-            
+
             me.setData(combinedData);
-            
+
             me.setHasDataSetOnce(true);
         }
-        
+
         return me;
     }
 });

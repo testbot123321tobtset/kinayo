@@ -1,5 +1,8 @@
 Ext.define('X.model.Group', {
     extend: 'X.model.Application',
+    requires: [
+        'Ext.data.proxy.Proxy'
+    ],
     config: {
         fields: [
             {
@@ -79,7 +82,7 @@ Ext.define('X.model.Group', {
             batchActions: false,
             reader: {
                 type: 'json',
-                rootProperty: ''
+                rootProperty: 'results'
             },
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',

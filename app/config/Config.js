@@ -84,6 +84,7 @@ Ext.define('X.config.Config', {
             USER_SUCCESSFULLY_UPDATED: 'This user was successfully updated.',
             USER_SUCCESSFULLY_DESTROYED: 'This user was successfully destroyed.',
             GROUP_SUCCESSFULLY_CREATED: 'This group was successfully created.',
+            GROUP_FAILED_CREATED: 'This group could not be created.',
             GROUP_SUCCESSFULLY_UPDATED: 'This group was successfully updated.',
             GROUP_FAILED_UPDATED: 'This group failed to update.',
             GROUP_SUCCESSFULLY_DESTROYED: 'This group was successfully destroyed.',

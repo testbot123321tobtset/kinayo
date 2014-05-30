@@ -6,7 +6,13 @@
     
     @include no-background;
     
-    border-bottom: 1px solid $default-border-color-for-fieldsets !important;
+    /*border-bottom: 1px solid $default-border-color-for-fieldsets !important;*/
+    
+/*    We need these spacers to make sure that when the list scrolls, it scrolls behind the tab bars but
+    the top and the bottom portions of the list are still clickable when you scroll to either end*/
+    .tabbar-spacer {
+        height: $default-toolbar-height !important;
+    }
     
     .x-list-disclosure {
         

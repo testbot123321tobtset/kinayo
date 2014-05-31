@@ -35,6 +35,15 @@ $tabbar-tab-button-active-color: $default-color-active;
         
         height: $default-toolbar-height !important;
         min-height: $default-toolbar-height !important;
+        
+        /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
+        & + div {
+            
+            .x-scroll-scroller {
+                
+                padding: $default-toolbar-height 0 !important;
+            }
+        }
 
         &.x-docked-bottom-that-is-top {
 
@@ -47,6 +56,15 @@ $tabbar-tab-button-active-color: $default-color-active;
             
             height: $default-toolbar-height !important;
             min-height: $default-toolbar-height !important;
+            
+            /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
+            & + div {
+
+                .x-scroll-scroller {
+
+                    padding: $default-toolbar-height 0 !important;
+                }
+            }
         }
     }
 
@@ -61,6 +79,15 @@ $tabbar-tab-button-active-color: $default-color-active;
         
         height: $default-toolbar-height !important;
         min-height: $default-toolbar-height !important;
+
+        /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
+        & + div {
+            
+            .x-scroll-scroller {
+                
+                padding: $default-toolbar-height 0 !important;
+            }
+        }
     }
 
     &.x-full-width {

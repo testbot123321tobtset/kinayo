@@ -41,6 +41,9 @@ Ext.define('X.store.AuthenticatedUser', {
                         }
 
                         me.setUrlPostfixEndpoint(userIdFromSession);
+                        
+                        me.getProxy().
+                                setExtraParam('include', 'isMemberOf,hasCreated');
 
                         me.callParent(arguments);
                         return me;

@@ -26,7 +26,7 @@ Parse.Cloud.beforeSave('Group', function(request, response) {
     }
     else {
         var group = request.object;
-        var isCreate = group.isNew;
+        var isCreate = group.isNew();
         
 //        Group is being created
         if(isCreate) {
@@ -50,18 +50,14 @@ Parse.Cloud.afterSave('Group', function(request) {
     
     var creator = request.user;
     var group = request.object;
-    var wasGroupCreated = group.existed;
+    var wasGroupCreated = !group.existed();
     
 //    This means that the group was just created and so we need to add the 
 //    corresponding relations to the creator
     if(wasGroupCreated) {
-//        This relation denotes 'creation'
-        var hasCreatedRelation = creator.relation('hasCreated');
-        hasCreatedRelation.add(group);
-
-//        This relation denotes 'isAMemberOf'
-        var isAMemberOfRelation = creator.relation('isMemberOf');
-        isAMemberOfRelation.add(group);
+    
+        creator.addUnique('hasCreated', group);
+        creator.addUnique('isMemberOf', group);
 
 //        Save the creator
         creator.save();

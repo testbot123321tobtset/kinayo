@@ -1,14 +1,14 @@
 // This is meant to be displayed as a window. This means that any other 
 // component can call this component and this component should just fill up
 // the screen. This is essentially an independent and quasi-floating window
-Ext.define('X.view.plugandplay.UserEditGroupContainer', {
+Ext.define('X.view.plugandplay.UserGroupEditContainer', {
     extend: 'X.view.core.Container',
     requires: [
         'X.view.plugandplay.UserGroupEditFormPanel',
         'X.view.plugandplay.UserGroupsList'
     ],
-    xtype: 'usereditgroupcontainer',
-    id: 'userEditGroupContainer',
+    xtype: 'usergroupeditcontainer',
+    id: 'UserGroupEditContainer',
     config: {
         // isWindow config just means what is explained in the beginning
         // This is an easy way to query for any and all windows and do
@@ -36,7 +36,7 @@ Ext.define('X.view.plugandplay.UserEditGroupContainer', {
         items: [
             {
                 xtype: 'titlebar',
-                itemId: 'userEditGroupContainerToolbar',
+                itemId: 'UserGroupEditContainerToolbar',
                 docked: 'top',
                 top: 0,
                 cls: 'x-stretched x-docked-top x-full-width user-edit-group-container-toolbar',
@@ -55,7 +55,7 @@ Ext.define('X.view.plugandplay.UserEditGroupContainer', {
                         text: 'Close',
                         listeners: {
                             tap: function(button, e, eOpts) {
-                                button.up('#userEditGroupContainer').onBackButtonTap(button, e, eOpts);
+                                button.up('#UserGroupEditContainer').onBackButtonTap(button, e, eOpts);
                             }
                         }
                     },
@@ -68,7 +68,7 @@ Ext.define('X.view.plugandplay.UserEditGroupContainer', {
                         text: 'Delete',
                         listeners: {
                             tap: function(button, e, eOpts) {
-                                button.up('#userEditGroupContainer').onDeleteButtonTap(button, e, eOpts);
+                                button.up('#UserGroupEditContainer').onDeleteButtonTap(button, e, eOpts);
                             }
                         }
                     }
@@ -82,7 +82,7 @@ Ext.define('X.view.plugandplay.UserEditGroupContainer', {
 //                        text: 'RO',
 //                        listeners: {
 //                            tap: function(button, e, eOpts) {
-//                                button.up('#userEditGroupContainer').setReadOnly(true);
+//                                button.up('#UserGroupEditContainer').setReadOnly(true);
 //                            }
 //                        }
 //                    },
@@ -95,7 +95,7 @@ Ext.define('X.view.plugandplay.UserEditGroupContainer', {
 //                        text: 'Reset RO',
 //                        listeners: {
 //                            tap: function(button, e, eOpts) {
-//                                button.up('#userEditGroupContainer').setReadOnly(false);
+//                                button.up('#UserGroupEditContainer').setReadOnly(false);
 //                            }
 //                        }
 //                    }
@@ -131,11 +131,11 @@ Ext.define('X.view.plugandplay.UserEditGroupContainer', {
     },
     getBackButton: function() {
         var me = this;
-        return me.down('#userEditGroupContainerToolbar #backButton');
+        return me.down('#UserGroupEditContainerToolbar #backButton');
     },
     setTitleToGroupTitle: function() {
         var me = this;
-        me.down('#userEditGroupContainerToolbar').setTitle(me.getRecord().get('title'));
+        me.down('#UserGroupEditContainerToolbar').setTitle(me.getRecord().get('title'));
         return me;
     },
     setReadOnly: function(isReadOnly) {

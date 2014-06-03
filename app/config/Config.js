@@ -103,7 +103,7 @@ Ext.define('X.config.Config', {
         // UI
         EAGERGENERATECOMPONENTS: [
             //            'usergroupcontainer',
-            //            'usereditgroupcontainer'
+            //            'usergroupeditcontainer'
         ],
         // Z indices
         ZINDEX_LEVEL_5: 50,

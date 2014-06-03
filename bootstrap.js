@@ -794,10 +794,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.view.plugandplay.SignupAndLoginContainer": [],
   "X.view.plugandplay.SignupAndLoginTabPanel": [],
   "X.view.plugandplay.UserAccountFormPanel": [],
-  "X.view.plugandplay.UserEditGroupContainer": [],
   "X.view.plugandplay.UserFriendFormPanel": [],
   "X.view.plugandplay.UserGroupAddFormPanel": [],
   "X.view.plugandplay.UserGroupContainer": [],
+  "X.view.plugandplay.UserGroupEditContainer": [],
   "X.view.plugandplay.UserGroupEditFormPanel": [],
   "X.view.plugandplay.UserGroupsList": [],
   "X.view.plugandplay.UserGroupsTabPanel": [],
@@ -1831,9 +1831,6 @@ Ext.ClassManager.addNameAliasMappings({
   "X.view.plugandplay.UserAccountFormPanel": [
     "widget.useraccountformpanel"
   ],
-  "X.view.plugandplay.UserEditGroupContainer": [
-    "widget.usereditgroupcontainer"
-  ],
   "X.view.plugandplay.UserFriendFormPanel": [
     "widget.userfriendformpanel"
   ],
@@ -1842,6 +1839,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "X.view.plugandplay.UserGroupContainer": [
     "widget.usergroupcontainer"
+  ],
+  "X.view.plugandplay.UserGroupEditContainer": [
+    "widget.usergroupeditcontainer"
   ],
   "X.view.plugandplay.UserGroupEditFormPanel": [
     "widget.usergroupeditformpanel"

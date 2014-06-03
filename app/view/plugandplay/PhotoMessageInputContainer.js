@@ -33,7 +33,7 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
         querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
             '#pageUserRoot',
             '#userGroupContainer',
-            '#userEditGroupContainer'
+            '#UserGroupEditContainer'
         ],
         items: [
             {

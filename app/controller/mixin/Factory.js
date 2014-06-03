@@ -311,15 +311,15 @@ Ext.define('X.controller.mixin.Factory', {
         options = Ext.isObject(options) ? options : false;
         if (options) {
             var group = ('group' in options && Ext.isObject(options.group)) ? options.group : false;
-            var userEditGroupContainer = Ext.isObject(me.getUserEditGroupContainer()) ? me.getUserEditGroupContainer() : Ext.Viewport.add(me.createView({
-                xtype: 'usereditgroupcontainer'
+            var UserGroupEditContainer = Ext.isObject(me.getUserGroupEditContainer()) ? me.getUserGroupEditContainer() : Ext.Viewport.add(me.createView({
+                xtype: 'usergroupeditcontainer'
             }));
-            userEditGroupContainer.setDimensions().
+            UserGroupEditContainer.setDimensions().
                     open().
                     setRecordRecursive(group).
                     setReadOnly(!group.isCreatedByMe());
 
-            return userEditGroupContainer;
+            return UserGroupEditContainer;
         }
 
         return me;

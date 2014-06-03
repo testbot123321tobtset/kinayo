@@ -76,7 +76,7 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                 buffer: 1
             },
             {
-                // This is fired from X.view.plugandplay.UserEditGroupContainer
+                // This is fired from X.view.plugandplay.UserGroupEditContainer
                 fn: 'onGroupDataDestroy',
                 event: 'deletebuttontap',
                 buffer: 1

@@ -2,7 +2,7 @@ Ext.define('X.controller.Groups', {
     extend: 'X.controller.Main',
     requires: [
         'X.view.plugandplay.UserGroupContainer',
-        'X.view.plugandplay.UserEditGroupContainer',
+        'X.view.plugandplay.UserGroupEditContainer',
         'X.view.plugandplay.UsersList'
     ],
     config: {
@@ -64,8 +64,8 @@ Ext.define('X.controller.Groups', {
             userGroupCreateSubmitButton: {
                 tap: 'onUserGroupCreateSubmitButtonTap'
             },
-            userEditGroupContainerBackButton: {
-                tap: 'onUserEditGroupContainerBackButtonTap'
+            UserGroupEditContainerBackButton: {
+                tap: 'onUserGroupEditContainerBackButtonTap'
             }
         },
         refs: {
@@ -83,9 +83,9 @@ Ext.define('X.controller.Groups', {
             userGroupContainerMoreButton: '#userGroupContainer #userGroupContainerToolbar #moreButton',
             userGroupContainerBackButton: '#userGroupContainer #userGroupContainerToolbar #backButton',
             // User :: Groups :: Group edit
-            userEditGroupContainer: '#userEditGroupContainer',
-            userEditGroupContainerTopToolbar: '#userEditGroupContainer #userEditGroupContainerToolbar',
-            userEditGroupContainerBackButton: '#userEditGroupContainer #userEditGroupContainerToolbar #backButton',
+            UserGroupEditContainer: '#UserGroupEditContainer',
+            UserGroupEditContainerTopToolbar: '#UserGroupEditContainer #UserGroupEditContainerToolbar',
+            UserGroupEditContainerBackButton: '#UserGroupEditContainer #UserGroupEditContainerToolbar #backButton',
             userGroupEditFormPanel: '#userGroupEditFormPanel',
             userGroupEditFormPanelUsersListContainer: '#userGroupEditFormPanel #usersListContainer',
             userGroupEditFormPanelUsersList: '#userGroupEditFormPanel #usersListContainer #usersList',
@@ -200,7 +200,7 @@ Ext.define('X.controller.Groups', {
                         //                            }
                         //                        });
                     }
-                    me.getUserEditGroupContainer().
+                    me.getUserGroupEditContainer().
                             closeEverythingAboveMe();
                 },
                 scope: me
@@ -245,7 +245,7 @@ Ext.define('X.controller.Groups', {
         //                                }
         //                            });
         //                        }
-        //                        me.getUserEditGroupContainer().
+        //                        me.getUserGroupEditContainer().
         //                                closeEverythingAboveMe();
         //                    }
         //                });
@@ -368,12 +368,12 @@ Ext.define('X.controller.Groups', {
 
         return me;
     },
-    onUserEditGroupContainerBackButtonTap: function(button) {
+    onUserGroupEditContainerBackButtonTap: function(button) {
         var me = this;
         if (me.getDebug()) {
-            console.log('Debug: X.controller.Groups.onUserEditGroupContainerBackButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.controller.Groups.onUserGroupEditContainerBackButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        me.redirectTo('user/profile/groups/feeds/' + button.up('#userEditGroupContainer').
+        me.redirectTo('user/profile/groups/feeds/' + button.up('#UserGroupEditContainer').
                 getRecord().
                 getId());
         return me;
@@ -534,12 +534,12 @@ Ext.define('X.controller.Groups', {
     //        if (Ext.isObject(group)) {
     //            //            This supposed to update ui with group data, but try out the method updateViewsBoundToGivenRecord in Common
     //            //            var userGroupContainer = me.getUserGroupContainer();
-    //            //            var userEditGroupContainer = me.getUserEditGroupContainer();
+    //            //            var UserGroupEditContainer = me.getUserGroupEditContainer();
     //            //            if (Ext.isObject(userGroupContainer)) {
     //            //                userGroupContainer.setRecordRecursive(group);
     //            //            }
-    //            //            if (Ext.isObject(userEditGroupContainer)) {
-    //            //                userEditGroupContainer.setRecordRecursive(group);
+    //            //            if (Ext.isObject(UserGroupEditContainer)) {
+    //            //                UserGroupEditContainer.setRecordRecursive(group);
     //            //            }
     //        }
     //        return me;

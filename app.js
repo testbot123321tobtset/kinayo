@@ -133,7 +133,6 @@ Ext.application({
     ],
     views: [
         'core.Msg',
-        'page.Login',
         'page.user.Root'
     ],
     icon: {

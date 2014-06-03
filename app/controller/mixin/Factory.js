@@ -148,38 +148,34 @@ Ext.define('X.controller.mixin.Factory', {
         });
         return me;
     },
+    destroyAllAuthenticatedComponents: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.Factory: destroyAllAuthenticatedComponents(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        var pageUserRoot = Ext.isObject(me.getPageUserRoot()) ? me.getPageUserRoot() : false;
+        if(pageUserRoot) {
+            pageUserRoot.close();
+        }
+
+        return me;
+    },
     //    Signup
     generateAndFillViewportWithUserSignupWindow: function() {
         var me = this;
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithUserSignupWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        if (!Ext.isObject(me.getPageLogin())) {
-            var loginPage = Ext.Viewport.removeAll(false, false).
-                    add(me.createView({
-                        xtype: 'pagelogin'
-                    }));
-            loginPage.setDimensionsToFillScreen().
-                    show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-            loginPage.setActiveItem('#userSignup');
-        }
-        else {
-            if (me.getPageLogin().
-                    isHidden()) {
-                Ext.Viewport.removeAll(false, false).
-                        add(me.getPageLogin());
-                me.getPageLogin().
-                        setDimensionsToFillScreen().
-                        show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-                me.getPageLogin().
-                        setActiveItem('#userSignup');
-            }
-            else {
-                me.getPageLogin().
-                        setActiveItem('#userSignup');
-            }
-        }
-        return me;
+        
+        var signupAndLoginContainer = Ext.isObject(me.getSignupAndLoginContainer()) ? me.getSignupAndLoginContainer() : Ext.Viewport.add(me.createView({
+            xtype: 'signupandlogincontainer'
+        }));
+        signupAndLoginContainer.down('#signupAndLoginTabPanel').setActiveItem('#userSignup');
+        signupAndLoginContainer.setDimensions().
+                open();
+
+        return signupAndLoginContainer;
     },
     //    Login
     generateAndFillViewportWithUserLoginWindow: function() {
@@ -187,31 +183,34 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        if (!Ext.isObject(me.getPageLogin())) {
-            var loginPage = Ext.Viewport.removeAll(false, false).
-                    add(me.createView({
-                        xtype: 'pagelogin'
-                    }));
-            loginPage.setDimensionsToFillScreen().
-                    show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-            loginPage.setActiveItem('#userLogin');
+        
+        var signupAndLoginContainer = Ext.isObject(me.getSignupAndLoginContainer()) ? me.getSignupAndLoginContainer() : Ext.Viewport.add(me.createView({
+            xtype: 'signupandlogincontainer'
+        }));
+        signupAndLoginContainer.down('#signupAndLoginTabPanel').setActiveItem('#userLogin');
+        signupAndLoginContainer.setDimensions().
+                open();
+
+        return signupAndLoginContainer;
+    },
+    clearViewportAndGenerateUserRootPageTabPanel: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.Factory: clearViewportAndGenerateUserRootPageTabPanel(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        else {
-            if (me.getPageLogin().
-                    isHidden()) {
-                Ext.Viewport.removeAll(false, false).
-                        add(me.getPageLogin());
-                me.getPageLogin().
-                        setDimensionsToFillScreen().
-                        show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-                me.getPageLogin().
-                        setActiveItem('#userLogin');
-            }
-            else {
-                me.getPageLogin().
-                        setActiveItem('#userLogin');
-            }
+
+        var pageUserRoot = (Ext.isObject(me.getPageUserRoot()) && !Ext.isEmpty(me.getPageUserRoot())) ? me.getPageUserRoot() : false;
+        if (!pageUserRoot) {
+            pageUserRoot = me.createView({
+                xtype: 'pageuserroot'
+            });
         }
+        if (Ext.isObject(pageUserRoot) && !Ext.isEmpty(pageUserRoot)) {
+            Ext.Viewport.removeAll(false, false).
+                    add(pageUserRoot).
+                    open();
+        }
+
         return me;
     },
     // User
@@ -220,7 +219,7 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateUserRootPageTabPanel(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-
+        
         var pageUserRoot = Ext.isObject(me.getPageUserRoot()) ? me.getPageUserRoot() : Ext.Viewport.removeAll(false, false).
                 add(me.createView({
                     xtype: 'pageuserroot'

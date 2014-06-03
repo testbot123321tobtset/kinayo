@@ -41,9 +41,7 @@ Ext.define('X.store.AuthenticatedUser', {
                         }
 
                         me.setUrlPostfixEndpoint(userIdFromSession);
-
-                        me.getProxy().
-                                setExtraParam('include', 'isMemberOf,hasCreated');
+                        me.setSessionHeaderForAllStores(sessionToken);
 
                         me.callParent(arguments);
                         return me;
@@ -79,7 +77,7 @@ Ext.define('X.store.AuthenticatedUser', {
                     //                    Don't rely on this to get the relevant groups – always use the group
                     //                    stores. For instance when a group is created by the user, the arrays in
                     //                    authenticated user are not updated
-                    authenticatedUser.updateAllGroupStores(store, records);
+                    authenticatedUser.updateAllGroupStores();
                 }
 
                 Ext.Viewport.fireEvent('authenticateduserstoreload', {

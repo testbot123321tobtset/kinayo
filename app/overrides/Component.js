@@ -3,6 +3,7 @@ Ext.define('overrides.Component', {
     // http://docs.sencha.com/touch/2.3.0/#!/api/Ext.Component-method-setRecord
     setRecordRecursive: function(record) {
         var me = this;
+        
         if (Ext.isObject(record)) {
             if ('setRecord' in me && Ext.isFunction(me.setRecord)) {
                 me.setRecord(record);
@@ -10,9 +11,12 @@ Ext.define('overrides.Component', {
             if ('getItems' in me && Ext.isFunction(me.getItems)) {
                 me.getItems().
                         each(function(item) {
-                            me.setRecordRecursive.apply(item, [
-                                record
-                            ]);
+                            if('setRecordRecursive' in item && Ext.isFunction(item.setRecordRecursive)) {
+                                item.setRecordRecursive(record);
+                            }
+//                            me.setRecordRecursive.apply(item, [
+//                                record
+//                            ]);
                         });
             }
         }

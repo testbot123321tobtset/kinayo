@@ -140,11 +140,17 @@ Ext.define('X.model.AuthenticatedUser', {
             groupsIHaveCreated = (Ext.isArray(groupsIHaveCreated) && !Ext.isEmpty(groupsIHaveCreated)) ? groupsIHaveCreated : false;
             if (groupsIHaveCreated) {
                 groupsAuthenticatedUserHasCreatedStore.setData(groupsIHaveCreated);
+                if (!groupsAuthenticatedUserHasCreatedStore.isLoaded()) {
+                    groupsAuthenticatedUserHasCreatedStore.loaded = true;
+                }
             }
             var groupsIAmMemberOf = me.get('isMemberOf');
             groupsIAmMemberOf = (Ext.isArray(groupsIAmMemberOf) && !Ext.isEmpty(groupsIAmMemberOf)) ? groupsIAmMemberOf : false;
             if (groupsIAmMemberOf) {
                 groupsAuthenticatedUserIsMemberOfStore.setData(groupsIAmMemberOf);
+                if (!groupsAuthenticatedUserIsMemberOfStore.isLoaded()) {
+                    groupsAuthenticatedUserIsMemberOfStore.loaded = true;
+                }
             }
         }
 

@@ -22,6 +22,7 @@ Ext.define('X.controller.Users', {
     extend: 'X.controller.Main',
     requires: [
         'X.model.validation.UserLogin',
+        'X.view.plugandplay.SignupAndLoginContainer',
         'X.view.plugandplay.PhotoMessageInputContainer'
     ],
     config: {
@@ -42,9 +43,6 @@ Ext.define('X.controller.Users', {
             ],
             showAuthenticatedMoreAccountInformation: [
                 'checkLoginAndResumeIfExistsOrRedirectIfNotExists'
-            ],
-            doLogout: [
-                'checkLoginAndResumeIfExistsOrRedirectIfNotExists'
             ]
         },
         routes: {
@@ -52,8 +50,7 @@ Ext.define('X.controller.Users', {
             'user/signup': 'showSignup',
             'user/login': 'showLogin',
             // Authenticated
-            'user/profile/more/account': 'showAuthenticatedMoreAccountInformation',
-            'user/profile/more/logout': 'doLogout'
+            'user/profile/more/account': 'showAuthenticatedMoreAccountInformation'
         },
         control: {
             viewport: {
@@ -62,8 +59,8 @@ Ext.define('X.controller.Users', {
                 devicecontactsstorerefreshuserrequest: 'onDeviceContactsStoreRefreshUserRequest'
             },
             //            Login page
-            pageLogin: {
-                activeitemchange: 'onPageLoginTabPanelActiveItemChange'
+            signupAndLoginTabPanel: {
+                activeitemchange: 'onSignupAndLoginTabPanelActiveItemChange'
             },
             //            Signup
             userSignupFormSubmitButton: {
@@ -101,7 +98,8 @@ Ext.define('X.controller.Users', {
         },
         refs: {
             // Login
-            pageLogin: '#pageLogin',
+            signupAndLoginContainer: '#signupAndLoginContainer',
+            signupAndLoginTabPanel: '#signupAndLoginTabPanel',
             userSignupFormPanel: '#userSignupFormPanel',
             userSignupFormSubmitButton: '#userSignupFormPanel #submitButton',
             userLoginFormPanel: '#userLoginFormPanel',
@@ -178,35 +176,13 @@ Ext.define('X.controller.Users', {
     //    
     //    Show sign up form
     showSignup: function() {
-        var me = this;
-        if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
-                isHidden() || !Ext.isObject(me.getPageLogin().
-                getActiveItem()) || me.getPageLogin().
-                getActiveItem().
-                getItemId() !== 'userSignup') {
-            if (me.getDebug()) {
-                console.log('Debug: X.controller.Users.showSignup(): Current active item is not userLogin. Will call generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-            }
-            return me.generateAndFillViewportWithUserSignupWindow();
-        }
-        return me;
+        return this.generateAndFillViewportWithUserSignupWindow();
     },
     //    LOGIN
     //    
     //    Show login form
     showLogin: function() {
-        var me = this;
-        if (!Ext.isObject(me.getPageLogin()) || me.getPageLogin().
-                isHidden() || !Ext.isObject(me.getPageLogin().
-                getActiveItem()) || me.getPageLogin().
-                getActiveItem().
-                getItemId() !== 'userLogin') {
-            if (me.getDebug()) {
-                console.log('Debug: X.controller.Users.showLogin(): Current active item is not userLogin. Will call generateAndFillViewportWithUserLoginWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-            }
-            return me.generateAndFillViewportWithUserLoginWindow();
-        }
-        return me;
+        return this.generateAndFillViewportWithUserLoginWindow();
     },
     showAuthenticatedMoreAccountInformation: function() {
         var me = this;
@@ -214,8 +190,7 @@ Ext.define('X.controller.Users', {
             console.log('Debug: X.controller.Users.showAuthenticatedMoreAccountInformation(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         me.generateUserMoreTabPanelAndActivateUserAccountTab();
-        var userMoreTabPanel = me.getUserMoreTabPanel();
-        userMoreTabPanel.setRecordRecursive(X.authenticatedEntity);
+        me.getUserAccountFormPanel().setRecord(X.authenticatedUser);
         return me;
     },
     //    LOGOUT
@@ -245,12 +220,12 @@ Ext.define('X.controller.Users', {
     /*
      *    OTHER EVENT HANDLERS
      */
-    onPageLoginTabPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
+    onSignupAndLoginTabPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
         if (Ext.isObject(tabPanel) && Ext.isObject(activeItem)) {
             var urlHash = me.getUrlHash();
             if (me.getDebug()) {
-                console.log('Debug: X.controller.Users.onPageLoginTabPanelActiveItemChange(): activeItem - ' + activeItem.getItemId() + ', previousActiveItem - ' + previousActiveItem.getItemId() + ', urlHash - ' + urlHash + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                console.log('Debug: X.controller.Users.onSignupAndLoginTabPanelActiveItemChange(): activeItem - ' + activeItem.getItemId() + ', previousActiveItem - ' + previousActiveItem.getItemId() + ', urlHash - ' + urlHash + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
             if (activeItem.getItemId() === 'userLogin' && me.getUrlHash() !== X.XConfig.getDEFAULT_USER_LOGIN_PAGE()) {
                 me.redirectTo(X.XConfig.getDEFAULT_USER_LOGIN_PAGE());
@@ -371,8 +346,8 @@ Ext.define('X.controller.Users', {
                             if (Ext.isObject(createdUser) && !Ext.isEmpty(createdUser) && me.logUserIn({
                                 user: createdUser
                             })) {
-                                me.getPageLogin().
-                                        hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+                                me.getSignupAndLoginContainer().
+                                        close();
                                 me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
                             }
                         },
@@ -489,8 +464,8 @@ Ext.define('X.controller.Users', {
                     if (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser) && me.logUserIn({
                         user: loggedInUser
                     })) {
-                        me.getPageLogin().
-                                hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+                        me.getSignupAndLoginContainer().
+                                close();
                         me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
                     }
                 },
@@ -505,9 +480,9 @@ Ext.define('X.controller.Users', {
                     //                    var operationStatus = serverResponse.status,
                     //                            operationStatusText = serverResponse.statusText;
                     //
-                    //                    var serverResponseText = Ext.decode(serverResponse.responseText),
-                    //                            serverResponseCode = serverResponseText.code,
-                    //                            serverResponseError = serverResponseText.error;
+                    var serverResponseText = Ext.decode(serverResponse.responseText),
+                            serverResponseCode = serverResponseText.code,
+                            serverResponseError = serverResponseText.error;
 
                     me.generateFailedAuthenticationWindow({
                         message: serverResponseError

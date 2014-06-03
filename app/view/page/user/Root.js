@@ -77,12 +77,12 @@ Ext.define('X.view.page.user.Root', {
     },
     open: function() {
         var me = this;
-        me.setDimensionsToFillScreen().show();
+        me.setDimensionsToFillScreen().show(X.config.Config.getSHOW_ANIMATION_CONFIG());
         return me;
     },
     close: function() {
         var me = this;
-        me.hide();
+        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
         return me;
     }
 });

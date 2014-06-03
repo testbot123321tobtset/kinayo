@@ -785,13 +785,14 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.view.core.FormPanel": [],
   "X.view.core.Msg": [],
   "X.view.core.Panel": [],
-  "X.view.page.Login": [],
   "X.view.page.user.Root": [],
   "X.view.phone.Main": [],
   "X.view.plugandplay.CameraTriggerPanel": [],
   "X.view.plugandplay.DeviceContactsUsersList": [],
   "X.view.plugandplay.MessageFormPanel": [],
   "X.view.plugandplay.PhotoMessageInputContainer": [],
+  "X.view.plugandplay.SignupAndLoginContainer": [],
+  "X.view.plugandplay.SignupAndLoginTabPanel": [],
   "X.view.plugandplay.UserAccountFormPanel": [],
   "X.view.plugandplay.UserEditGroupContainer": [],
   "X.view.plugandplay.UserFriendFormPanel": [],
@@ -1805,9 +1806,6 @@ Ext.ClassManager.addNameAliasMappings({
   "X.view.core.Panel": [
     "widget.corepanel"
   ],
-  "X.view.page.Login": [
-    "widget.pagelogin"
-  ],
   "X.view.page.user.Root": [
     "widget.pageuserroot"
   ],
@@ -1823,6 +1821,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "X.view.plugandplay.PhotoMessageInputContainer": [
     "widget.photomessageinputcontainer"
+  ],
+  "X.view.plugandplay.SignupAndLoginContainer": [
+    "widget.signupandlogincontainer"
+  ],
+  "X.view.plugandplay.SignupAndLoginTabPanel": [
+    "widget.signupandlogintabpanel"
   ],
   "X.view.plugandplay.UserAccountFormPanel": [
     "widget.useraccountformpanel"

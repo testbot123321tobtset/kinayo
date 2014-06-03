@@ -1,13 +1,13 @@
-Ext.define('X.view.page.Login', {
+Ext.define('X.view.plugandplay.SignupAndLoginTabPanel', {
     extend: 'Ext.tab.Panel',
     requires: [
         'X.view.plugandplay.UserLoginFormPanel',
         'X.view.plugandplay.UserSignupFormPanel'
     ],
-    xtype: 'pagelogin',
-    id: 'pageLogin',
+    xtype: 'signupandlogintabpanel',
+    id: 'signupAndLoginTabPanel',
     config: {
-        cls: 'page-login',
+        cls: 'signup-and-login-tab-panel',
         tabBarPosition: 'bottom',
         items: [
             {
@@ -57,5 +57,10 @@ Ext.define('X.view.page.Login', {
                 ]
             }
         ]
+    },
+    close: function() {
+        var me = this;
+        me.hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
+        return me;
     }
 });

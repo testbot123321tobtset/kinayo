@@ -29,11 +29,16 @@ Ext.define('X.controller.mixin.User', {
             if (Ext.isObject(user)) {
                 var unSyncedAuthenticatedUser = Ext.create('X.model.AuthenticatedUser', user);
                 if (Ext.isObject(unSyncedAuthenticatedUser) && 'isValid' in unSyncedAuthenticatedUser && unSyncedAuthenticatedUser.isValid()) {
-                    return me.setSession({
-                        user: unSyncedAuthenticatedUser
-                    }) && me.setAuthenticatedUser({
+                    
+                    me.setSession({
                         user: unSyncedAuthenticatedUser
                     });
+                    me.setAuthenticatedUser({
+                        user: unSyncedAuthenticatedUser
+                    });
+                    unSyncedAuthenticatedUser.updateAllGroupStores();
+                    
+                    return me;
                 }
             }
         }
@@ -51,7 +56,7 @@ Ext.define('X.controller.mixin.User', {
     logUserOut: function() {
         var me = this;
         if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.User.logUserIn(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.controller.mixin.User.logUserOut(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
 
         me.resetReferencesOnXToGivenAuthenticatedUser();
@@ -72,7 +77,7 @@ Ext.define('X.controller.mixin.User', {
      */
     //    This loads authenticated user store only if a session is found in local storage,
     //    and before it does, it also sets the session header and the url on the store
-    loadAuthenticatedUserStoreFromSession: function(existsCallback, doesNotExistCallback) {
+    loadAuthenticatedUserStoreIfSessionExists: function(existsCallback, doesNotExistCallback) {
         var me = this;
 
         var parseSessionStore = Ext.getStore('ParseSessionStore');
@@ -331,7 +336,7 @@ Ext.define('X.controller.mixin.User', {
 
         return false;
     },
-    //    This uses this.checkIfAuthenticatedUserExists() and this.loadAuthenticatedUserStoreFromSession() to perform the logic
+    //    This uses this.checkIfAuthenticatedUserExists() and this.loadAuthenticatedUserStoreIfSessionExists() to perform the logic
     checkLoginAndResumeIfNotExistsOrRedirectIfExists: function(action) {
         var me = this;
         me.checkIfAuthenticatedUserExists({
@@ -349,7 +354,7 @@ Ext.define('X.controller.mixin.User', {
         {
             // Callback if authenticated user does not exist
             fn: function() {
-                me.loadAuthenticatedUserStoreFromSession({
+                me.loadAuthenticatedUserStoreIfSessionExists({
                     // Callback if authenticated user exists
                     fn: function() {
                         if (me.getUrlHash() !== X.XConfig.getDEFAULT_USER_PAGE()) {
@@ -375,7 +380,7 @@ Ext.define('X.controller.mixin.User', {
             scope: me
         });
     },
-    //    This uses this.checkIfAuthenticatedUserExists() and this.loadAuthenticatedUserStoreFromSession() to perform the logic
+    //    This uses this.checkIfAuthenticatedUserExists() and this.loadAuthenticatedUserStoreIfSessionExists() to perform the logic
     checkLoginAndResumeIfExistsOrRedirectIfNotExists: function(action) {
         var me = this;
 
@@ -392,7 +397,7 @@ Ext.define('X.controller.mixin.User', {
         {
             // Callback if authenticated user does not exist
             fn: function() {
-                me.loadAuthenticatedUserStoreFromSession({
+                me.loadAuthenticatedUserStoreIfSessionExists({
                     // Callback if authenticated user exists
                     fn: function() {
                         if (me.getDebug()) {

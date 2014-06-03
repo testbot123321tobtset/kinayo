@@ -131,7 +131,6 @@ Ext.define('X.controller.Users', {
     /*
      *    VIEWPORT EVENT HANDLERS
      */
-
     onAuthenticatedUserLoggedIn: function() {
         var me = this;
         if (me.getDebug()) {
@@ -175,7 +174,6 @@ Ext.define('X.controller.Users', {
     /*
      *    ROUTE HANDLERS
      */
-
     //    SIGNUP
     //    
     //    Show sign up form
@@ -247,7 +245,6 @@ Ext.define('X.controller.Users', {
     /*
      *    OTHER EVENT HANDLERS
      */
-
     onPageLoginTabPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
         if (Ext.isObject(tabPanel) && Ext.isObject(activeItem)) {
@@ -315,7 +312,6 @@ Ext.define('X.controller.Users', {
     /*
      *    HELPERS
      */
-
     //    SIGNUP
     //    
     //    Initiate validation and then actual signup

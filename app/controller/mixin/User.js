@@ -6,6 +6,12 @@ Ext.define('X.controller.mixin.User', {
     //    {
     //      user: <Object>
     //    }
+    //    This is currently used only when:
+    //      1. the user signs up for the first time; if the sign up is successful, use
+    //         this to log her in automatically
+    //      2. the user explicitly logs in via the login form
+    //    If a user is already logged in but refreshes the page, then the session gets refreshed
+    //    every time the authenticated user store loads 
     //    This: 
     //      1. sets session: calls setSession()
     //      2. sets authenticated user: calls setAuthenticatedUser()
@@ -96,6 +102,8 @@ Ext.define('X.controller.mixin.User', {
     //    
     //    Event handler 'onBeforeLoad' on the store will make sure that
     //    the session header and url endpoint get set up correctly
+    //    Event handler 'onLoad' on the store will make sure that that all
+    //    groups stores are automatically updated
     loadAuthenticatedUserStore: function(existsCallback, doesNotExistCallback) {
         var me = this;
 
@@ -112,10 +120,6 @@ Ext.define('X.controller.mixin.User', {
                     if (!Ext.isEmpty(records)) {
                         //                        This sets up references on X e.g. X.authenticatedUser
                         me.setReferencesOnXToGivenAuthenticatedUser(records[0]);
-
-                        //                        This loads all groups now that we have the authenticated user
-                        //                        This is a method in the Group mixin
-                        me.loadAllGroupsStores();
 
                         me.executeCallback(existsCallback);
                     }
@@ -280,13 +284,47 @@ Ext.define('X.controller.mixin.User', {
             if (Ext.isObject(user) && !Ext.isEmpty(user)) {
                 var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
                 if (Ext.isObject(authenticatedUserStore)) {
-                    if (authenticatedUserStore.locallySetGivenUserAsAuthenticatedUser({
+                    if (me.locallySetGivenUserAsAuthenticatedUser({
                         user: user
                     })) {
                         me.setReferencesOnXToGivenAuthenticatedUser(user);
 
                         return me;
                     }
+                }
+            }
+        }
+
+        return false;
+    },
+    //    This sets a given user as the authenticated user in the authenticated user store
+    //    This means that it'll replace any record in this store with the given user and
+    //    edit the session header and the url approporiately – all without having to sync
+    //    back to the server
+    locallySetGivenUserAsAuthenticatedUser: function(options) {
+        var me = this;
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.controller.mixin.User.locallySetGivenUserAsAuthenticatedUser(): Options:');
+            console.log(options);
+            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if (options) {
+            var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
+            if (user) {
+                var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
+                if(Ext.isObject(authenticatedUserStore)) {
+                    authenticatedUserStore.each(function(thisUser) {
+                        thisUser.destroy();
+                        thisUser.commit();
+                    });
+                    authenticatedUserStore.add(user);
+                    user.commit();
+
+                    authenticatedUserStore.setSessionHeaderForAllStores(user.get('sessionToken'));
+                    authenticatedUserStore.setUrlPostfixEndpoint(user.get('objectId'));
+
+                    return me;
                 }
             }
         }

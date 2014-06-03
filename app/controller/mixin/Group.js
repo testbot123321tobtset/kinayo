@@ -2,6 +2,10 @@ Ext.define('X.controller.mixin.Group', {
     /*
      * LOAD
      */
+    //    For now, these stores are not loaded from the server; when the authenticated user store loads,
+    //    we automatically grab these groups from authenticated user and set data in these stores. This
+    //    is only to initialize these stores. If you need to later on load these stores, use these methods to 
+    //    do so
     loadAllGroupsStores: function() {
         var me = this;
         if (me.getDebug()) {
@@ -13,6 +17,10 @@ Ext.define('X.controller.mixin.Group', {
 
         return me;
     },
+    //    For now, these stores are not loaded from the server; when the authenticated user store loads,
+    //    we automatically grab these groups from authenticated user and set data in these stores. This
+    //    is only to initialize these stores. If you need to later on load these stores, use these methods to 
+    //    do so
     loadGroupsCreatedByAUStore: function(existsCallback, doesNotExistCallback) {
         var me = this;
         if (me.getDebug()) {
@@ -44,6 +52,10 @@ Ext.define('X.controller.mixin.Group', {
 
         return me;
     },
+    //    For now, these stores are not loaded from the server; when the authenticated user store loads,
+    //    we automatically grab these groups from authenticated user and set data in these stores. This
+    //    is only to initialize these stores. If you need to later on load these stores, use these methods to 
+    //    do so
     loadGroupsAUIsMemberOfStore: function(existsCallback, doesNotExistCallback) {
         var me = this;
         if (me.getDebug()) {

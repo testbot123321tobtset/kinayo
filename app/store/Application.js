@@ -99,6 +99,10 @@ Ext.define('X.store.Application', {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.Application: ' + me.getStoreId() + ': onAddRecords(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+        if(!store.isLoaded()) {
+            store.loaded = true;
+        }
 
         return me;
     },
@@ -113,8 +117,36 @@ Ext.define('X.store.Application', {
     //    
     //    HELPER METHODS
     //
+    getAllStores: function() {
+        return [
+            Ext.getStore('AuthenticatedUserStore'),
+            Ext.getStore('GroupsStore'),
+            Ext.getStore('GroupsAUIsMemberOfStore'),
+            Ext.getStore('GroupsCreatedByAUStore'),
+            Ext.getStore('UsersStore')
+        ];
+    },
     isEmpty: function() {
         return this.getAllCount() === 0;
+    },
+    //    Sets session header with the given session token for all stores
+    //    This calls setSessionHeader()
+    setSessionHeaderForAllStores: function(sessionToken) {
+        var me = this;
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.store.Application.setSessionHeaderForAllStores(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        var allStores = me.getAllStores();
+        if (!Ext.isEmpty(allStores)) {
+            Ext.Array.each(allStores, function(thisStore) {
+                if(Ext.isObject(thisStore) && !Ext.isEmpty(thisStore)) {
+                    thisStore.setSessionHeader(sessionToken);
+                }
+            });
+        }
+        
+        return me;
     },
     //    Sets session header with the given session token
     setSessionHeader: function(sessionToken) {
@@ -124,8 +156,6 @@ Ext.define('X.store.Application', {
         var proxyHeaders = proxy.getHeaders();
         proxyHeaders['X-Parse-Session-Token'] = sessionToken;
         proxy.setHeaders(proxyHeaders);
-        console.log('!!!!!!!!!!!!!!!!');
-        console.log(proxy.getHeaders());
 
         return me;
     },

@@ -42,6 +42,12 @@ Ext.define('X.model.AuthenticatedUser', {
                 type: 'string'
             },
             {
+                name: 'hasCreated'
+            },
+            {
+                name: 'isMemberOf'
+            },
+            {
                 name: 'fullName',
                 type: 'string',
                 convert: function(value, record) {
@@ -115,5 +121,33 @@ Ext.define('X.model.AuthenticatedUser', {
                 });
             }
         }
+    },
+    //                    This only happens when the authenticated user store loads
+    //                    Don't rely on this to get the relevant groups – always use the group
+    //                    stores. For instance when a group is created by the user, the arrays in
+    //                    authenticated user are not updated
+    updateAllGroupStores: function() {
+        var me = this;
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.model.AuthenticatedUser.updateAllGroupStores(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        var groupsAuthenticatedUserIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
+        var groupsAuthenticatedUserHasCreatedStore = Ext.getStore('GroupsCreatedByAUStore');
+        var groupsStore = Ext.getStore('GroupsStore');
+        if (Ext.isObject(groupsAuthenticatedUserIsMemberOfStore) && Ext.isObject(groupsAuthenticatedUserHasCreatedStore) && Ext.isObject(groupsStore)) {
+            var groupsIHaveCreated = me.get('hasCreated');
+            groupsIHaveCreated = (Ext.isArray(groupsIHaveCreated) && !Ext.isEmpty(groupsIHaveCreated)) ? groupsIHaveCreated : false;
+            if (groupsIHaveCreated) {
+                groupsAuthenticatedUserHasCreatedStore.setData(groupsIHaveCreated);
+            }
+            var groupsIAmMemberOf = me.get('isMemberOf');
+            groupsIAmMemberOf = (Ext.isArray(groupsIAmMemberOf) && !Ext.isEmpty(groupsIAmMemberOf)) ? groupsIAmMemberOf : false;
+            if (groupsIAmMemberOf) {
+                groupsAuthenticatedUserIsMemberOfStore.setData(groupsIAmMemberOf);
+            }
+        }
+
+        return me;
     }
 });

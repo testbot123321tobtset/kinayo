@@ -6,12 +6,12 @@ Ext.define('X.store.AuthenticatedUser', {
         autoLoad: false,
         autoSync: false
     },
-//    
-//    EVENT HANDLERS
+    //    
+    //    EVENT HANDLERS
 
-//    Before the store loads, this makes sure that the record contained in this store (alongwith the
-//    url and the session header of the store) are in sync. If not, this removes the existing authenticated user 
-//    in the store and continues loading the one referred to by the session
+    //    Before the store loads, this makes sure that the record contained in this store (alongwith the
+    //    url and the session header of the store) are in sync. If not, this removes the existing authenticated user 
+    //    in the store and continues loading the one referred to by the session
     onBeforeLoad: function(store, operation, eOpts) {
         var me = this;
         if (X.config.Config.getDEBUG()) {
@@ -28,10 +28,10 @@ Ext.define('X.store.AuthenticatedUser', {
                     if (sessionToken) {
                         var isAuthenticatedUserStoreEmpty = me.isEmpty();
                         if (!isAuthenticatedUserStoreEmpty) {
-//                            When authenticated user store is not empty, check if the user in store
-//                            is the same as the one in the session. If it is, then proceed with refreshing
-//                            of the authenticated user store. If not, then remove the existing record from
-//                            the authenticated user store, and then proceed with the load
+                            //                            When authenticated user store is not empty, check if the user in store
+                            //                            is the same as the one in the session. If it is, then proceed with refreshing
+                            //                            of the authenticated user store. If not, then remove the existing record from
+                            //                            the authenticated user store, and then proceed with the load
                             var authenticatedUser = me.getAt(0);
                             var authenticatedUserId = authenticatedUser.get('objectId');
                             if (authenticatedUserId !== userIdFromSession) {
@@ -41,7 +41,7 @@ Ext.define('X.store.AuthenticatedUser', {
                         }
 
                         me.setUrlPostfixEndpoint(userIdFromSession);
-                        
+
                         me.getProxy().
                                 setExtraParam('include', 'isMemberOf,hasCreated');
 
@@ -52,58 +52,47 @@ Ext.define('X.store.AuthenticatedUser', {
             }
         }
 
-//        Only load if a session is found in localstorage
+        //        Only load if a session is found in localstorage
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onBeforeLoad(): Failed: Where clause in the URL could not be correctly edited: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         return false;
     },
+    //    Every time the authenticated user store loads, make sure that you take the group information from this store and 
+    //    update all group data stored in all of the group stores locally
     onLoad: function(store, records, successful, operation, eOpts) {
         var me = this;
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
 
-        Ext.Viewport.fireEvent('authenticateduserstoreload', {
-            me: me,
-            authenticatedUser: me.getAt(0)
-        });
+        //        Refresh all group stores
+        if (successful) {
+            var authenticatedUser = records[0];
+            authenticatedUser = (Ext.isObject(authenticatedUser) && !Ext.isEmpty(authenticatedUser)) ? authenticatedUser : false;
+            if (authenticatedUser) {
+                var sessionToken = authenticatedUser.get('sessionToken');
+                sessionToken = (Ext.isString(sessionToken) && !Ext.isEmpty(sessionToken)) ? sessionToken : false;
+                if (sessionToken) {
+                    me.setSessionHeaderForAllStores(sessionToken);
+                    //                    This only happens when the authenticated user store loads
+                    //                    Don't rely on this to get the relevant groups – always use the group
+                    //                    stores. For instance when a group is created by the user, the arrays in
+                    //                    authenticated user are not updated
+                    authenticatedUser.updateAllGroupStores(store, records);
+                }
 
-        me.callParent(arguments);
-    },
-//    This sets a given user as the authenticated user in the authenticated user store
-//    This means that it'll relace any record in this store with the given user and
-//    edit the session header and the url approporiately – all without having to sync
-//    back to the server
-    locallySetGivenUserAsAuthenticatedUser: function(options) {
-        var me = this;
-        if (X.config.Config.getDEBUG()) {
-            console.log('Debug: X.store.AuthenticatedUser.locallySetGivenUserAsAuthenticatedUser(): Options:');
-            console.log(options);
-            console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
-        if (Ext.isObject(options)) {
-            var user = ('user' in options && Ext.isObject(options.user) && !Ext.isEmpty(options.user)) ? options.user : false;
-            if (Ext.isObject(user) && !Ext.isEmpty(user)) {
-                me.each(function(thisUser) {
-                    thisUser.destroy();
-                    thisUser.commit();
+                Ext.Viewport.fireEvent('authenticateduserstoreload', {
+                    me: me,
+                    authenticatedUser: authenticatedUser
                 });
-                me.add(user);
-                user.commit();
-
-                me.setSessionHeader(user.get('sessionToken'));
-                me.setUrlPostfixEndpoint(user.get('objectId'));
-
-                return me;
             }
         }
 
-        return false;
+        me.callParent(arguments);
     },
-//    This sets the url such that the endpoint refers to the objectId of the user currently in session
-//    This is needed to perform any updates using store.sync()
+    //    This sets the url such that the endpoint refers to the objectId of the user currently in session
+    //    This is needed to perform any updates using store.sync()
     setUrlPostfixEndpoint: function(endpoint) {
         var me = this;
 
@@ -112,7 +101,7 @@ Ext.define('X.store.AuthenticatedUser', {
 
         return me;
     },
-//    This resets what setUrlPostfixEndpoint() does
+    //    This resets what setUrlPostfixEndpoint() does
     resetUrlPostfixEndpoint: function() {
         var me = this;
 
@@ -121,7 +110,7 @@ Ext.define('X.store.AuthenticatedUser', {
 
         return me;
     },
-//    This does callParent(arguments)
+    //    This does callParent(arguments)
     reset: function() {
         var me = this;
 

@@ -19,17 +19,17 @@ var _ = require('underscore');
 //1. Creates and updates always need a user in session
 //2. validate title field
 Parse.Cloud.beforeSave('Group', function(request, response) {
-    
+
     var creator = request.user;
-    if(!_.isObject(creator)) {
+    if (!_.isObject(creator)) {
         response.error('creator is not specified');
     }
     else {
         var group = request.object;
         var isCreate = group.isNew();
-        
-//        Group is being created
-        if(isCreate) {
+
+        //        Group is being created
+        if (isCreate) {
             if (!_.isString(group.get('title'))) {
                 response.error('group title is required');
             }
@@ -38,7 +38,7 @@ Parse.Cloud.beforeSave('Group', function(request, response) {
                 response.success();
             }
         }
-//        Group is being updated
+        //        Group is being updated
         else {
             response.success();
         }
@@ -47,19 +47,31 @@ Parse.Cloud.beforeSave('Group', function(request, response) {
 
 //Use this to create relationships after create (not update) 
 Parse.Cloud.afterSave('Group', function(request) {
-    
+
     var creator = request.user;
     var group = request.object;
     var wasGroupCreated = !group.existed();
-    
-//    This means that the group was just created and so we need to add the 
-//    corresponding relations to the creator
-    if(wasGroupCreated) {
-    
+
+    //    This means that the group was just created and so we need to add the 
+    //    corresponding relations to the creator
+    if (wasGroupCreated) {
+
         creator.addUnique('hasCreated', group);
         creator.addUnique('isMemberOf', group);
 
-//        Save the creator
+        //        Save the creator
         creator.save();
     }
+});
+
+//Use this to destroy references of this group from other tables such as _User
+Parse.Cloud.afterDelete('Group', function(request) {
+
+    var creator = request.user;
+    var group = request.object;
+    
+    creator.remove('hasCreated', group);
+    creator.remove('isMemberOf', group);
+    
+    creator.save();
 });

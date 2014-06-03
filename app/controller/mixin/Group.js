@@ -131,6 +131,7 @@ Ext.define('X.controller.mixin.Group', {
                             operation: operation,
                             model: group,
                             silent: silent,
+                            typeOfSave: typeOfSave,
                             //                            This is the callback function called after 
                             //                            user feedback is shown and after the user
                             //                            reacts to it
@@ -152,6 +153,7 @@ Ext.define('X.controller.mixin.Group', {
                             operation: operation,
                             model: group,
                             silent: silent,
+                            typeOfSave: typeOfSave,
                             //                            This is the callback function called after 
                             //                            user feedback is shown and after the user
                             //                            reacts to it

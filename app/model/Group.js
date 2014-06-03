@@ -82,7 +82,7 @@ Ext.define('X.model.Group', {
             batchActions: false,
             reader: {
                 type: 'json',
-                rootProperty: 'results'
+                rootProperty: ''
             },
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',

@@ -1,8 +1,8 @@
 Ext.define('X.controller.mixin.Factory', {
     generateComponentsOnViewportPainted: function() {
         var me = this;
-//        We haven\'t figured out eager generaton yet, but here is the hook
-//        me.generateEagerComponents();
+        //        We haven\'t figured out eager generaton yet, but here is the hook
+        //        me.generateEagerComponents();
         me.generateCameraTriggerPanel();
         return me;
     },
@@ -148,7 +148,7 @@ Ext.define('X.controller.mixin.Factory', {
         });
         return me;
     },
-//    Signup
+    //    Signup
     generateAndFillViewportWithUserSignupWindow: function() {
         var me = this;
         if (me.getDebug()) {
@@ -181,7 +181,7 @@ Ext.define('X.controller.mixin.Factory', {
         }
         return me;
     },
-//    Login
+    //    Login
     generateAndFillViewportWithUserLoginWindow: function() {
         var me = this;
         if (me.getDebug()) {
@@ -220,12 +220,12 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateUserRootPageTabPanel(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var pageUserRoot = Ext.isObject(me.getPageUserRoot()) ? me.getPageUserRoot() : Ext.Viewport.removeAll(false, false).
                 add(me.createView({
                     xtype: 'pageuserroot'
                 }));
-        
+
         return pageUserRoot.open();
     },
     // User :: More
@@ -234,10 +234,10 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateUserRootPageTabPanelAndActivateUserMoreTab(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var pageUserRoot = me.generateUserRootPageTabPanel();
         pageUserRoot.setActiveItem('#userMore');
-        
+
         return pageUserRoot;
     },
     // User :: More :: Account
@@ -246,12 +246,12 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateUserMoreTabPanelAndActivateUserAccountTab(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var userMoreTabPanel = me.generateUserRootPageTabPanelAndActivateUserMoreTab().
                 down('#userMoreTabPanel');
         userMoreTabPanel.
                 setActiveItem('#userAccount');
-        
+
         return userMoreTabPanel;
     },
     // User :: Groups
@@ -260,10 +260,10 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateUserRootPageTabPanelAndActivateUserGroupsTab(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var pageUserRoot = me.generateUserRootPageTabPanel();
         pageUserRoot.setActiveItem('#userGroups');
-        
+
         return pageUserRoot;
     },
     // User :: Groups :: Feeds
@@ -272,7 +272,7 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateUserGroupsTabPanelAndActivateUserGroupFeedsTab(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var userGroupsTabPanel = me.generateUserRootPageTabPanelAndActivateUserGroupsTab().
                 down('#userGroupsTabPanel');
         userGroupsTabPanel.
@@ -286,7 +286,7 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithGroupDataWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         options = Ext.isObject(options) ? options : false;
         if (options) {
             var group = ('group' in options && Ext.isObject(options.group)) ? options.group : false;
@@ -296,10 +296,10 @@ Ext.define('X.controller.mixin.Factory', {
             userGroupContainer.setDimensions().
                     open().
                     setRecordRecursive(group);
-            
+
             return userGroupContainer;
         }
-        
+
         return false;
     },
     // User :: Groups :: Feed edit
@@ -308,7 +308,7 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithEditGroupWindow(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         options = Ext.isObject(options) ? options : false;
         if (options) {
             var group = ('group' in options && Ext.isObject(options.group)) ? options.group : false;
@@ -319,10 +319,10 @@ Ext.define('X.controller.mixin.Factory', {
                     open().
                     setRecordRecursive(group).
                     setReadOnly(!group.isCreatedByMe());
-            
+
             return userEditGroupContainer;
         }
-        
+
         return me;
     },
     // User :: Groups :: Create
@@ -331,7 +331,7 @@ Ext.define('X.controller.mixin.Factory', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.Factory: generateUserGroupsTabPanelAndActivateUserAddGroupTab()');
         }
-        
+
         var userGroupsTabPanel = me.generateUserRootPageTabPanelAndActivateUserGroupsTab().
                 down('#userGroupsTabPanel');
         userGroupsTabPanel.

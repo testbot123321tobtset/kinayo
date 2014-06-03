@@ -25,6 +25,8 @@ Ext.define('X.controller.mixin.Common', {
                 if (operation) {
                     var modelFullClassName = model.modelName,
                             modelName = modelFullClassName.substr(modelFullClassName.lastIndexOf('.') + 1);
+                    
+                    var typeOfSave = ('typeOfSave' in options && Ext.isString(options.typeOfSave) && !Ext.isEmpty(options.typeOfSave)) ? options.typeOfSave : 'edit';
 
                     var silent = ('silent' in options && Ext.isBoolean(options.silent)) ? options.silent : false;
 
@@ -68,7 +70,20 @@ Ext.define('X.controller.mixin.Common', {
                                 }
                             }
                         }
-
+                        
+                        //                        This is a hack. Sencha Touch will notify the stores related to the model
+                        //                        automatically if the server is able to return the deleted record on successful erase
+                        //                        But, Parse sends back an empty object on successful erase. This confuses Sencha Touch,
+                        //                        and it complains that it could not find the record that was erased. So we need to handle this
+                        //                        manually. The specific source is: http://docs.sencha.com/touch/2.3.2/source/Operation.html#Ext-data-Operation in
+                        //                        processDestroy() method
+                        //                        Related question in Sencha Touch forums:
+                        //                        http://www.sencha.com/forum/showthread.php?286368-Parse.com-API-sending-empty-object-on-delete&p=1047228#post1047228
+                        if(typeOfSave === 'destroy') {
+                            model.setIsErased(true);
+                            model.notifyStores('afterErase', model);
+                        }
+                        
                         model.commit();
                     }
                     else {
@@ -106,8 +121,6 @@ Ext.define('X.controller.mixin.Common', {
 
         return me;
     }
-
-
     //    ,
     //    This seems like its working without having to update the UI explicitly
     //    updateViewsBoundToGivenRecord: function(options) {

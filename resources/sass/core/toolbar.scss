@@ -2,7 +2,7 @@
 @import '_variables';
 @import '_mixins';
 
-$toolbar-background-color: rgba(255, 255, 255, $default-theme-translucency-opacity);
+$toolbar-background-color: rgba(255, 255, 255, $default-theme-toolbar-translucency-opacity);
 $toolbar-border-width: 0;
 $toolbar-border-style: solid;
 $toolbar-border-color: transparent;

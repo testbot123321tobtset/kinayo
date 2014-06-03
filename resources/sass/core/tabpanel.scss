@@ -2,7 +2,7 @@
 @import '_variables';
 @import '_mixins';
 
-$tabbar-background-color: rgba(255, 255, 255, $default-theme-translucency-opacity);
+$tabbar-background-color: rgba(255, 255, 255, $default-theme-toolbar-translucency-opacity);
 $tabbar-border-width: 0;
 $tabbar-border-style: solid;
 $tabbar-border-color: transparent;

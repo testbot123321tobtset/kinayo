@@ -42,6 +42,10 @@ Ext.define('X.model.AuthenticatedUser', {
                 type: 'string'
             },
             {
+                name: 'phoneNumber',
+                type: 'int'
+            },
+            {
                 name: 'hasCreated'
             },
             {
@@ -80,6 +84,10 @@ Ext.define('X.model.AuthenticatedUser', {
             {
                 type: 'presence',
                 field: 'username'
+            },
+            {
+                type: 'presence',
+                field: 'phoneNumber'
             },
             {
                 type: 'presence',

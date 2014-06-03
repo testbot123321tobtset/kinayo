@@ -2,6 +2,7 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
     extend: 'X.view.core.FormPanel',
     requires: [
         'Ext.form.FieldSet',
+        'Ext.field.Number',
         'Ext.field.Email'
     ],
     xtype: 'useraccountformpanel',
@@ -27,6 +28,14 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
                         cls: 'username-textfield',
                         placeHolder: 'Username',
                         name: 'username',
+                        readOnly: true
+                    },
+                    {
+                        xtype: 'numberfield',
+                        itemId: 'phoneNumberNumberfield',
+                        cls: 'phonenumber-numberfield',
+                        placeHolder: 'Phone Number',
+                        name: 'phoneNumber',
                         readOnly: true
                     },
                     {
@@ -80,7 +89,7 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
             {
                 fn: 'onUserRecordChange',
                 event: 'change',
-                delegate: '#usernameEmail',
+                delegate: '#usernameEmailfield',
                 buffer: 1
             }
         ]

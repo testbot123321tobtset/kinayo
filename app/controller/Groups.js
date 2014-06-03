@@ -185,20 +185,20 @@ Ext.define('X.controller.Groups', {
                         // 
                         // For now, we show contacts list – once we are ready with friends API, 
                         // we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-                        //                        me.setDeviceContactsStoreAndCallback({
-                        //                            successCallback: {
-                        //                                fn: function() {
-                        //                                    me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
-                        //                                },
-                        //                                scope: me
-                        //                            },
-                        //                            failureCallback: {
-                        //                                fn: function() {
-                        //                                    console.log('failed!');
-                        //                                },
-                        //                                scope: me
-                        //                            }
-                        //                        });
+                        me.setDeviceContactsStoreAndCallback({
+                            successCallback: {
+                                fn: function() {
+                                    me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
+                                },
+                                scope: me
+                            },
+                            failureCallback: {
+                                fn: function() {
+                                    console.log('failed!');
+                                },
+                                scope: me
+                            }
+                        });
                     }
                     me.getUserGroupEditContainer().
                             closeEverythingAboveMe();

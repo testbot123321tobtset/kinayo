@@ -47,13 +47,19 @@ Ext.define('X.store.Application', {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.Application: ' + me.getStoreId() + ': onBeforeLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if(proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if(url) {
+                //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
+                //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
+                me.checkAndSetProxyReaderRootProperty();
 
-        //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
-        //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
-        me.checkAndSetProxyReaderRootProperty();
-
-        //        Set session if session exists in local storage
-        me.setSessionHeaderFromSession();
+                //        Set session if session exists in local storage
+                me.setSessionHeaderFromSession();
+            }
+        }
 
         if (me.getAllCount() > 0) {
             var idsOfRecordsBeforeLoad = [
@@ -78,10 +84,16 @@ Ext.define('X.store.Application', {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.Application: ' + me.getStoreId() + ': onLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-
-        //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
-        //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
-        me.checkAndResetProxyReaderRootProperty();
+        
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if(proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if(url) {
+                //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
+                //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
+                me.checkAndResetProxyReaderRootProperty();
+            }
+        }
 
         me.setCountOnLoad(me.getAllCount());
 
@@ -151,38 +163,54 @@ Ext.define('X.store.Application', {
     //    Sets session header with the given session token
     setSessionHeader: function(sessionToken) {
         var me = this;
-
-        var proxy = me.getProxy();
-        var proxyHeaders = proxy.getHeaders();
-        proxyHeaders['X-Parse-Session-Token'] = sessionToken;
-        proxy.setHeaders(proxyHeaders);
-
+        
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if(proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if(url) {
+                var proxyHeaders = proxy.getHeaders();
+                proxyHeaders['X-Parse-Session-Token'] = sessionToken;
+                proxy.setHeaders(proxyHeaders);
+            }
+        }
+        
         return me;
     },
     //    Resets session header to null
     resetSessionHeader: function() {
         var me = this;
 
-        var proxy = me.getProxy();
-        var proxyHeaders = proxy.getHeaders();
-        proxyHeaders['X-Parse-Session-Token'] = null;
-        proxy.setHeaders(proxyHeaders);
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if (proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if (url) {
+                var proxyHeaders = proxy.getHeaders();
+                proxyHeaders['X-Parse-Session-Token'] = null;
+                proxy.setHeaders(proxyHeaders);
+            }
+        }
 
         return me;
     },
     //    This sets session headers from session stored in localstorage if any
     setSessionHeaderFromSession: function() {
         var me = this;
-
-        var parseSessionStore = Ext.getStore('ParseSessionStore');
-        if (Ext.isObject(parseSessionStore)) {
-            var session = parseSessionStore.getSession();
-            if (Ext.isObject(session) && !Ext.isEmpty(session)) {
-                var userIdFromSession = ('userId' in session && Ext.isString(session.userId) && !Ext.isEmpty(session.userId)) ? session.userId : false;
-                if (userIdFromSession) {
-                    var sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
-                    if (sessionToken) {
-                        me.setSessionHeader(sessionToken);
+        
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if (proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if (url) {
+                var parseSessionStore = Ext.getStore('ParseSessionStore');
+                if (Ext.isObject(parseSessionStore)) {
+                    var session = parseSessionStore.getSession();
+                    if (Ext.isObject(session) && !Ext.isEmpty(session)) {
+                        var userIdFromSession = ('userId' in session && Ext.isString(session.userId) && !Ext.isEmpty(session.userId)) ? session.userId : false;
+                        if (userIdFromSession) {
+                            var sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
+                            if (sessionToken) {
+                                me.setSessionHeader(sessionToken);
+                            }
+                        }
                     }
                 }
             }
@@ -314,30 +342,32 @@ Ext.define('X.store.Application', {
 
         //        If the GET is to a Parse class, then set rootProperty on its proxy to the 
         //        value of me.getProxyRootPropertyOnParseGetOnClass(). After load, reset it back
-        var proxy = me.getProxy();
-        var url = proxy.
-                getUrl();
-
-        var urlPathInArray = url.getUrlPathInArray();
-        if (Ext.Array.contains(urlPathInArray, 'users')) {
-            //            The url is going to be:
-            //              1. /users/ – we are concerned with case, or
-            //              3. /users/me, or
-            //              2. /users/adsa657
-            var indexOfUsersKey = Ext.Array.indexOf(urlPathInArray, 'users');
-            var itemAfterUsersKey = urlPathInArray[indexOfUsersKey + 1];
-            if (!Ext.isString(itemAfterUsersKey)) {
-                return true;
-            }
-        }
-        else {
-            //            The url if 'classes' is present:
-            //              1. /classes/<Model/Class Name> – we are concerned with case, or
-            //              2. /classes/<Model/Class Name>/<Model Id>
-            var indexOfClassesKey = Ext.Array.indexOf(urlPathInArray, 'classes');
-            var itemAfterClassesKey = urlPathInArray[indexOfClassesKey + 2];
-            if (!Ext.isString(itemAfterClassesKey)) {
-                return true;
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if(proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if(url) {
+                var urlPathInArray = url.getUrlPathInArray();
+                if (Ext.Array.contains(urlPathInArray, 'users')) {
+                    //            The url is going to be:
+                    //              1. /users/ – we are concerned with case, or
+                    //              3. /users/me, or
+                    //              2. /users/adsa657
+                    var indexOfUsersKey = Ext.Array.indexOf(urlPathInArray, 'users');
+                    var itemAfterUsersKey = urlPathInArray[indexOfUsersKey + 1];
+                    if (!Ext.isString(itemAfterUsersKey)) {
+                        return true;
+                    }
+                }
+                else {
+                    //            The url if 'classes' is present:
+                    //              1. /classes/<Model/Class Name> – we are concerned with case, or
+                    //              2. /classes/<Model/Class Name>/<Model Id>
+                    var indexOfClassesKey = Ext.Array.indexOf(urlPathInArray, 'classes');
+                    var itemAfterClassesKey = urlPathInArray[indexOfClassesKey + 2];
+                    if (!Ext.isString(itemAfterClassesKey)) {
+                        return true;
+                    }
+                }
             }
         }
         
@@ -346,25 +376,45 @@ Ext.define('X.store.Application', {
     checkAndSetProxyReaderRootProperty: function() {
         var me = this;
         
-        if(me.shouldSetProxyReaderRootPropertyToRootPropertyForParseCollectionOfObjects()) {
-            me.getProxy().getReader().setRootProperty(me.getProxyReaderRootPropertyForParseCollectionOfObjects());
-        }
-        else {
-            me.getProxy().getReader().setRootProperty(me.getOriginalReaderRootProperty());
-        }
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if (proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if (url) {
+                if (me.shouldSetProxyReaderRootPropertyToRootPropertyForParseCollectionOfObjects()) {
+                    proxy.
+                            getReader().
+                            setRootProperty(me.getProxyReaderRootPropertyForParseCollectionOfObjects());
+                }
+                else {
+                    proxy.
+                            getReader().
+                            setRootProperty(me.getOriginalReaderRootProperty());
+                }
 
-        console.log('*******BEFORE LOAD********');
-        console.log(me.getProxy().getReader().getRootProperty());
+                console.log('*******BEFORE LOAD********');
+                console.log(me.getProxy().
+                        getReader().
+                        getRootProperty());
+            }
+        }
 
         return me;
     },
     checkAndResetProxyReaderRootProperty: function() {
         var me = this;
 
-        me.getProxy().getReader().setRootProperty(me.getOriginalReaderRootProperty());
-        
-        console.log('*******AFTER LOAD********');
-        console.log(me.getProxy().getReader().getRootProperty());
+        var proxy = Ext.isObject(me.getProxy()) ? me.getProxy() : false;
+        if (proxy) {
+            var url = ('getUrl' in proxy && Ext.isFunction(proxy.getUrl)) ? proxy.getUrl() : false;
+            if (url) {
+                proxy.getReader().
+                        setRootProperty(me.getOriginalReaderRootProperty());
+
+                console.log('*******AFTER LOAD********');
+                console.log(proxy.getReader().
+                        getRootProperty());
+            }
+        }
 
         return me;
     },

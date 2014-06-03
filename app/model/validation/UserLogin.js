@@ -7,6 +7,9 @@ Ext.define('X.model.validation.UserLogin', {
             },
             {
                 name: 'password'
+            },
+            {
+                name: 'phoneNumber'
             }
         ],
         validations: [
@@ -19,6 +22,11 @@ Ext.define('X.model.validation.UserLogin', {
                 type: 'presence',
                 field: 'password',
                 message: 'How could you forget to enter your password?'
+            },
+            {
+                type: 'presence',
+                field: 'phoneNumber',
+                message: 'Your device\'s phone number is required to continue. We only use it to authenticate you – we will never share it with anyone else without your explicit permission.'
             }
         ]
     }

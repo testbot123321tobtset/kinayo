@@ -42,6 +42,10 @@ Ext.define('X.model.User', {
                 type: 'string'
             },
             {
+                name: 'phoneNumber',
+                type: 'int'
+            },
+            {
                 name: 'fullName',
                 type: 'string',
                 convert: function(value, record) {
@@ -60,8 +64,8 @@ Ext.define('X.model.User', {
                 field: 'username'
             },
             {
-                type: 'email',
-                field: 'email'
+                type: 'presence',
+                field: 'phoneNumber'
             }
         ],
         proxy: {

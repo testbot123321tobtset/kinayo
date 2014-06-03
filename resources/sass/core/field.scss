@@ -3,8 +3,9 @@
 @import '_mixins';
 
 $field-label-font-size: 0.8em;
+$field-label-font-weight: 400;
 $field-label-font-color: $default-font-color;
-$field-label-font-style: italic;
+$field-label-font-style: normal;
 $field-label-padding: .7em .4em .4em .4em;
 
 .x-panel.x-select-overlay {
@@ -66,6 +67,8 @@ $field-label-padding: .7em .4em .4em .4em;
     color: $field-label-font-color !important;
     
     font-size: $field-label-font-size !important;
+    
+    font-weight: $field-label-font-weight !important;
     
     font-style: $field-label-font-style !important;
     

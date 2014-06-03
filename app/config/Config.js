@@ -93,7 +93,9 @@ Ext.define('X.config.Config', {
             
             DEVICE_CONTACTS_ACCESS_REQUEST: 'Giving us access to your device\'s address book will help us automatically find all ' +
                     'your friends whom you can start sharing with right away.<br /><br />We promise we will not contact them on your behalf or otherwise bug you ' +
-                    'guys in any way!<br /><br />Do you want to go ahead with it?'
+                    'guys in any way!<br /><br />Do you want to go ahead with it?',
+        
+            PHONE_NUMBER_REQUIRED: 'Your device\'s phone number is required to proceed.'
         },
         CUSTOMER_SERVICE_EMAIL_ADDRESS: 'test@test.com',
         DEBUG: true,
@@ -140,13 +142,13 @@ Ext.define('X.config.Config', {
         SHOW_ANIMATION_CONFIG: {
             type: 'pop',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 600
         },
         SHOW_ANIMATION_FROM_UP_CONFIG: {
             type: 'slide',
             direction: 'down',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 700
         },
         HIDE_ANIMATION_CONFIG: {
             type: 'popOut',
@@ -157,7 +159,7 @@ Ext.define('X.config.Config', {
             type: 'slideOut',
             direction: 'up',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 700
         },
         HIDE_ANIMATION_FROM_DOWN_SLOW_AT_FIRST_CONFIG: {
             type: 'slideOut',
@@ -168,7 +170,7 @@ Ext.define('X.config.Config', {
         SHOW_BY_POP_ANIMATION_CONFIG: {
             type: 'pop',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 600
         },
         HIDE_BY_POP_ANIMATION_CONFIG: {
             type: 'popOut',

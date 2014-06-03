@@ -16,7 +16,7 @@ $container-border-visible-edge-color: $default-border-color;
     
     /* http://codepen.io/rikschennink/pen/zvcgx */
     @include filter(blur(15px));
-    opacity: 0.35;
+    opacity: 0.8;
     
     @include single-transition;
 }

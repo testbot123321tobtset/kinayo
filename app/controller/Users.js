@@ -512,7 +512,8 @@ Ext.define('X.controller.Users', {
 
             var errors = Ext.create('X.model.validation.UserLogin', {
                 username: formData.username,
-                password: formData.password
+                password: formData.password,
+                phoneNumber: formData.phoneNumber
             }).
                     validate();
 

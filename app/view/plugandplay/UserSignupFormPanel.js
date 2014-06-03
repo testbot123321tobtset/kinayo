@@ -47,6 +47,17 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
                         cls: 'password-field',
                         name: 'password',
                         placeHolder: 'Password'
+                    },
+                    {
+                        xtype: 'numberfield',
+                        itemId: 'phoneNumberNumberfield',
+                        cls: 'phonenumber-numberfield',
+                        placeHolder: 'Phone Number',
+                        name: 'phoneNumber'
+                    },
+                    {
+                        xtype: 'label',
+                        html: 'The phone number you enter above must be this device\'s phone number with country code. Enter only numbers.'
                     }
                 ]
             },
@@ -61,7 +72,7 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
     },
     resetAllFields: function() {
         var me = this;
-        me.resetUsernameField().resetPasswordField();
+        me.resetUsernameField().resetPasswordField().resetPhoneNumberField();
         return me;
     },
     resetUsernameField: function() {
@@ -72,6 +83,11 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
     resetPasswordField: function() {
         var me = this;
         me.down('#passwordfield').setValue('');
+        return me;
+    },
+    resetPhoneNumberField: function() {
+        var me = this;
+        me.down('#phoneNumberNumberfield').setValue('');
         return me;
     }
 });

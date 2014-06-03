@@ -289,10 +289,6 @@ Ext.define('X.controller.Groups', {
     },
     onDestroyGroupMessageShow: function(options) {
         var me = this;
-        if (Ext.isObject(options) && !Ext.isEmpty(options) && 'containerToBeBlurred' in options && Ext.isObject(options.containerToBeBlurred)) {
-            //            me.createOptimizedLayeredEffect(options.containerToBeBlurred);
-            options.containerToBeBlurred.createOptimizedLayeredEffect();
-        }
         return me;
     },
     onDestroyGroup: function(options) {

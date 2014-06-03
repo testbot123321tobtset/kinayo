@@ -23,13 +23,7 @@ Ext.define('X.view.plugandplay.SignupAndLoginContainer', {
         fullscreen: true,
         modal: true,
         hidden: true,
-        layer: 3,
-        depthBasedOnOffset: true,
-        querySelectorsForComponentsToBeHiddenToOptimizeLayer: [
-        ],
-        querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
-            '#pageUserRoot'
-        ],
+        
         items: [
             {
                 xtype: 'signupandlogintabpanel',

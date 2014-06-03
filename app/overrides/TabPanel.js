@@ -14,7 +14,7 @@ Ext.define('overrides.TabPanel', {
                 // scroll
                 // slide
                 type: 'flip',
-                duration: 500,
+                duration: 200,
                 easing: 'cubic-bezier(0,.23,0,1)'
             }
         }

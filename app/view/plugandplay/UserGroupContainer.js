@@ -23,15 +23,8 @@ Ext.define('X.view.plugandplay.UserGroupContainer', {
         floating: true,
         centered: true,
         fullscreen: true,
-        layer: 1,
-        depthBasedOnOffset: true,
         modal: true,
         hidden: true,
-        querySelectorsForComponentsToBeHiddenToOptimizeLayer: [
-        ],
-        querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
-            '#pageUserRoot'
-        ],
         items: [
             {
                 xtype: 'titlebar',

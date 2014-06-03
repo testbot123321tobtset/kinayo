@@ -24,17 +24,8 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
         floating: true,
         centered: true,
         fullscreen: true,
-        layer: 1,
-        depthBasedOnOffset: true,
         modal: true,
         hidden: true,
-        querySelectorsForComponentsToBeHiddenToOptimizeLayer: [
-        ],
-        querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
-            '#pageUserRoot',
-            '#userGroupContainer',
-            '#UserGroupEditContainer'
-        ],
         items: [
             {
                 xtype: 'image',
@@ -122,7 +113,6 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
     open: function() {
         var me = this;
         me.setDimensionsToFillScreen().
-                createOptimizedLayeredEffect().
                 show(X.config.Config.getSHOW_BY_POP_ANIMATION_CONFIG());
         Ext.Viewport.fireEvent('photomessageinputcontaineropen', {
             photoMessageInputContainer: me
@@ -132,8 +122,7 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
     close: function() {
         var me = this;
         
-        me.revertOptimizedLayeredEffect().
-                hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
+        me.hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
         Ext.Viewport.fireEvent('photomessageinputcontainerclose', {
             photoMessageInputContainer: me
         });

@@ -85,14 +85,12 @@ Ext.define('X.view.core.Container', {
     },
     open: function() {
         var me = this;
-        me.createOptimizedLayeredEffect().
-                show(X.config.Config.getSHOW_ANIMATION_CONFIG());
+        me.show(X.config.Config.getSHOW_ANIMATION_CONFIG());
         return me;
     },
     close: function() {
         var me = this;
-        me.revertOptimizedLayeredEffect().
-                hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
         return me;
     }
 });

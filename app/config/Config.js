@@ -121,61 +121,61 @@ Ext.define('X.config.Config', {
         // Animations
         // When you change animations, check overrides.TitleBar for consistency
         // Animation types: 'fade', 'fadeOut', 'flip', 'pop', 'popOut', 'slide', 'slideOut' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.fx.Animation-cfg-type)
-        DEFAULT_ANIMATION_DURATION: 800,
+        DEFAULT_ANIMATION_DURATION: 200,
         // Easing types: 'ease', 'linear', ease-in', 'ease-out', 'ease-in-out' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.Anim-cfg-easing)
         DEFAULT_ANIMATION_EASING: 'cubic-bezier(0,.23,0,1)',
         ANIMATION_CONFIG: {
             type: 'slide',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 200
         },
         SHOW_ANIMATION_WITH_NO_DIRECTION_CONFIG: {
             type: 'slide',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 200
         },
         HIDE_ANIMATION_WITH_NO_DIRECTION_CONFIG: {
             type: 'slideOut',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 200
         },
         SHOW_ANIMATION_CONFIG: {
             type: 'pop',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 600
+            duration: 200
         },
         SHOW_ANIMATION_FROM_UP_CONFIG: {
             type: 'slide',
             direction: 'down',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 700
+            duration: 200
         },
         HIDE_ANIMATION_CONFIG: {
             type: 'popOut',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 400
         },
         HIDE_ANIMATION_FROM_DOWN_CONFIG: {
             type: 'slideOut',
             direction: 'up',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 700
+            duration: 200
         },
         HIDE_ANIMATION_FROM_DOWN_SLOW_AT_FIRST_CONFIG: {
             type: 'slideOut',
             direction: 'up',
             easing: 'cubic-bezier(.7,0,.7,1)',
-            duration: 800
+            duration: 200
         },
         SHOW_BY_POP_ANIMATION_CONFIG: {
             type: 'pop',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 600
+            duration: 200
         },
         HIDE_BY_POP_ANIMATION_CONFIG: {
             type: 'popOut',
             easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 800
+            duration: 400
         },
         
         // Phonegap

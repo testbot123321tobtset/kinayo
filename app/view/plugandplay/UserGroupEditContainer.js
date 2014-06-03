@@ -24,15 +24,8 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
         floating: true,
         centered: true,
         fullscreen: true,
-        layer: 2,
         modal: true,
         hidden: true,
-        querySelectorsForComponentsToBeHiddenToOptimizeLayer: [
-        ],
-        querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
-            '#pageUserRoot',
-            '#userGroupContainer'
-        ],
         items: [
             {
                 xtype: 'titlebar',

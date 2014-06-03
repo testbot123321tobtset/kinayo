@@ -64,14 +64,8 @@ Ext.define('X.view.core.Msg', {
         floating: true,
         centered: true,
         fullscreen: true,
-        layer: 1,
-        depthBasedOnOffset: true,
         modal: true,
         hidden: true,
-        querySelectorsForComponentsToBeHiddenToOptimizeLayer: [
-        ],
-        querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
-        ],
         title: null,
         message: null,
         buttons: null,

@@ -17,11 +17,22 @@ $toolbar-button-pressing-background-color: lighten($toolbar-button-background-co
 
 .x-toolbar {
     
+    position: relative !important;
+    
     @include no-background;
     background-color: $toolbar-background-color !important;
     
     height: $default-toolbar-height !important;
     min-height: $default-toolbar-height !important;
+    
+    /*Give padding to the scroller so the contents will be at a certain distance from the edge of the tab bars*/
+    & + div {
+
+        .x-scroll-scroller {
+
+            padding: $default-edge-distance-from-toolbars 0 !important;
+        }
+    }
     
     .x-container {
         

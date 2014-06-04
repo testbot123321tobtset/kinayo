@@ -326,6 +326,9 @@ Ext.define('X.controller.Groups', {
             else if (activeItem.getItemId() === 'userAddGroups' && urlHash !== 'user/profile/groups/create') {
                 me.redirectTo('user/profile/groups/create');
             }
+            else if (activeItem.getItemId() === 'userContacts' && urlHash !== 'user/profile/groups/contacts') {
+                me.redirectTo('user/profile/groups/contacts');
+            }
         }
         return me;
     },

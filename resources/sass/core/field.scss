@@ -74,3 +74,9 @@ $field-label-padding: .7em .4em .4em .4em;
     
     padding: $field-label-padding !important;
 }
+
+.x-input-el {
+    
+    /*Use this to make sure that the input element aligns itself with the border underneath*/
+    padding: 0.7em 0.4em 0.4em 1em !important;
+}

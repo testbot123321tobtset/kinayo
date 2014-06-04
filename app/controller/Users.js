@@ -447,12 +447,14 @@ Ext.define('X.controller.Users', {
                     headers = parseMetaData.headers;
 
             var formValues = form.getValues();
+            
+            var params = formValues;
 
             Ext.Ajax.request({
                 url: url,
                 method: method,
                 headers: headers,
-                params: formValues,
+                params: params,
                 success: function(serverResponse) {
                     if (me.getDebug()) {
                         console.log('Debug: X.controller.Users.xhrLogin(): Successful. Received serverResponse:');
@@ -461,12 +463,22 @@ Ext.define('X.controller.Users', {
                     }
 
                     var loggedInUser = Ext.decode(serverResponse.responseText);
-                    if (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser) && me.logUserIn({
-                        user: loggedInUser
-                    })) {
-                        me.getSignupAndLoginContainer().
-                                close();
-                        me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                    loggedInUser = (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser)) ? loggedInUser : false;
+                    if (loggedInUser) {
+
+                        var hasLoggedIn = false;
+                        hasLoggedIn = me.logUserIn({
+                            user: loggedInUser
+                        });
+
+                        if (hasLoggedIn) {
+                            me.getSignupAndLoginContainer().
+                                    close();
+                            //                            This redirect will automatically load the authenticated user store
+                            //                            which is when we get the full authenticated user with all her
+                            //                            associated groups from Parse
+                            me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                        }
                     }
                 },
                 failure: function(serverResponse) {

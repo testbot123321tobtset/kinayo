@@ -65,6 +65,10 @@ $include-default-icons: false;
 @include icon('mic', '\f1aa', 'ionicons');
 @include icon('micfilled', '\f1ab', 'ionicons');
 @include icon('micmuted', '\f1a9', 'ionicons');
+@include icon('contact', '\f17f', 'ionicons');
+@include icon('contactfilled', '\f180', 'ionicons');
+@include icon('bookmark', '\f15c', 'ionicons');
+@include icon('bookmarkfilled', '\f15d', 'ionicons');
 
 @import 'shell';
 

@@ -65,8 +65,7 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
                 xtype: 'button',
                 itemId: 'submitButton',
                 cls: 'submit-button',
-                text: 'Sign up',
-                ui: 'confirm'
+                text: 'Sign up'
             }
         ]
     },

@@ -24,6 +24,15 @@ $tabbar-tab-button-active-color: $default-color-active;
     height: $default-toolbar-height !important;
     min-height: $default-toolbar-height !important;
     
+    /*Give padding to the scroller so the contents will be at a certain distance from the edge of the tab bars*/
+    & + div {
+
+        .x-scroll-scroller {
+
+            padding: $default-edge-distance-from-toolbars 0 !important;
+        }
+    }
+    
     &.x-docked-bottom {
 
         @include no-border;
@@ -36,16 +45,9 @@ $tabbar-tab-button-active-color: $default-color-active;
         height: $default-toolbar-height !important;
         min-height: $default-toolbar-height !important;
         
-        /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
-        & + div {
-            
-            .x-scroll-scroller {
-                
-                padding: $default-toolbar-height 0 !important;
-            }
-        }
-
         &.x-docked-bottom-that-is-top {
+            
+            position: relative !important;
 
             @include no-border;
             border: $tabbar-border-width $tabbar-border-style $tabbar-border-color !important;
@@ -56,15 +58,6 @@ $tabbar-tab-button-active-color: $default-color-active;
             
             height: $default-toolbar-height !important;
             min-height: $default-toolbar-height !important;
-            
-            /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
-            & + div {
-
-                .x-scroll-scroller {
-
-                    padding: $default-toolbar-height 0 !important;
-                }
-            }
         }
     }
 
@@ -79,18 +72,10 @@ $tabbar-tab-button-active-color: $default-color-active;
         
         height: $default-toolbar-height !important;
         min-height: $default-toolbar-height !important;
-
-        /*Give padding to the scroll view of the next element so it can scroll underneath the tab bar*/
-        & + div {
-            
-            .x-scroll-scroller {
-                
-                padding: $default-toolbar-height 0 !important;
-            }
-        }
     }
 
     &.x-full-width {
+        
         @include full-width;
     }
 

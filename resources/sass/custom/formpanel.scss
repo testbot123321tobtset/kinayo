@@ -8,12 +8,12 @@
     
     .x-form-fieldset:first-child {
         
-        margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        /*margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
     }
     
     .logout-button {
         
-        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
     }
 }
 
@@ -21,12 +21,12 @@
     
     .x-form-fieldset:first-child {
         
-        margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        /*margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
     }
     
     .submit-button {
         
-        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
     }
 }
 
@@ -34,12 +34,12 @@
     
     .x-form-fieldset:first-child {
         
-        margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        /*margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
     }
     
     .delete-button {
         
-        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
     }
 }
 
@@ -48,7 +48,7 @@
     .x-form-fieldset {
         
         @include no-margin;
-        margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;
+        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
         
         .message-textarea-field {
             

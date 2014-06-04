@@ -65,8 +65,7 @@ Ext.define('X.view.plugandplay.UserLoginFormPanel', {
                 xtype: 'button',
                 itemId: 'submitButton',
                 cls: 'submit-button',
-                text: 'Log in',
-                ui: 'confirm'
+                text: 'Log in'
             }
         ]
     },

@@ -55,8 +55,7 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                 xtype: 'button',
                 itemId: 'submitButton',
                 cls: 'submit-button',
-                text: 'Create',
-                ui: 'confirm'
+                text: 'Create'
             }
         ]
     },

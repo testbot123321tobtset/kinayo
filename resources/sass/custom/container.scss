@@ -40,7 +40,7 @@ $container-border-visible-edge-color: $default-border-color;
         
         .x-scroll-view {
 
-            padding-top: $default-toolbar-height !important;
+            /*padding-top: $default-toolbar-height !important;*/
         }
     }
     
@@ -48,7 +48,7 @@ $container-border-visible-edge-color: $default-border-color;
         
         .x-scroll-view {
 
-            padding-top: 0 !important;
+            /*padding-top: 0 !important;*/
         }
     }
 }

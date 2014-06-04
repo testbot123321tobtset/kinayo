@@ -25,6 +25,7 @@ $white-99: darken(white, 1%);
 $facebook-blue: #4c66a4;
 $facebook-blue-lighten: lighten($facebook-blue, 30%);
 $ios7-blue: #157efb;
+$my-blue: #28B7FA;
 $ios7-red: #fc3e39;
 $ios7-orange: #F92E32;
 $my-orange: #ee6557;
@@ -77,10 +78,11 @@ $default-theme-transparency-opacity: 1;
 $default-theme-translucency-opacity: 1;
 $default-theme-toolbar-translucency-opacity: 1;
 $default-background-color: white;
-$default-darker-background-color: $white-96;
+$default-darker-background-color: $white-99;
 $default-border-width: 1px;
 $default-border-style: solid;
 $default-border-color: $silver;
+$default-border-lighter-color: $white-94;
 
 /* Default colors on pressed and such events */
 $default-color-normal: $silver;
@@ -92,6 +94,7 @@ $layer-reduction-percent: 1.5%;
 
 /* Default heights */
 $default-toolbar-height: 3.2em;
+$default-edge-distance-from-toolbars: 1.5em;
 
 /* Default font */
 $default-font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, Arial, 'BBAlpha Sans', sans-serif;

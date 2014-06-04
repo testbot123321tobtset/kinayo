@@ -14,6 +14,7 @@ Ext.define('X.controller.Main', {
         common: 'X.controller.mixin.Common',
         factory: 'X.controller.mixin.Factory',
         page: 'X.controller.mixin.Page',
+        loginlogout: 'X.controller.mixin.LoginLogout',
         user: 'X.controller.mixin.User',
         group: 'X.controller.mixin.Group',
         deviceContact: 'X.controller.mixin.DeviceContact'

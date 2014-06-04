@@ -44,22 +44,14 @@ Ext.define('X.store.AuthenticatedUser', {
                         me.setSessionHeaderForAllStores(sessionToken);
 
                         me.callParent(arguments);
-                        return me;
                     }
                 }
             }
         }
-
-        //        Only load if a session is found in localstorage
-        if (X.config.Config.getDEBUG()) {
-            console.log('Debug: X.store.AuthenticatedUser.onBeforeLoad(): Failed: Where clause in the URL could not be correctly edited: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return false;
     },
     //    Every time the authenticated user store loads, make sure that you take the group information from this store and 
     //    update all group data stored in all of the group stores locally
-    onLoad: function(store, records, successful, operation, eOpts) {
-        var me = this;
+    onLoad: function(me, records, successful, operation, eOpts) {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }

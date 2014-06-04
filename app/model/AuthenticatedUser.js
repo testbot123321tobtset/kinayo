@@ -100,6 +100,9 @@ Ext.define('X.model.AuthenticatedUser', {
             //            objectId or Id will depend on which user is in session and is set dynamically by the AuthenticatedUser store
             appendId: false,
             batchActions: false,
+            extraParams: {
+                includeKey: 'isMemberOf,hasCreated'
+            },
             reader: {
                 type: 'json',
                 //                There is always one authenticated user, and so the resultset returned by Parse will always be of the type:

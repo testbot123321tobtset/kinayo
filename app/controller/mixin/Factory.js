@@ -338,6 +338,20 @@ Ext.define('X.controller.mixin.Factory', {
 
         return userGroupsTabPanel;
     },
+    // User :: Groups :: Create
+    generateUserGroupsTabPanelAndActivateUserContactsTab: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.Factory: generateUserGroupsTabPanelAndActivateUserContactsTab()');
+        }
+
+        var userGroupsTabPanel = me.generateUserRootPageTabPanelAndActivateUserGroupsTab().
+                down('#userGroupsTabPanel');
+        userGroupsTabPanel.
+                setActiveItem('#userContacts');
+
+        return userGroupsTabPanel;
+    },
     // Camera :: Photo message input
     generateAndFillViewportWithPhotoMessageInputContainerWindow: function(options) {
         var me = this;

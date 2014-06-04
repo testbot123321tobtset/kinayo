@@ -4,10 +4,10 @@ Ext.define('X.view.plugandplay.UsersList', {
     config: {
         itemId: 'usersList',
         cls: 'users-list',
+        
         itemTpl: '{formattedName}',
         onItemDisclosure: true,
         infinite: true,
-        grouped: true,
         mode: 'MULTI'
     },
     setReadOnly: function(isReadOnly) {

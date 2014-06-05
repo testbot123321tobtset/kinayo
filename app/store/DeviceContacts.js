@@ -3,11 +3,15 @@ Ext.define('X.store.DeviceContacts', {
     config: {
         model: 'X.model.DeviceContact',
         storeId: 'DeviceContactStore',
-        autoLoad: true,
+        
+        autoLoad: false,
         autoSync: true,
+        
         sorters: 'formattedName',
+        
         grouper: {
             groupFn: function(record) {
+                
                 return Ext.isString(record.get('formattedName')) ? record.get('formattedName')[0] : false;
             }
         }
@@ -39,11 +43,9 @@ Ext.define('X.store.DeviceContacts', {
     setContacts: function(contacts) {
         var me = this;
         
-                        console.log('!!!!!!!!!');
-                        console.log(contacts);
         if(Ext.isArray(contacts)) {
-            me.removeAll();
             me.setData(contacts);
+            me.sync();
             if(!me.loaded) {
                 me.loaded = true;
             }
@@ -51,10 +53,17 @@ Ext.define('X.store.DeviceContacts', {
         
         return me;
     },
-    reset: function() {
+    resetContacts: function() {
         var me = this;
         
         me.removeAll();
+        
+        return me;
+    },
+    reset: function() {
+        var me = this;
+        
+        me.resetContacts();
         
         return me;
     }

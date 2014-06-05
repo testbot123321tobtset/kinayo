@@ -166,42 +166,48 @@ Ext.define('X.controller.Groups', {
         if (Ext.isObject(groupsStore)) {
             groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
                 fn: function() {
-                    // Preload all UIs that go underneath this edit group UI
-                    me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
-                    me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+                    
                     var group = groupsStore.
                             getById(groupId);
-                    me.generateAndFillViewportWithGroupDataWindow({
-                        group: group
-                    });
-                    // Actually show edit group UI
-                    if (me.generateAndFillViewportWithEditGroupWindow({
-                        group: group,
-                        showcontainer: true
-                    })) {
-                        // Retrieve all of the friends of the authenticated user
-                        // and display them here in a list
-                        // me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-                        // 
-                        // For now, we show contacts list – once we are ready with friends API, 
-                        // we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-                        me.setDeviceContactsStoreAndCallback({
-                            successCallback: {
-                                fn: function() {
-                                    me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
-                                },
-                                scope: me
-                            },
-                            failureCallback: {
-                                fn: function() {
-                                    console.log('failed!');
-                                },
-                                scope: me
-                            }
+                    group = (Ext.isObject(group) && !Ext.isEmpty(group)) ? group : false;
+                    if(group) {
+                        
+                        // Preload all UIs that go underneath this edit group UI
+                        me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
+                        me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
+                        me.generateAndFillViewportWithGroupDataWindow({
+                            group: group
                         });
+                        
+                        // Actually show edit group UI
+                        var userGroupEditContainer = me.generateAndFillViewportWithEditGroupWindow({
+                            group: group,
+                            showcontainer: true
+                        });
+                        userGroupEditContainer = (Ext.isObject(userGroupEditContainer) && !Ext.isEmpty(userGroupEditContainer)) ? userGroupEditContainer : false;
+                        if (userGroupEditContainer) {
+                            
+                            //                            Add a list of users that are already there
+                            //                            in the device contacts store. Don't load the store again
+                            //                            Loading the store means that we read all of the contacts from
+                            //                            the user's address book and check on our backend who amongst
+                            //                            them are still registered with us and then set those contacts
+                            //                            in the device contacts store
+                            var deviceContactStore = Ext.getStore('DeviceContactStore');
+                            if (Ext.isObject(deviceContactStore)) {
+                                
+                                var usersList = me.getUserGroupEditFormPanelUsersList();
+                                usersList = (Ext.isObject(usersList) && !Ext.isEmpty(usersList)) ? usersList : false;
+                                if(usersList) {
+                                    
+                                    usersList.setStore(deviceContactStore);
+                                }
+                            }
+                            
+                            me.getUserGroupEditContainer().
+                                    closeEverythingAboveMe();
+                        }
                     }
-                    me.getUserGroupEditContainer().
-                            closeEverythingAboveMe();
                 },
                 scope: me
             });
@@ -230,7 +236,7 @@ Ext.define('X.controller.Groups', {
         //                            //                            
         //                            //                            For now, we show contacts list – once we are ready with friends API, 
         //                            //                            we'll switch to me.resetUserGroupEditFormPanelWithFriendsCheckboxes();
-        //                            me.setDeviceContactsStoreAndCallback({
+        //                            me.setDeviceContactsStore({
         //                                successCallback: {
         //                                    fn: function() {
         //                                        me.resetUserGroupEditFormPanelWithDeviceContactsCheckboxes();
@@ -325,9 +331,6 @@ Ext.define('X.controller.Groups', {
             }
             else if (activeItem.getItemId() === 'userAddGroups' && urlHash !== 'user/profile/groups/create') {
                 me.redirectTo('user/profile/groups/create');
-            }
-            else if (activeItem.getItemId() === 'userContacts' && urlHash !== 'user/profile/groups/contacts') {
-                me.redirectTo('user/profile/groups/contacts');
             }
         }
         return me;

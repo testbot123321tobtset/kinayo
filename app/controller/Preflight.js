@@ -31,6 +31,9 @@ Ext.define('X.controller.Preflight', {
         Ext.Msg.on('painted', function() {
             Ext.Msg.setZIndex(X.config.Config.getZINDEX_LEVEL_5());
         });
+        
+        //        X.view.plugandplay.LoadingContainer initialization
+        Ext.Viewport.add(X.view.plugandplay.LoadingContainer);
 
 //        Native string extras
         Ext.apply(String.prototype, (function() {

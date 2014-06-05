@@ -20,6 +20,19 @@ $form-panel-background-color: $default-background-color;
         
         @include no-margin;
         margin-top: $default-edge-distance-from-toolbars !important;
+        
+        .x-button-label {
+
+            color: $my-blue !important;
+        }
+            
+        &.x-button-pressing {
+
+            .x-button-label {
+
+                color: $my-blue-lighten !important;
+            }
+        }
     }
 
     .x-form-fieldset {
@@ -43,6 +56,14 @@ $form-panel-background-color: $default-background-color;
                 text-align: left !important;
                 
                 color: $my-blue !important;
+            }
+            
+            &.x-button-pressing {
+                
+                .x-button-label {
+
+                    color: $my-blue-lighten !important;
+                }
             }
         }
     }

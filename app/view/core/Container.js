@@ -77,6 +77,11 @@ Ext.define('X.view.core.Container', {
         me.close();
         return me;
     },
+    onContinueButtonTap: function(button, e, eOpts) {
+        var me = this;
+        me.close();
+        return me;
+    },
     onDeleteButtonTap: function(button, e, eOpts) {
         return this;
     },

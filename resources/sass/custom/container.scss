@@ -3,6 +3,7 @@
 @import '_mixins';
 @import 'core/container';
 @import 'core/tabpanel';
+@import 'core/messagebox';
 
 $container-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
 $container-border-width: 0;
@@ -19,6 +20,44 @@ $container-border-visible-edge-color: $default-border-color;
     opacity: 0.8;
     
     @include single-transition;
+}
+
+.loading-container {
+    
+    @include no-border;
+    @include no-background;
+    @include no-margin;
+    
+    min-height: $default-toolbar-height !important;
+    height: $default-toolbar-height !important;
+    
+    font-size: 0.7em !important;
+    text-transform: uppercase !important;
+    color: $default-theme-color;
+    
+    padding-right: 1.4em !important;
+    
+    /*http://blog.42at.com/emulating-iphones-slide-to-unlock*/
+    /*    -webkit-mask-image: -webkit-gradient(
+            linear, 
+            0% top, 
+            90% top,
+            from(rgba(0, 0, 0, .1)), 
+            color-stop(.6, $default-theme-color-lighten), 
+            to(rgba(0, 0, 0, .1))
+            );
+        -webkit-mask-size: 50%;
+    
+        -webkit-animation-name: spotlight;
+        -webkit-animation-timing-function: linear;
+        -webkit-animation-duration: 2000ms;
+        -webkit-animation-iteration-count: infinite;*/
+    
+/*    min-width: $default-toolbar-height !important;
+    width: $default-toolbar-height !important;
+    
+    background: transparent url('../images/loading.gif') no-repeat center !important; 
+    background-size: 24px 24px !important;*/
 }
 
 .page-user-root {

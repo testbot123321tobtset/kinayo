@@ -35,11 +35,15 @@ Ext.define('X.controller.mixin.LoginLogout', {
                     var parseSessionStore = Ext.getStore('ParseSessionStore');
                     if (Ext.isObject(parseSessionStore)) {
                         
-                        return parseSessionStore.setSession({
+                        var isSessionSet = parseSessionStore.setSession({
                             userId: unSyncedAuthenticatedUser.get('objectId'),
                             sessionToken: unSyncedAuthenticatedUser.get('sessionToken')
                         });
+                        
+                        return isSessionSet;
                     }
+                    
+                    me.setDeviceContactsStore();
                 }
             }
         }

@@ -132,6 +132,7 @@ Ext.application({
         'Messages'
     ],
     views: [
+        'plugandplay.LoadingContainer',
         'core.Msg',
         'page.user.Root'
     ],

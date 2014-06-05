@@ -38,6 +38,15 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                     }
                 ]
             },
+            {
+                xtype: 'fieldset',
+                items: {
+                    xtype: 'button',
+                    itemId: 'selectContactsButton',
+                    cls: 'select-contacts-button',
+                    text: 'Pick Contacts to Add'
+                }
+            }
             //            {
             //                xtype: 'container',
             //                itemId: 'groupEditMembersFormFieldSet',
@@ -46,13 +55,13 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
             //                    xtype: 'checkboxfield'
             //                }
             //            },
-            {
-                xtype: 'fieldset',
-                itemId: 'usersListContainer',
-                flex: 1,
-                layout: 'fit',
-                title: X.config.Config.getLABELS().SELECT_FRIENDS_TO_ADD_TO_GROUP
-            }
+            //            {
+            //                xtype: 'fieldset',
+            //                itemId: 'usersListContainer',
+            //                flex: 1,
+            //                layout: 'fit',
+            //                title: X.config.Config.getLABELS().SELECT_FRIENDS_TO_ADD_TO_GROUP
+            //            }
             //            ,
             //            {
             //                xtype: 'button',

@@ -16,15 +16,15 @@ $toolbar-button-background-color: $default-darker-background-color;
 $toolbar-button-pressing-background-color: lighten($toolbar-button-background-color, $default-color-variance);
 
 .x-toolbar {
-    
+
     position: relative !important;
-    
+
     @include no-background;
     background-color: $toolbar-background-color !important;
-    
+
     height: $default-toolbar-height !important;
     min-height: $default-toolbar-height !important;
-    
+
     /*Give padding to the scroller so the contents will be at a certain distance from the edge of the tab bars*/
     & + div {
 
@@ -33,27 +33,27 @@ $toolbar-button-pressing-background-color: lighten($toolbar-button-background-co
             padding: $default-edge-distance-from-toolbars 0 !important;
         }
     }
-    
+
     .x-container {
-        
+
         @include no-background;
     }
 
     &.x-docked-bottom {
-        
+
         @include no-background;
         background-color: $toolbar-background-color !important;
-        
+
         @include no-border;
         border: $toolbar-border-width $toolbar-border-style $toolbar-border-color !important;
         border-top: $toolbar-border-visible-edge-width $toolbar-border-visible-edge-style $toolbar-border-visible-edge-color !important;
     }
 
     &.x-docked-top {
-        
+
         @include no-background;
         background-color: $toolbar-background-color !important;
-        
+
         @include no-border;
         border: $toolbar-border-width $toolbar-border-style $toolbar-border-color !important;
         border-bottom: $toolbar-border-visible-edge-width $toolbar-border-visible-edge-style $toolbar-border-visible-edge-color !important;
@@ -70,28 +70,28 @@ $toolbar-button-pressing-background-color: lighten($toolbar-button-background-co
     }
 
     .x-toolbar-inner > .x-container {
-        
+
     }
 
     .button-stacked {
-        
+
         @include no-background;
-        
+
         @include no-margin;
         margin: 0 0.2em !important;
-        
+
         @include no-padding;
         padding-top: .4em !important;
-        
+
         @include no-border;
-        
+
         -webkit-box-orient: vertical;
         -ms-flex-direction: column;
         flex-direction: column;
 
         height: $default-toolbar-height !important;
         min-height: $default-toolbar-height !important;
-        
+
         min-width: 3.2em !important;
 
         .x-button-icon {
@@ -108,59 +108,59 @@ $toolbar-button-pressing-background-color: lighten($toolbar-button-background-co
         .x-button-label {
 
             display: block;
-            
+
             @include no-margin;
-            
+
             @include no-padding;
             padding: 0.1em 0 0.2em 0;
-            
+
             font-size: 0.65em !important;
             line-height: 1em !important;
-            
+
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
-            
+
             color: $toolbar-title-color !important;
         }
     }
 
     .x-button {
-        
+
         @include full-height;
-        
+
         @include no-margin;
-        
+
         @include no-background;
         &.messagebox-button {
-            
+
             background-color: $toolbar-button-background-color !important;
-            
+
             &.x-button-pressing {
-                
+
                 background-color: $toolbar-button-pressing-background-color !important;
             }
         }
-        
+
         @include no-border;
         &.messagebox-button {
-            
+
             border-right: $toolbar-border-visible-edge-width $toolbar-border-visible-edge-style $toolbar-border-visible-edge-color !important;
         }
-        
+
         &:last-child {
             @include no-border;
         }
 
         .x-button-icon {
-            
+
             &:before {
-                
+
                 color: $toolbar-button-color !important;
             }
         }
-        
+
         &.x-button-pressing {
-            
+
             .x-button-icon {
 
                 &:before {
@@ -169,7 +169,7 @@ $toolbar-button-pressing-background-color: lighten($toolbar-button-background-co
                 }
             }
         }
-        
+
         &.messagebox-button {
 
             .x-button-label {
@@ -188,6 +188,28 @@ $toolbar-button-pressing-background-color: lighten($toolbar-button-background-co
 
                 color: $toolbar-title-color !important;
             }
+        }
+    }
+    
+    /*http://blog.42at.com/emulating-iphones-slide-to-unlock*/
+    &.shine {
+
+        .x-title .x-innerhtml {
+
+            -webkit-mask-image: -webkit-gradient(
+                linear, 
+                20% top, 
+                100% top,
+                from(rgba(0, 0, 0, .1)), 
+                color-stop(.5, $default-theme-color-lighten), 
+                to(rgba(0, 0, 0, .1))
+                );
+            -webkit-mask-size: 50%;
+
+            -webkit-animation-name: spotlight;
+            -webkit-animation-timing-function: linear;
+            -webkit-animation-duration: 2000ms;
+            -webkit-animation-iteration-count: infinite;
         }
     }
 }

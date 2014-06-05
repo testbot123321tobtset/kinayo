@@ -11,6 +11,7 @@ Ext.define('X.controller.Main', {
     mixins: {
         util: 'X.controller.mixin.Util',
         parse: 'X.controller.mixin.Parse',
+        phonenumber: 'X.controller.mixin.PhoneNumber',
         common: 'X.controller.mixin.Common',
         factory: 'X.controller.mixin.Factory',
         page: 'X.controller.mixin.Page',

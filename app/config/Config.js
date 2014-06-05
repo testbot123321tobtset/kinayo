@@ -150,6 +150,12 @@ Ext.define('X.config.Config', {
             easing: 'cubic-bezier(0,.23,0,1)',
             duration: 200
         },
+        SHOW_ANIMATION_FROM_DOWN_CONFIG: {
+            type: 'slide',
+            direction: 'up',
+            easing: 'cubic-bezier(0,.23,0,1)',
+            duration: 200
+        },
         HIDE_ANIMATION_CONFIG: {
             type: 'popOut',
             easing: 'cubic-bezier(0,.23,0,1)',
@@ -167,6 +173,12 @@ Ext.define('X.config.Config', {
             easing: 'cubic-bezier(.7,0,.7,1)',
             duration: 200
         },
+        HIDE_ANIMATION_FROM_UP_SLOW_AT_FIRST_CONFIG: {
+            type: 'slideOut',
+            direction: 'down',
+            easing: 'cubic-bezier(.7,0,.7,1)',
+            duration: 200
+        },
         SHOW_BY_POP_ANIMATION_CONFIG: {
             type: 'pop',
             easing: 'cubic-bezier(0,.23,0,1)',
@@ -181,8 +193,8 @@ Ext.define('X.config.Config', {
         // Phonegap
         // Contact (http://docs.phonegap.com/en/3.3.0/cordova_contacts_contacts.md.html#Contacts)
         PG_FIELDS_REQUIRED_TO_IMPORT_DEVICE_CONTACT: [
-            'emails'
-            //            'phoneNumbers'
+            //            'emails'
+            'phoneNumbers'
         ],
         PG_READ_DEVICE_CONTACT_FIELDS: [
             'id', 'displayName', 'name', 'nickname', 'phoneNumbers', 'emails', 'photos'

@@ -122,10 +122,6 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
         me.setTitleToGroupTitle();
         me.callParent(arguments);
     },
-    getBackButton: function() {
-        var me = this;
-        return me.down('#UserGroupEditContainerToolbar #backButton');
-    },
     setTitleToGroupTitle: function() {
         var me = this;
         me.down('#UserGroupEditContainerToolbar').setTitle(me.getRecord().get('title'));

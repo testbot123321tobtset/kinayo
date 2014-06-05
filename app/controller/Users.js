@@ -23,6 +23,8 @@ Ext.define('X.controller.Users', {
     requires: [
         'X.model.validation.UserLogin',
         'X.view.plugandplay.SignupAndLoginContainer',
+        'X.view.plugandplay.NonInteractiveUsersListContainer',
+        'X.view.plugandplay.InteractiveUsersListContainer',
         'X.view.plugandplay.PhotoMessageInputContainer'
     ],
     config: {
@@ -82,7 +84,7 @@ Ext.define('X.controller.Users', {
             },
             // User account info panel
             importFriendsFromDeviceContactsButton: {
-                tap: 'addFriendsFromDeviceContacts'
+                tap: 'onImportFriendsFromDeviceContactsButtonTap'
             },
             // Logout
             logoutButton: {
@@ -117,7 +119,7 @@ Ext.define('X.controller.Users', {
             logoutButton: '#userAccountFormPanel #logoutButton',
             //            userLogoutPanel: '#userMoreTabPanel #userLogout',
             //            logoutButton: '#userMoreTabPanel #userLogout #logoutButton'
-
+            
             //            Messaging
             photoMessageInputContainer: '#photoMessageInputContainer',
             photoMessageInputContainerFormPanel: '#photoMessageInputContainer #messageFormPanel',
@@ -167,7 +169,9 @@ Ext.define('X.controller.Users', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.onDeviceContactsStoreRefreshUserRequest(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        return me.addFriendsFromDeviceContacts();
+        
+        //        Refresh device contacts store, then show a window containing
+        //        users list with an attached device contacts store
     },
     /*
      *    ROUTE HANDLERS
@@ -267,6 +271,13 @@ Ext.define('X.controller.Users', {
             }
         }
         return me;
+    },
+    onImportFriendsFromDeviceContactsButtonTap: function() {
+        var me = this;
+        
+        //        Refresh device contacts store, then show a window containing
+        //        users list with an attached device contacts store
+        return me.setDeviceContactsStoreAndGenerateAndFillViewportWithNonInteractiveUsersListContainer();
     },
     onPhotoMessageInputContainerSubmitButtonTap: function() {
         var me = this;
@@ -545,55 +556,6 @@ Ext.define('X.controller.Users', {
     //    METHODS TO BE SORTED OUT
     // 
 
-    addFriendsFromDeviceContacts: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Users.addFriendsFromDeviceContacts()');
-        }
-        me.setDeviceContactsStoreAndCallback({
-            successCallback: {
-                fn: function() {
-                    //                    var args = arguments[0];
-                    //                    args.contacts should have all contacts
-                    me.xhrAddFriendsFromDeviceContacts();
-                },
-                scope: me
-            },
-            failureCallback: {
-                fn: function() {
-                    console.log('Debug: X.controller.Users.addFriendsFromDeviceContacts(): Failed to retrieve contacts from device\'s address book');
-                },
-                scope: me
-            }
-        });
-        return me;
-    },
-    xhrAddFriendsFromDeviceContacts: function() {
-        var me = this;
-        var deviceContactsStore = Ext.getStore('DeviceContactStore');
-        var deviceContactsStoreCount = deviceContactsStore.getCount();
-        if (deviceContactsStoreCount > 0) {
-            var emails = deviceContactsStore.getEmails();
-            if (Ext.isArray(emails) && !Ext.isEmpty(emails)) {
-                Ext.Ajax.request({
-                    url: '/friendships/usingemails',
-                    method: 'POST',
-                    params: {
-                        emails: emails.join(';')
-                    },
-                    success: function(response) {
-                        //                        When you get this response, either refresh authenticated user store
-                        //                        that should now give you the authenticated user with all of the contacts
-                        //                        whom he/she can see or have POST to /friendships/usingemails send back the
-                        //                        this data and update authenticated user store locally, so we get all friends back
-                        //                        See: http://www.sencha.com/forum/showthread.php?284514-How-to-mimic-store.load()-with-local-data&p=1040738#post1040738
-                        console.log(response);
-                    }
-                });
-            }
-        }
-        return me;
-    },
     doAddFriend: function(button, e, eOpts) {
         var me = this;
         if (me.getDebug()) {

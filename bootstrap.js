@@ -746,6 +746,7 @@ Ext.ClassManager.addNameAlternateMappings({
   ],
   "X.config.Config": [],
   "X.config.DummyData": [],
+  "X.config.LocalDummyData": [],
   "X.controller.Boot": [],
   "X.controller.Groups": [],
   "X.controller.Main": [],
@@ -759,6 +760,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.controller.mixin.LoginLogout": [],
   "X.controller.mixin.Page": [],
   "X.controller.mixin.Parse": [],
+  "X.controller.mixin.PhoneNumber": [],
   "X.controller.mixin.User": [],
   "X.controller.mixin.Util": [],
   "X.controller.phone.Main": [],
@@ -790,7 +792,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.view.phone.Main": [],
   "X.view.plugandplay.CameraTriggerPanel": [],
   "X.view.plugandplay.DeviceContactsUsersList": [],
+  "X.view.plugandplay.InteractiveUsersList": [],
+  "X.view.plugandplay.InteractiveUsersListContainer": [],
+  "X.view.plugandplay.LoadingContainer": [],
   "X.view.plugandplay.MessageFormPanel": [],
+  "X.view.plugandplay.NonInteractiveUsersList": [],
+  "X.view.plugandplay.NonInteractiveUsersListContainer": [],
   "X.view.plugandplay.PhotoMessageInputContainer": [],
   "X.view.plugandplay.SignupAndLoginContainer": [],
   "X.view.plugandplay.SignupAndLoginTabPanel": [],
@@ -1760,6 +1767,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.viewport.WindowsPhone": [],
   "X.config.Config": [],
   "X.config.DummyData": [],
+  "X.config.LocalDummyData": [],
   "X.controller.Boot": [],
   "X.controller.Groups": [],
   "X.controller.Main": [],
@@ -1773,6 +1781,7 @@ Ext.ClassManager.addNameAliasMappings({
   "X.controller.mixin.LoginLogout": [],
   "X.controller.mixin.Page": [],
   "X.controller.mixin.Parse": [],
+  "X.controller.mixin.PhoneNumber": [],
   "X.controller.mixin.User": [],
   "X.controller.mixin.Util": [],
   "X.controller.phone.Main": [],
@@ -1818,8 +1827,23 @@ Ext.ClassManager.addNameAliasMappings({
   "X.view.plugandplay.DeviceContactsUsersList": [
     "widget.devicecontactsuserslist"
   ],
+  "X.view.plugandplay.InteractiveUsersList": [
+    "widget.interactiveuserslist"
+  ],
+  "X.view.plugandplay.InteractiveUsersListContainer": [
+    "widget.interactiveuserslistcontainer"
+  ],
+  "X.view.plugandplay.LoadingContainer": [
+    "widget.loadingcontainer"
+  ],
   "X.view.plugandplay.MessageFormPanel": [
     "widget.messageformpanel"
+  ],
+  "X.view.plugandplay.NonInteractiveUsersList": [
+    "widget.noninteractiveuserslist"
+  ],
+  "X.view.plugandplay.NonInteractiveUsersListContainer": [
+    "widget.noninteractiveuserslistcontainer"
   ],
   "X.view.plugandplay.PhotoMessageInputContainer": [
     "widget.photomessageinputcontainer"

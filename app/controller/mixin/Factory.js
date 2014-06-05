@@ -311,15 +311,15 @@ Ext.define('X.controller.mixin.Factory', {
         options = Ext.isObject(options) ? options : false;
         if (options) {
             var group = ('group' in options && Ext.isObject(options.group)) ? options.group : false;
-            var UserGroupEditContainer = Ext.isObject(me.getUserGroupEditContainer()) ? me.getUserGroupEditContainer() : Ext.Viewport.add(me.createView({
+            var userGroupEditContainer = Ext.isObject(me.getUserGroupEditContainer()) ? me.getUserGroupEditContainer() : Ext.Viewport.add(me.createView({
                 xtype: 'usergroupeditcontainer'
             }));
-            UserGroupEditContainer.setDimensions().
+            userGroupEditContainer.setDimensions().
                     open().
                     setRecordRecursive(group).
                     setReadOnly(!group.isCreatedByMe());
 
-            return UserGroupEditContainer;
+            return userGroupEditContainer;
         }
 
         return me;
@@ -335,20 +335,6 @@ Ext.define('X.controller.mixin.Factory', {
                 down('#userGroupsTabPanel');
         userGroupsTabPanel.
                 setActiveItem('#userAddGroups');
-
-        return userGroupsTabPanel;
-    },
-    // User :: Groups :: Create
-    generateUserGroupsTabPanelAndActivateUserContactsTab: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.Factory: generateUserGroupsTabPanelAndActivateUserContactsTab()');
-        }
-
-        var userGroupsTabPanel = me.generateUserRootPageTabPanelAndActivateUserGroupsTab().
-                down('#userGroupsTabPanel');
-        userGroupsTabPanel.
-                setActiveItem('#userContacts');
 
         return userGroupsTabPanel;
     },
@@ -389,5 +375,119 @@ Ext.define('X.controller.mixin.Factory', {
         }
 
         return me;
+    },
+    setDeviceContactsStoreAndGenerateAndFillViewportWithNonInteractiveUsersListContainer: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.Factory: setDeviceContactsStoreAndGenerateAndFillViewportWithNonInteractiveUsersListContainer()');
+        }
+        
+        var successCallback = false,
+                failureCallback = false;
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(options) {
+            
+            successCallback = ('successCallback' in options && Ext.isObject(options.successCallback)) ? options.successCallback : false;
+            failureCallback = ('failureCallback' in options && Ext.isObject(options.failureCallback)) ? options.failureCallback : false;
+        }
+        
+        var listContainer = 'nonInteractiveUsersListContainer' in X ? X.nonInteractiveUsersListContainer : false;
+        if(listContainer) {
+            
+            listContainer = (Ext.isObject(listContainer) && !Ext.isEmpty(listContainer)) ? listContainer : false;
+        }
+        
+        if(!listContainer) {
+            
+            listContainer = Ext.Viewport.add(me.createView({
+                xtype: 'noninteractiveuserslistcontainer'
+            }));
+            listContainer = (Ext.isObject(listContainer) && !Ext.isEmpty(listContainer)) ? listContainer : false;
+        }
+        
+        if(listContainer) {
+            
+            X.view.plugandplay.LoadingContainer.show();
+            
+            listContainer.down('list').hide();
+            listContainer.setDimensions().
+                    open();
+            
+            Ext.Function.defer(function() {
+                var deviceContactStore = Ext.getStore('DeviceContactStore');
+                if (Ext.isObject(deviceContactStore)) {
+                    
+                    me.setDeviceContactsStore({
+                        successCallback: {
+                            fn: function() {
+                                
+                                listContainer.down('list').
+                                        setStore(deviceContactStore);
+                                listContainer.down('list').show();
+
+                                X.view.plugandplay.LoadingContainer.hide();
+                            },
+                            scope: me
+                        }
+                    });
+                }
+            }, 100);
+            
+            return listContainer;
+        }
+        
+        return false;
+    },
+    generateAndFillViewportWithNonInteractiveUsersListContainer: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithNonInteractiveUsersListContainer()');
+        }
+
+        var successCallback = false,
+                failureCallback = false;
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(options) {
+            
+            successCallback = ('successCallback' in options && Ext.isObject(options.successCallback)) ? options.successCallback : false;
+            failureCallback = ('failureCallback' in options && Ext.isObject(options.failureCallback)) ? options.failureCallback : false;
+        }
+        
+        var listContainer = 'nonInteractiveUsersListContainer' in X ? X.nonInteractiveUsersListContainer : false;
+        if(listContainer) {
+            
+            listContainer = (Ext.isObject(listContainer) && !Ext.isEmpty(listContainer)) ? listContainer : false;
+        }
+        
+        if(!listContainer) {
+            
+            listContainer = Ext.Viewport.add(me.createView({
+                xtype: 'noninteractiveuserslistcontainer'
+            }));
+            listContainer = (Ext.isObject(listContainer) && !Ext.isEmpty(listContainer)) ? listContainer : false;
+        }
+        
+        if(listContainer) {
+            listContainer.addShine();
+            listContainer.setDimensions().
+                    open();
+            Ext.Function.defer(function() {
+                var deviceContactStore = Ext.getStore('DeviceContactStore');
+                if (Ext.isObject(deviceContactStore)) {
+
+                    listContainer.down('list').
+                            setStore(deviceContactStore);
+                    
+                    listContainer.removeShine();
+                }
+            }, 100);
+            
+
+            return listContainer;
+        }
+        
+        return false;
     }
 });

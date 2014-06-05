@@ -26,6 +26,7 @@ $facebook-blue: #4c66a4;
 $facebook-blue-lighten: lighten($facebook-blue, 30%);
 $ios7-blue: #157efb;
 $my-blue: #28B7FA;
+$my-blue-lighten: lighten($my-blue, 30%);
 $ios7-red: #fc3e39;
 $ios7-orange: #F92E32;
 $my-orange: #ee6557;
@@ -42,6 +43,7 @@ $i-purple-lighten: $icloud-reminders-purple-lighten;
 $my-purple-lighten: lighten($my-purple, 30%);
 $my-purple-orange: lighten($my-orange, 30%);
 $ios7-music-pink: #F01F73;
+$ios7-music-pink-lighten: lighten($ios7-music-pink, 30%);
 $ios7-music-pink-r: 240;
 $ios7-music-pink-g: 31;
 $ios7-music-pink-b: 115;
@@ -70,6 +72,7 @@ $wetasphalt-b: 94;
 
 /* Default theme colors */
 $default-theme-color: $ios7-music-pink;
+$default-theme-color-lighten: $ios7-music-pink-lighten;
 $default-theme-color-r: $ios7-music-pink-r;
 $default-theme-color-g: $ios7-music-pink-g;
 $default-theme-color-b: $ios7-music-pink-b;

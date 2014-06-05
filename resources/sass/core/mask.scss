@@ -7,7 +7,6 @@ $mask-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity)
 .x-mask {
     
     @include no-background;
-    /*background-color: $mask-background-color !important;*/
     
     .x-mask-inner {
         

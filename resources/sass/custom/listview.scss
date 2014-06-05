@@ -4,6 +4,8 @@
 @import 'core/listview';
 
 .users-list {
+    
+    margin-bottom: $default-toolbar-height !important;
 
     .x-list-item {
 
@@ -35,4 +37,9 @@
             }
         }
     }
+}
+
+.noninteractive-users-list, .interactive-users-list {
+    
+    margin-bottom: $default-toolbar-height !important;
 }

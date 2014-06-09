@@ -45,6 +45,10 @@ Ext.define('X.config.Config', {
             },
             GROUPS: {
                 ENDPOINT: 'classes/Group'
+            },
+            CUSTOM_CLOUD_FUNCTIONS: {
+                ENDPOINT: 'functions',
+                METHOD: 'POST'
             }
         },
         
@@ -158,8 +162,8 @@ Ext.define('X.config.Config', {
         },
         HIDE_ANIMATION_CONFIG: {
             type: 'popOut',
-            easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 400
+            easing: 'cubic-bezier(.7,0,.7,1)',
+            duration: 200
         },
         HIDE_ANIMATION_FROM_DOWN_CONFIG: {
             type: 'slideOut',
@@ -186,8 +190,8 @@ Ext.define('X.config.Config', {
         },
         HIDE_BY_POP_ANIMATION_CONFIG: {
             type: 'popOut',
-            easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 400
+            easing: 'cubic-bezier(.7,0,.7,1)',
+            duration: 200
         },
         
         // Phonegap
@@ -197,7 +201,9 @@ Ext.define('X.config.Config', {
             'phoneNumbers'
         ],
         PG_READ_DEVICE_CONTACT_FIELDS: [
-            'id', 'displayName', 'name', 'nickname', 'phoneNumbers', 'emails', 'photos'
+            //            'id', 'displayName', 'name', 'nickname', 'phoneNumbers', 'emails', 'photos'
+            //            I think we only need phone numbers to verify with Parse
+            'phoneNumbers'
         ],
 //        https://github.com/apache/cordova-plugin-camera/blob/master/doc/index.md
         PG_CAMERA: {

@@ -29,7 +29,7 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
         items: [
             {
                 xtype: 'titlebar',
-                itemId: 'UserGroupEditContainerToolbar',
+                itemId: 'userGroupEditContainerToolbar',
                 docked: 'top',
                 top: 0,
                 cls: 'x-stretched x-docked-top x-full-width user-edit-group-container-toolbar',
@@ -103,8 +103,12 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
     },
     onShow: function() {
         var me = this;
+        
         me.setTitleToGroupTitle();
-        me.callParent(arguments);
+        
+        me.down('usergroupeditformpanel').setUsersListWithCurrentGroupMembers();
+        
+        return me.callParent(arguments);
     },
     onBackButtonTap: function(button, e, eOpts) {
         var me = this;
@@ -124,7 +128,7 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
     },
     setTitleToGroupTitle: function() {
         var me = this;
-        me.down('#UserGroupEditContainerToolbar').setTitle(me.getRecord().get('title'));
+        me.down('#userGroupEditContainerToolbar').setTitle(me.getRecord().get('title'));
         return me;
     },
     setReadOnly: function(isReadOnly) {

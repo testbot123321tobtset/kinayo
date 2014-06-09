@@ -33,7 +33,15 @@
 
         &:before {
 
-            border-bottom: 1px solid $default-border-color-for-fieldsets;
+            border-bottom: 1px solid $default-border-color-for-fieldsets !important;
+        }
+
+        &.x-list-item-last {
+
+            &:before {
+
+                @include no-border;
+            }
         }
 
         .x-innerhtml {
@@ -56,10 +64,10 @@
 
                 &:before {
 
-                    border-bottom: 1px solid $default-border-color-for-fieldsets;
+                    border-bottom: 1px solid $default-border-color-for-fieldsets !important;
                 }
 
-                &:last-of-type {
+                &.x-list-item-last {
 
                     &:before {
 
@@ -97,7 +105,15 @@
 
                 &:before {
 
-                    border-bottom: 1px solid $default-border-color-for-fieldsets;
+                    border-bottom: 1px solid $default-border-color-for-fieldsets !important;
+                }
+
+                &.x-list-item-last {
+
+                    &:before {
+
+                        @include no-border;
+                    }
                 }
 
                 &:last-of-type {

@@ -42,8 +42,6 @@ Ext.define('X.controller.mixin.LoginLogout', {
                         
                         return isSessionSet;
                     }
-                    
-                    me.setDeviceContactsStore();
                 }
             }
         }

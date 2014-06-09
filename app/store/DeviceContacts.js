@@ -44,8 +44,9 @@ Ext.define('X.store.DeviceContacts', {
         var me = this;
         
         if(Ext.isArray(contacts)) {
+            
             me.setData(contacts);
-            me.sync();
+            
             if(!me.loaded) {
                 me.loaded = true;
             }

@@ -2,6 +2,7 @@
 // component can call this component and this component should just fill up
 // the screen. This is essentially an independent and quasi-floating window
 Ext.define('X.view.plugandplay.InteractiveUsersListContainer', {
+    singleton: true,
     extend: 'X.view.core.Container',
     requires: [
         'Ext.TitleBar',
@@ -26,6 +27,7 @@ Ext.define('X.view.plugandplay.InteractiveUsersListContainer', {
         fullscreen: true,
         modal: true,
         hidden: true,
+        zIndex: X.config.Config.getZINDEX_LEVEL_1(),
         items: [
             {
                 xtype: 'titlebar',
@@ -66,8 +68,14 @@ Ext.define('X.view.plugandplay.InteractiveUsersListContainer', {
                 ]
             },
             {
+                cls: 'tabbar-height-spacer-container'
+            },
+            {
                 xtype: 'interactiveuserslist',
                 flex: 1
+            },
+            {
+                cls: 'tabbar-height-spacer-container'
             }
         ]
     },
@@ -85,7 +93,36 @@ Ext.define('X.view.plugandplay.InteractiveUsersListContainer', {
         
         return me;
     },
+    close: function() {
+        var me = this;
+        
+        me.resetTitle();
+        me.resetList();
+        
+        return me.callParent(arguments);
+    },
     setShine: function() {
         this.down('toolbar').addCls('shine');
+    },
+    setTitle: function(title) {
+        var me = this;
+        
+        me.down('#interactiveUsersListContainerToolbar').setTitle(Ext.isString(title) ? title : 'Contacts');
+        
+        return me;
+    },
+    resetTitle: function() {
+        var me = this;
+        
+        me.down('#interactiveUsersListContainerToolbar').setTitle('Contacts');
+        
+        return me;
+    },
+    resetList: function() {
+        var me = this;
+        
+        me.down('#interactiveUsersList').deselectAll(true);
+        
+        return me;
     }
 });

@@ -20,12 +20,16 @@ Ext.define('X.store.AuthenticatedUser', {
 
         var parseSessionStore = Ext.getStore('ParseSessionStore');
         if (Ext.isObject(parseSessionStore)) {
+            
             var session = parseSessionStore.getSession();
             if (Ext.isObject(session) && !Ext.isEmpty(session)) {
+                
                 var userIdFromSession = ('userId' in session && Ext.isString(session.userId) && !Ext.isEmpty(session.userId)) ? session.userId : false;
                 if (userIdFromSession) {
+                    
                     var sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
                     if (sessionToken) {
+                        
                         var isAuthenticatedUserStoreEmpty = me.isEmpty();
                         if (!isAuthenticatedUserStoreEmpty) {
                             //                            When authenticated user store is not empty, check if the user in store
@@ -65,11 +69,13 @@ Ext.define('X.store.AuthenticatedUser', {
                 sessionToken = (Ext.isString(sessionToken) && !Ext.isEmpty(sessionToken)) ? sessionToken : false;
                 if (sessionToken) {
                     me.setSessionHeaderForAllStores(sessionToken);
-                    //                    This only happens when the authenticated user store loads
+                    //                    This is a one-way update. Changes made to the group stores from elsewhere
+                    //                    doesn't sync back to this array
                     //                    Don't rely on this to get the relevant groups – always use the group
                     //                    stores. For instance when a group is created by the user, the arrays in
                     //                    authenticated user are not updated
                     authenticatedUser.updateAllGroupStores();
+                    authenticatedUser.updateFriendsStore();
                 }
 
                 Ext.Viewport.fireEvent('authenticateduserstoreload', {

@@ -97,6 +97,18 @@ Ext.define('X.controller.mixin.Group', {
             console.log(options);
             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+        var successCallback = false,
+                failureCallback = false,
+                callback = false;
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(options) {
+            
+            successCallback = ('successCallback' in options && Ext.isObject(options.successCallback)) ? options.successCallback : false;
+            failureCallback = ('failureCallback' in options && Ext.isObject(options.failureCallback)) ? options.failureCallback : false;
+            callback = ('callback' in options && Ext.isObject(options.callback)) ? options.callback : false;
+        }
 
         options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
         if (options) {
@@ -141,6 +153,10 @@ Ext.define('X.controller.mixin.Group', {
                             },
                             scope: me
                         });
+                        
+                        successCallback && me.executeCallback(successCallback);
+                    
+                        callback && me.executeCallback(callback);
                     },
                     failure: function(record, operation) {
                         if (me.getDebug()) {
@@ -162,6 +178,10 @@ Ext.define('X.controller.mixin.Group', {
                                 me.redirectTo('user/profile/groups/feeds');
                             }
                         });
+                        
+                        failureCallback && me.executeCallback(failureCallback);
+                    
+                        callback && me.executeCallback(callback);
                     }
                 };
 

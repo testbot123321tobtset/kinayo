@@ -47,8 +47,8 @@ Ext.define('X.view.page.user.Root', {
                 },
                 itemId: 'userGroups',
                 cls: 'user-groups',
-                iconCls: 'groupsfilled',
-                title: 'Groups',
+                iconCls: 'chatbubblefilled',
+                title: 'Chats',
                 items: [
                     {
                         flex: 1,

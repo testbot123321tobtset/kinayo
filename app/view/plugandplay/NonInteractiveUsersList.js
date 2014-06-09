@@ -12,9 +12,6 @@ Ext.define('X.view.plugandplay.NonInteractiveUsersList', {
         
         scrollToTopOnRefresh: true,
         
-        itemTpl: '{formattedName}',
-        
-        showAnimation: X.config.Config.getSHOW_ANIMATION_CONFIG(),
-        hideAnimation: X.config.Config.getHIDE_ANIMATION_CONFIG()
+        itemTpl: '{fullName}'
     }
 });

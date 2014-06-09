@@ -81,8 +81,8 @@ Ext.define('X.store.Groups', {
                                     condition: function() {
                                         return !groupsCreatedByAUStore.isLoading();
                                     },
-                                    delay: 1000,
-                                    limit: 10000,
+                                    delay: 100,
+                                    limit: 2000,
                                     scope: me
                                 });
 
@@ -93,8 +93,8 @@ Ext.define('X.store.Groups', {
                     condition: function() {
                         return !groupsAUIsMemberOfStore.isLoading();
                     },
-                    delay: 1000,
-                    limit: 10000,
+                    delay: 100,
+                    limit: 2000,
                     scope: me
                 });
             }

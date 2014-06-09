@@ -32,8 +32,13 @@ Ext.define('X.controller.Preflight', {
             Ext.Msg.setZIndex(X.config.Config.getZINDEX_LEVEL_5());
         });
         
-        //        X.view.plugandplay.LoadingContainer initialization
+        /*
+         * Singleton Initializations
+         */
+        
         Ext.Viewport.add(X.view.plugandplay.LoadingContainer);
+        Ext.Viewport.add(X.view.plugandplay.InteractiveUsersListContainer);
+        //        Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer);
 
 //        Native string extras
         Ext.apply(String.prototype, (function() {

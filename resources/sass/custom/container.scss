@@ -22,6 +22,11 @@ $container-border-visible-edge-color: $default-border-color;
     @include single-transition;
 }
 
+.tabbar-height-spacer-container {
+    
+    height: $default-edge-distance-from-toolbars !important;
+}
+
 .loading-container {
     
     @include no-border;
@@ -58,6 +63,11 @@ $container-border-visible-edge-color: $default-border-color;
     
     background: transparent url('../images/loading.gif') no-repeat center !important; 
     background-size: 24px 24px !important;*/
+}
+
+.simple-display-container {
+    
+    height: $default-button-height !important;
 }
 
 .page-user-root {

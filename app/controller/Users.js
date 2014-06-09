@@ -83,7 +83,7 @@ Ext.define('X.controller.Users', {
                 activeitemchange: 'onUserMoreTabPanelPanelActiveItemChange'
             },
             // User account info panel
-            importFriendsFromDeviceContactsButton: {
+            findFriendsFromDeviceContactsButton: {
                 tap: 'onImportFriendsFromDeviceContactsButtonTap'
             },
             // Logout
@@ -114,7 +114,7 @@ Ext.define('X.controller.Users', {
             // User :: More
             userMoreTabPanel: '#userMoreTabPanel',
             userAccountFormPanel: '#userMoreTabPanel #userAccountFormPanel',
-            importFriendsFromDeviceContactsButton: '#userMoreTabPanel #userAccountFormPanel #importFriendsFromDeviceContactsButton',
+            findFriendsFromDeviceContactsButton: '#userMoreTabPanel #userAccountFormPanel #findFriendsFromDeviceContactsButton',
             // User :: Logout
             logoutButton: '#userAccountFormPanel #logoutButton',
             //            userLogoutPanel: '#userMoreTabPanel #userLogout',
@@ -256,6 +256,7 @@ Ext.define('X.controller.Users', {
         }
         return me;
     },
+    //    USER ACCOUNT PANEL
     onUserMoreTabPanelPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
         if (Ext.isObject(tabPanel) && Ext.isObject(activeItem)) {
@@ -275,10 +276,60 @@ Ext.define('X.controller.Users', {
     onImportFriendsFromDeviceContactsButtonTap: function() {
         var me = this;
         
-        //        Refresh device contacts store, then show a window containing
-        //        users list with an attached device contacts store
-        return me.setDeviceContactsStoreAndGenerateAndFillViewportWithNonInteractiveUsersListContainer();
+        //        The logic:
+        //        1. freshly read device contacts from the device and get all the phone numbers
+        //        2. POST to parse cloud function setFriendsForPhoneNumbers, which if executed successfully
+        //              will automatically trigger authenticated user store load
+        //        3. Pass a successCallback from here which will be execute as a callback after the 
+        //              authenticated user store loads
+        //        4. When the authenticated user store loads, it will automatically update the friends store
+        //        5. Generate the friends list in an interactive user list (so the user can pick members for her group)
+        //              inside of the successCallback sent in step #3
+        //        
+        //        For a clearer picture of the workflow, refer to: https://docs.google.com/document/d/12HrIs4C6R0h9j1maSMkHIci4OrSnuXkNia87V_luNXI/edit?usp=sharing
+        
+        X.view.plugandplay.LoadingContainer.show();
+        
+        return me.fetchFriendsFromServerForPhoneNumbersOfDeviceContactsAndSetFriendsStore({
+            
+            successCallback: {
+                fn: function() {
+                    
+                    me.generateAndFillViewportWithInteractiveUsersListContainer({
+                        
+                        callback: {
+                            fn: function() {
+
+                                var args = arguments[0];
+                                var interactiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
+                                if (interactiveUsersListContainer) {
+
+                                    var interactiveList = interactiveUsersListContainer.down('interactiveuserslist');
+                                    var interactiveList = (Ext.isObject(interactiveList) && !Ext.isEmpty(interactiveList)) ? interactiveList : false;
+                                    if (interactiveList) {
+
+                                        interactiveUsersListContainer.setTitle('Pick Group Members');
+
+                                        var friendsStore = Ext.getStore('FriendsStore');
+                                        friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
+                                        if (friendsStore) {
+
+                                            interactiveList.setStore(friendsStore);
+                                            
+                                            X.view.plugandplay.LoadingContainer.hide();
+                                        }
+                                    }
+                                }
+                            },
+                            scope: me
+                        }
+                    });
+                },
+                scope: me
+            }
+        });
     },
+    //    MESSAGE CONTAINER
     onPhotoMessageInputContainerSubmitButtonTap: function() {
         var me = this;
         if (me.getDebug()) {
@@ -334,13 +385,16 @@ Ext.define('X.controller.Users', {
 
             //            Don't use formpanel's submit method – it always url encodes the params, and
             //            Parse expects json encoded params
+            
             var formValues = form.getValues();
+            
+            var params = formValues;
+            
             Ext.Ajax.request({
-                //                Parse
                 url: url,
                 method: method,
                 headers: headers,
-                jsonData: formValues,
+                jsonData: params,
                 success: function(serverResponse) {
                     if (me.getDebug()) {
                         console.log('Debug: X.controller.Users.xhrSignup(): Successful. Received serverResponse:');
@@ -348,22 +402,36 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
 
-                    me.generateUserSuccessfullyCreatedWindow({
-                        message: false,
-                        fn: function() {
-                            var createdUser = Ext.decode(serverResponse.responseText);
-                            //                            username is not sent by Parse, so grab it from form values
-                            createdUser.username = formValues.username;
-                            if (Ext.isObject(createdUser) && !Ext.isEmpty(createdUser) && me.logUserIn({
-                                user: createdUser
-                            })) {
-                                me.getSignupAndLoginContainer().
-                                        close();
-                                me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
-                            }
-                        },
-                        scope: me
-                    });
+                    var signedUpUser = Ext.decode(serverResponse.responseText);
+                    signedUpUser = (Ext.isObject(signedUpUser) && !Ext.isEmpty(signedUpUser)) ? signedUpUser : false;
+                    if (signedUpUser) {
+                        
+                        //                            username and phoneNumber is not sent by Parse, so grab it from form values
+                        signedUpUser.username = params.username;
+                        signedUpUser.phoneNumber = params.phoneNumber
+
+                        var hasLoggedIn = false;
+                        hasLoggedIn = me.logUserIn({
+                            user: signedUpUser
+                        });
+                        
+                        if (hasLoggedIn) {
+                            
+                            me.generateUserSuccessfullyCreatedWindow({
+                                message: false,
+                                fn: function() {
+
+                                    me.getSignupAndLoginContainer().
+                                            close();
+                                    //                            This redirect will automatically load the authenticated user store
+                                    //                            which is when we get the full authenticated user with all her
+                                    //                            associated groups from Parse
+                                    me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                                },
+                                scope: me
+                            });
+                        }
+                    }
                 },
                 failure: function(serverResponse) {
                     if (me.getDebug()) {
@@ -372,9 +440,10 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
 
-                    var operationStatus = serverResponse.status,
-                            operationStatusText = serverResponse.statusText;
-
+                    //                    TEMPLATE: Use this as a template to extract information from Parse's response
+                    //                    var operationStatus = serverResponse.status,
+                    //                            operationStatusText = serverResponse.statusText;
+                    //
                     var serverResponseText = Ext.decode(serverResponse.responseText),
                             serverResponseCode = serverResponseText.code,
                             serverResponseError = serverResponseText.error;
@@ -407,7 +476,8 @@ Ext.define('X.controller.Users', {
 
             var errors = Ext.create('X.model.validation.UserLogin', {
                 username: formData.username,
-                password: formData.password
+                password: formData.password,
+                phoneNumber: formData.phoneNumber
             }).
                     validate();
 
@@ -457,6 +527,9 @@ Ext.define('X.controller.Users', {
                     method = parseMetaData.method,
                     headers = parseMetaData.headers;
 
+            //            Don't use formpanel's submit method – it always url encodes the params, and
+            //            Parse expects json encoded params
+            
             var formValues = form.getValues();
             
             var params = formValues;
@@ -555,7 +628,6 @@ Ext.define('X.controller.Users', {
     //    
     //    METHODS TO BE SORTED OUT
     // 
-
     doAddFriend: function(button, e, eOpts) {
         var me = this;
         if (me.getDebug()) {

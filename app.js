@@ -118,6 +118,7 @@ Ext.application({
         'ParseSession',
         'Users',
         'AuthenticatedUser',
+        'Friends',
         'Groups',
         'GroupsAUIsMemberOf',
         'GroupsCreatedByAU',

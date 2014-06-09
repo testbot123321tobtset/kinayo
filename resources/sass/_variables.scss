@@ -98,6 +98,8 @@ $layer-reduction-percent: 1.5%;
 /* Default heights */
 $default-toolbar-height: 3.2em;
 $default-edge-distance-from-toolbars: 1.5em;
+$default-button-height: 2.1em;
+$default-field-height: 2.5em;
 
 /* Default font */
 $default-font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, Arial, 'BBAlpha Sans', sans-serif;
@@ -150,6 +152,8 @@ $mask-spinner-font-size: 170%;
 /*
 Buttons
 */
+$default-button-label-side-padding: 8px;
+
 /*$default-button-border-width: $default-border-width;
 $default-button-border-style: $default-border-style;
 $default-button-border-color: $default-border-color;

@@ -756,6 +756,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.controller.mixin.Common": [],
   "X.controller.mixin.DeviceContact": [],
   "X.controller.mixin.Factory": [],
+  "X.controller.mixin.Friend": [],
   "X.controller.mixin.Group": [],
   "X.controller.mixin.LoginLogout": [],
   "X.controller.mixin.Page": [],
@@ -778,6 +779,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.store.Application": [],
   "X.store.AuthenticatedUser": [],
   "X.store.DeviceContacts": [],
+  "X.store.Friends": [],
   "X.store.Groups": [],
   "X.store.GroupsAUIsMemberOf": [],
   "X.store.GroupsCreatedByAU": [],
@@ -801,6 +803,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.view.plugandplay.PhotoMessageInputContainer": [],
   "X.view.plugandplay.SignupAndLoginContainer": [],
   "X.view.plugandplay.SignupAndLoginTabPanel": [],
+  "X.view.plugandplay.SimpleFormPanelDisplayContainer": [],
   "X.view.plugandplay.UserAccountFormPanel": [],
   "X.view.plugandplay.UserFriendFormPanel": [],
   "X.view.plugandplay.UserGroupAddFormPanel": [],
@@ -1777,6 +1780,7 @@ Ext.ClassManager.addNameAliasMappings({
   "X.controller.mixin.Common": [],
   "X.controller.mixin.DeviceContact": [],
   "X.controller.mixin.Factory": [],
+  "X.controller.mixin.Friend": [],
   "X.controller.mixin.Group": [],
   "X.controller.mixin.LoginLogout": [],
   "X.controller.mixin.Page": [],
@@ -1799,6 +1803,7 @@ Ext.ClassManager.addNameAliasMappings({
   "X.store.Application": [],
   "X.store.AuthenticatedUser": [],
   "X.store.DeviceContacts": [],
+  "X.store.Friends": [],
   "X.store.Groups": [],
   "X.store.GroupsAUIsMemberOf": [],
   "X.store.GroupsCreatedByAU": [],
@@ -1853,6 +1858,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "X.view.plugandplay.SignupAndLoginTabPanel": [
     "widget.signupandlogintabpanel"
+  ],
+  "X.view.plugandplay.SimpleFormPanelDisplayContainer": [
+    "widget.simpleformpaneldisplaycontainer"
   ],
   "X.view.plugandplay.UserAccountFormPanel": [
     "widget.useraccountformpanel"

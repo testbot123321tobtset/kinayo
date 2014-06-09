@@ -113,7 +113,12 @@ Ext.define('X.controller.mixin.Common', {
                                 }
                             }
                         }
-                        me[generateWindowFunctionName].call(me, options);
+                        
+                        var generateWindowFunction = me[generateWindowFunctionName];
+                        if(Ext.isFunction(generateWindowFunction)) {
+                            
+                            generateWindowFunction.call(me, options);
+                        }
                     }
                 }
             }

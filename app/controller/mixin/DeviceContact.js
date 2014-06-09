@@ -58,7 +58,113 @@ Ext.define('X.controller.mixin.DeviceContact', {
             ]
         }
     */
-    //   This will always refresh the store
+   fetchPhoneNumbersOfDeviceContacts: function(options) {
+       var me = this;
+        
+        var successCallback = false,
+                failureCallback = false,
+                callback = false;
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(options) {
+            
+            successCallback = ('successCallback' in options && Ext.isObject(options.successCallback)) ? options.successCallback : false;
+            failureCallback = ('failureCallback' in options && Ext.isObject(options.failureCallback)) ? options.failureCallback : false;
+            callback = ('callback' in options && Ext.isObject(options.callback)) ? options.callback : false;
+        }
+        
+        if (Ext.browser.is.PhoneGap) {
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.mixin.DeviceContact.getPhoneNumbersFromDeviceContacts(): This is a Phonegap application: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
+
+            //                    Read from the device contact book
+            navigator.contacts.find(
+                    X.config.Config.getPG_READ_DEVICE_CONTACT_FIELDS(),
+                    function(contacts) {
+                        if (me.getDebug()) {
+                            console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): navigator.contacts.find(): This is a Phonegap application: Success: Found the following contacts: ');
+                            console.log(contacts);
+                            console.log('Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                        }
+
+                        var phoneNumbers = me.getPhoneNumbersFromGivenDeviceContacts(contacts);
+                        phoneNumbers = (Ext.isArray(phoneNumbers) && !Ext.isEmpty(phoneNumbers)) ? phoneNumbers : false;
+                        if (phoneNumbers) {
+                            
+                            if (successCallback) {
+
+                                successCallback.arguments = {
+                                    phoneNumbers: phoneNumbers
+                                };
+
+                                me.executeCallback(successCallback);
+                                
+                                callback && me.executeCallback(callback);
+                            }
+                        }
+                        else {
+                            
+                            failureCallback && me.executeCallback(failureCallback);
+                        
+                            callback && me.executeCallback(callback);
+                        }
+                    },
+                    function() {
+                        if (me.getDebug()) {
+                            console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): navigator.contacts.find() Failed!: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                        }
+
+                        failureCallback && me.executeCallback(failureCallback);
+                        
+                        callback && me.executeCallback(callback);
+                    },
+                    {
+                        filter: '',
+                        multiple: true
+                    }
+            );
+
+            callback && me.executeCallback(callback);
+        }
+        else {
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): This is not a Phonegap application: Dummy data for device contacts: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
+
+            //                Make sure the file LocalDummyData.js exists in app/config directory
+            Ext.require('X.config.LocalDummyData', function() {
+
+                var contacts = X.config.LocalDummyData.getDEVICE_UNFORMATTED_CONTACTS();
+                
+                var phoneNumbers = me.getPhoneNumbersFromGivenDeviceContacts(contacts);
+                phoneNumbers = (Ext.isArray(phoneNumbers) && !Ext.isEmpty(phoneNumbers)) ? phoneNumbers : false;
+                if (phoneNumbers) {
+                    
+                    if (successCallback) {
+                        
+                        successCallback.arguments = {
+                            phoneNumbers: phoneNumbers
+                        };
+
+                        me.executeCallback(successCallback);
+                    }
+                }
+                else {
+                    
+                    failureCallback && me.executeCallback(failureCallback);
+                }
+            });
+
+            callback && me.executeCallback(callback);
+        }
+        
+       return me;
+   },
+   
+   
+   
+    //   This will always refresh the store and check for registered users on server
     setDeviceContactsStore: function(options) {
         var me = this;
         
@@ -210,6 +316,65 @@ Ext.define('X.controller.mixin.DeviceContact', {
         
         return false;
     },
+    //    This will simply load the deivice contacts store, meaning that it will
+    //    simply load data from local storage. You could call
+    //    load() directly on the store, but its generally a good idea to have a 
+    //    wrapper, so we can perform additional stuff if need be
+    loadDeviceContactsStore: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.DeviceContact.loadDeviceContactsStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        var successCallback = false,
+                failureCallback = false,
+                callback = false;
+        
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if(options) {
+            
+            successCallback = ('successCallback' in options && Ext.isObject(options.successCallback)) ? options.successCallback : false;
+            failureCallback = ('failureCallback' in options && Ext.isObject(options.failureCallback)) ? options.failureCallback : false;
+            callback = ('callback' in options && Ext.isObject(options.callback)) ? options.callback : false;
+        }
+        
+        var deviceContactStore = Ext.getStore('DeviceContactStore');
+        if (Ext.isObject(deviceContactStore)) {
+            
+            deviceContactStore.load(function(records, operation, success) {
+                if (me.getDebug()) {
+                    console.log('Debug: X.controller.mixin.User: loadDeviceContactsStore(): Success: ' + success + ': Records received:');
+                    console.log(records);
+                    console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                }
+
+                if (success) {
+                    
+                    if (successCallback) {
+
+                        successCallback.arguments = {
+                            contacts: formattedContacts
+                        };
+
+                        me.executeCallback(successCallback);
+                    }
+                }
+                else {
+                    failureCallback && me.executeCallback(failureCallback);
+                }
+                
+                callback && me.executeCallback(callback);
+            });
+            
+            return me;
+        }
+        
+        failureCallback && me.executeCallback(failureCallback);
+
+        callback && me.executeCallback(callback);
+        
+        return false;
+    },
     getFormattedContactsFromGivenDeviceContacts: function(contacts) {
         var me = this;
         
@@ -354,7 +519,7 @@ Ext.define('X.controller.mixin.DeviceContact', {
                             var phoneNumber = ('value' in thisPhoneNumber && Ext.isString(thisPhoneNumber.value) && !Ext.isEmpty(Ext.isString(thisPhoneNumber.value))) ? thisPhoneNumber.value : false;
                             if(phoneNumber) {
                                 
-                                phoneNumbers.push(phoneNumber);
+                                phoneNumbers.push(parseInt(phoneNumber.replace(/[^0-9]/g, '')));
                             }
                         }
                     });

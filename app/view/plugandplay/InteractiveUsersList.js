@@ -12,6 +12,6 @@ Ext.define('X.view.plugandplay.InteractiveUsersList', {
         
         scrollToTopOnRefresh: true,
         
-        itemTpl: '{formattedName}'
+        itemTpl: '{fullName}'
     }
 });

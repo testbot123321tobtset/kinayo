@@ -68,7 +68,7 @@ Ext.define('X.store.Application', {
             var idsOfRecordsBeforeLoad = [
             ];
             me.each(function(thisRecord) {
-                idsOfRecordsBeforeLoad.push(thisRecordget('objectId'));
+                idsOfRecordsBeforeLoad.push(thisRecord.get('objectId'));
             });
             me.setIdsOfRecordsBeforeLoad(idsOfRecordsBeforeLoad);
         }
@@ -131,13 +131,7 @@ Ext.define('X.store.Application', {
     //    HELPER METHODS
     //
     getAllStores: function() {
-        return [
-            Ext.getStore('AuthenticatedUserStore'),
-            Ext.getStore('GroupsStore'),
-            Ext.getStore('GroupsAUIsMemberOfStore'),
-            Ext.getStore('GroupsCreatedByAUStore'),
-            Ext.getStore('UsersStore')
-        ];
+        return X.app.getStores();
     },
     isEmpty: function() {
         return this.getAllCount() === 0;
@@ -153,7 +147,7 @@ Ext.define('X.store.Application', {
         var allStores = me.getAllStores();
         if (!Ext.isEmpty(allStores)) {
             Ext.Array.each(allStores, function(thisStore) {
-                if(Ext.isObject(thisStore) && !Ext.isEmpty(thisStore)) {
+                if(Ext.isObject(thisStore) && 'setSessionHeader' in thisStore && Ext.isFunction(thisStore.setSessionHeader)) {
                     thisStore.setSessionHeader(sessionToken);
                 }
             });

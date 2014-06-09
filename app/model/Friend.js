@@ -3,7 +3,15 @@ Ext.define('X.model.Friend', {
     config: {
         fields: [
             {
-                name: 'id'
+                name: 'objectId'
+                        //                Don't persist this, because URLs to the server contain the resource to be updated
+                        //                and not the body of the data itself – Parse doesn't refer to the objectId passed inside
+                        //                of the data.
+                        //                Also, Parse doesn't like sending objectId at the time of creation, and Sencha Touch
+                        //                has to have one when a model is instantiated. Not sending the objectId is the 
+                        //                only solution to the problem. After the first create, the record is automatically
+                        //                updated with the data received from the server, and so the objectId is updated as well
+                        //                persist: false
             },
             {
                 name: 'createdAt',
@@ -18,10 +26,11 @@ Ext.define('X.model.Friend', {
                 persist: false
             },
             {
-                name: 'friendedId'
+                name: 'username',
+                type: 'string'
             },
             {
-                name: 'usernameEmail',
+                name: 'email',
                 type: 'string'
             },
             {
@@ -33,52 +42,45 @@ Ext.define('X.model.Friend', {
                 type: 'string'
             },
             {
+                name: 'phoneNumber',
+                type: 'int'
+            },
+            {
                 name: 'fullName',
                 type: 'string',
                 convert: function(value, record) {
-                    return record.get('firstName') + ' ' + record.get('lastName');
+                    return (Ext.isString(record.get('firstName')) && Ext.isString(record.get('lastName'))) ? record.get('firstName') + ' ' + record.get('lastName') : null;
                 },
                 persist: false
-            }
-        ],
-        hasMany: [
-            {
-//                We only show groups that are either created by the authenticated user
-//                or ones that the authenticated user is a member of. But, authenticated user
-//                can only be part of groups that are either created by the authenticated user
-//                himself/herself or created by his/her friends. So a friend can have groups as well
-                model: 'X.model.Group'
-            }
-        ],
-        belongsTo: [
-            {
-                model: 'X.model.AuthenticatedUser',
-                foreignKey: 'friendedId'
             }
         ],
         validations: [
             {
                 type: 'presence',
-                field: 'id'
+                field: 'objectId'
             },
             {
                 type: 'presence',
                 field: 'friendedId'
             },
             {
-                type: 'email',
-                field: 'usernameEmail'
+                type: 'presence',
+                field: 'phoneNumber'
             }
         ],
         proxy: {
             type: 'rest',
-            idParam: 'id',
-            appendId: false,
-            url: X.config.Config.getPARSE().ENDPOINT + 'user/friends',
-            batchActions: false,
+            url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().USERS.ENDPOINT,
+            appendId: true,
+            batchActions: true,
             reader: {
                 type: 'json',
-                rootProperty: 'result'
+                rootProperty: 'results'
+            },
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'X-Parse-Application-Id': X.config.Config.getPARSE().APPLICATION_ID,
+                'X-Parse-REST-API-Key': X.config.Config.getPARSE().REST_API_KEY
             },
             exception: function(proxy, response, operation, eOpts) {
                 Ext.Viewport.fireEvent('friendproxyexception', {

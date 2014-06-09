@@ -63,8 +63,8 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
                 items: [
                     {
                         xtype: 'button',
-                        itemId: 'importFriendsFromDeviceContactsButton',
-                        cls: 'import-friends-from-device-contacts-button',
+                        itemId: 'findFriendsFromDeviceContactsButton',
+                        cls: 'find-friends-from-device-contacts-button',
                         text: 'Find Friends from your Contacts'
                     },
                     {

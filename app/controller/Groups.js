@@ -3,6 +3,7 @@ Ext.define('X.controller.Groups', {
     requires: [
         'X.view.plugandplay.UserGroupContainer',
         'X.view.plugandplay.UserGroupEditContainer',
+        'X.view.plugandplay.InteractiveUsersListContainer',
         'X.view.plugandplay.UsersList'
     ],
     config: {
@@ -60,12 +61,18 @@ Ext.define('X.controller.Groups', {
             userGroupContainerBackButton: {
                 tap: 'onUserGroupContainerBackButtonTap'
             },
+            userGroupEditFormPanelSelectContactsButton: {
+                tap: 'onUserGroupEditFormPanelSelectContactsButtonTap'
+            },
             // User :: Groups :: Create
             userGroupCreateSubmitButton: {
                 tap: 'onUserGroupCreateSubmitButtonTap'
             },
-            UserGroupEditContainerBackButton: {
-                tap: 'onUserGroupEditContainerBackButtonTap'
+            userGroupCreateSelectContactsButton: {
+                tap: 'onUserGroupCreateSelectContactsButtonTap'
+            },
+            userGroupAddFormPanelSelectContactsButton: {
+                tap: 'onUserGroupAddFormPanelSelectContactsButtonTap'
             }
         },
         refs: {
@@ -89,8 +96,11 @@ Ext.define('X.controller.Groups', {
             userGroupEditFormPanel: '#userGroupEditFormPanel',
             userGroupEditFormPanelUsersListContainer: '#userGroupEditFormPanel #usersListContainer',
             userGroupEditFormPanelUsersList: '#userGroupEditFormPanel #usersListContainer #usersList',
+            userGroupEditFormPanelSelectContactsButton: '#userGroupEditFormPanel #selectContactsButton',
             // User :: Groups :: Create
             userGroupAddFormPanel: '#userGroupAddFormPanel',
+            userGroupAddFormPanelUserList: '#userGroupAddFormPanel interactiveuserslist',
+            userGroupAddFormPanelSelectContactsButton: '#userGroupAddFormPanel #selectContactsButton',
             userGroupCreateSubmitButton: '#userGroupAddFormPanel #submitButton'
         }
     },
@@ -106,12 +116,18 @@ Ext.define('X.controller.Groups', {
 
         var groupsStore = Ext.getStore('GroupsStore');
         if (Ext.isObject(groupsStore)) {
+            
+            X.view.plugandplay.LoadingContainer.show();
+            
             groupsStore.waitForGroupsAUCreatedByStoreAndGroupsAUIsMemberOfStoreToLoadThenLocallyLoad({
+                
                 fn: function() {
                     me.generateUserGroupsTabPanelAndActivateUserGroupFeedsTab();
                     me.addGroupsListToGroupsFeedTabWithGivenGroupsStore(groupsStore);
                     me.getPageUserRoot().
                             closeEverythingAboveMe();
+                    
+                    X.view.plugandplay.LoadingContainer.hide();
                 },
                 scope: me
             });
@@ -366,7 +382,7 @@ Ext.define('X.controller.Groups', {
             console.log('Debug: X.controller.Groups.onUserGroupCreateSubmitButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
 
-        me.doCreateGroup()
+        me.doCreateGroup();
 
         return me;
     },
@@ -375,9 +391,91 @@ Ext.define('X.controller.Groups', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.onUserGroupEditContainerBackButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
         me.redirectTo('user/profile/groups/feeds/' + button.up('#UserGroupEditContainer').
                 getRecord().
                 getId());
+        
+        return me;
+    },
+    onUserGroupEditFormPanelSelectContactsButtonTap: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.onUserGroupEditFormPanelSelectContactsButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        me.generateAndFillViewportWithInteractiveUsersListContainer({
+            callback: {
+                fn: function() {
+                    
+                    var args = arguments[0];
+                    var interactiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
+                    if (interactiveUsersListContainer) {
+                        
+                        var interactiveList = interactiveUsersListContainer.down('interactiveuserslist');
+                        var interactiveList = (Ext.isObject(interactiveList) && !Ext.isEmpty(interactiveList)) ? interactiveList : false;
+                        if (interactiveList) {
+                            
+                            interactiveUsersListContainer.setTitle('Pick Group Members');
+
+                            var friendsStore = Ext.getStore('FriendsStore');
+                            friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
+                            if (friendsStore) {
+                                
+                                interactiveList.setStore(friendsStore);
+                            }
+                        }
+                    }
+                },
+                scope: me
+            }
+        });
+        
+        return me;
+    },
+    onUserGroupAddFormPanelSelectContactsButtonTap: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.onUserGroupAddFormPanelSelectContactsButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        me.generateAndFillViewportWithInteractiveUsersListContainer({
+            callback: {
+                fn: function() {
+                    
+                    var args = arguments[0];
+                    var interactiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
+                    if (interactiveUsersListContainer) {
+                        
+                        var interactiveList = interactiveUsersListContainer.down('interactiveuserslist');
+                        var interactiveList = (Ext.isObject(interactiveList) && !Ext.isEmpty(interactiveList)) ? interactiveList : false;
+                        if (interactiveList) {
+                            
+                            interactiveUsersListContainer.setTitle('Pick Group Members');
+
+                            var friendsStore = Ext.getStore('FriendsStore');
+                            friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
+                            if (friendsStore) {
+                                
+                                interactiveList.setStore(friendsStore);
+                            }
+                        }
+                    }
+                },
+                scope: me
+            }
+        });
+        
+        
+//        var interactiveUsersListContainer = me.generateAndFillViewportWithInteractiveUsersListContainer();
+//        interactiveUsersListContainer = (Ext.isObject(interactiveUsersListContainer) && !Ext.isEmpty(interactiveUsersListContainer)) ? interactiveUsersListContainer : false;
+//        if(interactiveUsersListContainer) {
+//            
+//            interactiveUsersListContainer.setTitle('Pick Group Members');
+//            
+//            console.log('do after logic for when the user has selected a few contacts');
+//        }
+        
         return me;
     },
     /*
@@ -388,6 +486,7 @@ Ext.define('X.controller.Groups', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.doCreateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
         var formPanel = me.getUserGroupAddFormPanel();
         var formData = formPanel.getValues();
         var title = formData.title;
@@ -399,7 +498,14 @@ Ext.define('X.controller.Groups', {
             createdById: X.authenticatedUser.get('objectId')
         };
         var group = Ext.create('X.model.Group', newGroup);
-
+        
+        var userGroupAddFormPanelUserList = me.getUserGroupAddFormPanelUserList();
+        userGroupAddFormPanelUserList = (Ext.isObject(userGroupAddFormPanelUserList) && !Ext.isEmpty(userGroupAddFormPanelUserList)) ? userGroupAddFormPanelUserList : false;
+        if(userGroupAddFormPanelUserList) {
+            
+            group.setHasMemberUsersFieldForGivenUsers(userGroupAddFormPanelUserList.getSelection());
+        }
+        
         var errors = group.validate();
         if (!errors.isValid()) {
             if (me.getDebug()) {
@@ -417,10 +523,20 @@ Ext.define('X.controller.Groups', {
             if (me.getDebug()) {
                 console.log('Debug: X.controller.Groups.doCreateGroup(): Will call saveGivenGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
+            
+            X.view.plugandplay.LoadingContainer.show();
+            
             me.addToAllGroups(group);
             me.saveGivenGroup({
                 group: group,
-                validated: true
+                validated: true,
+                callback: {
+                    fn: function() {
+                        
+                        X.view.plugandplay.LoadingContainer.hide();
+                    },
+                    scope: me
+                }
             });
         }
         return me;

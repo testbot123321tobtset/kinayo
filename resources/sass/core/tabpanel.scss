@@ -25,13 +25,13 @@ $tabbar-tab-button-active-color: $default-color-active;
     min-height: $default-toolbar-height !important;
     
     /*Give padding to the scroller so the contents will be at a certain distance from the edge of the tab bars*/
-    & + div {
+/*    & + div {
 
         .x-scroll-scroller {
 
             padding: $default-edge-distance-from-toolbars 0 !important;
         }
-    }
+    }*/
     
     &.x-docked-bottom {
 

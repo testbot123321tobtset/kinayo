@@ -15,22 +15,22 @@ Ext.define('X.controller.mixin.User', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var parseSessionStore = Ext.getStore('ParseSessionStore');
         if (Ext.isObject(parseSessionStore)) {
-            
+
             var session = parseSessionStore.getSession();
             if (Ext.isObject(session) && !Ext.isEmpty(session)) {
-                
+
                 var userIdFromSession = ('userId' in session && Ext.isString(session.userId) && !Ext.isEmpty(session.userId)) ? session.userId : false;
                 if (userIdFromSession) {
-                    
+
                     var sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
                     if (sessionToken) {
-                        
+
                         var authenticatedUserStore = Ext.getStore('AuthenticatedUserStore');
                         if (Ext.isObject(authenticatedUserStore)) {
-                            
+
                             authenticatedUserStore.load(function(records, operation, success) {
                                 if (me.getDebug()) {
                                     console.log('Debug: X.controller.mixin.User: loadAuthenticatedUserStore(): Success: ' + success + ': Records received:');
@@ -43,6 +43,13 @@ Ext.define('X.controller.mixin.User', {
                                         //                        This sets up references on X e.g. X.authenticatedUser
                                         me.setReferencesOnXToGivenAuthenticatedUser(records[0]);
 
+                                        //                                        Load device contacts store if it hasn't already loaded
+                                        //                                        Don't read from the device's contacts for the moment, just
+                                        //                                        load from local storage. We want to minimize reads from the device's
+                                        //                                        contacts unless the user explciitly clicks on the "find frinds" button
+                                        //                                        in the user's account information view
+                                        //                                        me.loadDeviceContactsStore();
+
                                         me.executeCallback(existsCallback);
                                     }
                                 }
@@ -50,16 +57,16 @@ Ext.define('X.controller.mixin.User', {
                                     me.executeCallback(doesNotExistCallback);
                                 }
                             });
-                            
+
                             return me;
                         }
                     }
                 }
             }
         }
-        
+
         me.executeCallback(doesNotExistCallback);
-        
+
         return false;
     },
     /*
@@ -71,6 +78,18 @@ Ext.define('X.controller.mixin.User', {
             console.log('Debug: X.controller.mixin.User.saveAuthenticatedUser(): Options:');
             console.log(options);
             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+
+        var successCallback = false,
+                failureCallback = false,
+                callback = false;
+
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if (options) {
+
+            successCallback = ('successCallback' in options && Ext.isObject(options.successCallback)) ? options.successCallback : false;
+            failureCallback = ('failureCallback' in options && Ext.isObject(options.failureCallback)) ? options.failureCallback : false;
+            callback = ('callback' in options && Ext.isObject(options.callback)) ? options.callback : false;
         }
 
         var authenticatedUser = X.authenticatedUser;
@@ -86,11 +105,13 @@ Ext.define('X.controller.mixin.User', {
                         message: errors.getAt(0).
                                 getMessage()
                     });
+
                     return false;
                 }
             }
 
             var silent = ('silent' in options && Ext.isBoolean(options.silent)) ? options.silent : false;
+
             var optionsToSaveOperation = {
                 success: function(record, operation) {
                     if (me.getDebug()) {
@@ -104,6 +125,10 @@ Ext.define('X.controller.mixin.User', {
                         model: authenticatedUser,
                         silent: silent
                     });
+
+                    successCallback && me.executeCallback(successCallback);
+
+                    callback && me.executeCallback(callback);
                 },
                 failure: function(record, operation) {
                     if (me.getDebug()) {
@@ -117,6 +142,10 @@ Ext.define('X.controller.mixin.User', {
                         model: authenticatedUser,
                         silent: silent
                     });
+
+                    failureCallback && me.executeCallback(failureCallback);
+
+                    callback && me.executeCallback(callback);
                 }
             };
 

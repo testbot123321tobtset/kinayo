@@ -59,22 +59,32 @@ Ext.define('X.store.AuthenticatedUser', {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-
-        //        Refresh all group stores
+        
+        //        Load group stores
         if (successful) {
             var authenticatedUser = records[0];
             authenticatedUser = (Ext.isObject(authenticatedUser) && !Ext.isEmpty(authenticatedUser)) ? authenticatedUser : false;
             if (authenticatedUser) {
+                
                 var sessionToken = authenticatedUser.get('sessionToken');
                 sessionToken = (Ext.isString(sessionToken) && !Ext.isEmpty(sessionToken)) ? sessionToken : false;
                 if (sessionToken) {
+                    
                     me.setSessionHeaderForAllStores(sessionToken);
                     //                    This is a one-way update. Changes made to the group stores from elsewhere
                     //                    doesn't sync back to this array
                     //                    Don't rely on this to get the relevant groups – always use the group
                     //                    stores. For instance when a group is created by the user, the arrays in
                     //                    authenticated user are not updated
-                    authenticatedUser.updateAllGroupStores();
+                    //                    authenticatedUser.updateAllGroupStores();
+                    
+                    var groupsStore = Ext.getStore('GroupsStore');
+                    groupsStore = Ext.isObject(groupsStore) ? groupsStore : false;
+                    if (groupsStore) {
+
+                        groupsStore.load();
+                    }
+                    
                     authenticatedUser.updateFriendsStore();
                 }
 

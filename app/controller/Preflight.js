@@ -1,6 +1,9 @@
 Ext.define('X.controller.Preflight', {
     extend: 'X.controller.Main',
     requires: [
+        'X.view.plugandplay.LoadingContainer',
+        'X.view.plugandplay.NotificationContainer',
+        'X.view.plugandplay.InteractiveUsersListContainer'
     ],
     config: {
         before: {
@@ -37,6 +40,7 @@ Ext.define('X.controller.Preflight', {
          */
         
         Ext.Viewport.add(X.view.plugandplay.LoadingContainer);
+        Ext.Viewport.add(X.view.plugandplay.NotificationContainer);
         Ext.Viewport.add(X.view.plugandplay.InteractiveUsersListContainer);
         //        Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer);
 

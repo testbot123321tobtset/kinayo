@@ -6,6 +6,7 @@
 @import 'core/messagebox';
 
 $container-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
+$loading-container-background-color: $default-theme-color;
 $container-border-width: 0;
 $container-border-style: solid;
 $container-border-color: transparent;
@@ -27,20 +28,29 @@ $container-border-visible-edge-color: $default-border-color;
     height: $default-edge-distance-from-toolbars !important;
 }
 
-.loading-container {
+.loading-container, .notification-container {
     
     @include no-border;
-    @include no-background;
     @include no-margin;
     
     min-height: $default-toolbar-height !important;
     height: $default-toolbar-height !important;
+    @include full-width;
     
-    font-size: 0.7em !important;
-    text-transform: uppercase !important;
-    color: $default-theme-color;
+    @include no-background;
+    background: $loading-container-background-color !important;
     
-    padding-right: 1.4em !important;
+    .x-innerhtml {
+        
+        background: $loading-container-background-color !important;
+        
+        font-size: 0.7em !important;
+        text-transform: uppercase !important;
+        color: white;
+        text-align: center !important;
+    }
+    
+    /*padding-right: 1.4em !important;*/
     
     /*http://blog.42at.com/emulating-iphones-slide-to-unlock*/
     /*    -webkit-mask-image: -webkit-gradient(

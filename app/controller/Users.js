@@ -57,6 +57,7 @@ Ext.define('X.controller.Users', {
         control: {
             viewport: {
                 authenticateduserloggedin: 'onAuthenticatedUserLoggedIn',
+                //                authenticateduserstoreload: 'onAuthenticatedUserStoreLoad',
                 authenticateduserdataedit: 'onAuthenticatedUserDataEdit',
                 devicecontactsstorerefreshuserrequest: 'onDeviceContactsStoreRefreshUserRequest'
             },
@@ -65,10 +66,16 @@ Ext.define('X.controller.Users', {
                 activeitemchange: 'onSignupAndLoginTabPanelActiveItemChange'
             },
             //            Signup
+            userSignupFormPanel: {
+                fieldaction: 'doSignup'
+            },
             userSignupFormSubmitButton: {
                 tap: 'doSignup'
             },
             //            Login
+            userLoginFormPanel: {
+                fieldaction: 'doLogin'
+            },
             userLoginFormSubmitButton: {
                 tap: 'doLogin'
             },
@@ -288,7 +295,7 @@ Ext.define('X.controller.Users', {
         //        
         //        For a clearer picture of the workflow, refer to: https://docs.google.com/document/d/12HrIs4C6R0h9j1maSMkHIci4OrSnuXkNia87V_luNXI/edit?usp=sharing
         
-        X.view.plugandplay.LoadingContainer.show();
+        X.view.plugandplay.LoadingContainer.open();
         
         return me.fetchFriendsFromServerForPhoneNumbersOfDeviceContactsAndSetFriendsStore({
             
@@ -316,7 +323,7 @@ Ext.define('X.controller.Users', {
 
                                             interactiveList.setStore(friendsStore);
                                             
-                                            X.view.plugandplay.LoadingContainer.hide();
+                                            X.view.plugandplay.LoadingContainer.close();
                                         }
                                     }
                                 }

@@ -1,27 +1,28 @@
-Ext.define('X.view.plugandplay.LoadingContainer', {
+Ext.define('X.view.plugandplay.NotificationContainer', {
     singleton: true,
     extend: 'X.view.core.Container',
     requires: [
     ],
-    xtype: 'loadingcontainer',
-    id: 'loadingContainer',
+    xtype: 'notificationcontainer',
+    id: 'notificationContainer',
     config: {
         layout: {
             type: 'vbox',
             pack: 'center',
             align: 'stretch'
         },
-        cls: 'loading-container',
+        cls: 'notification-container',
         floating: true,
         centered: false,
         fullscreen: false,
         
-        modal: true,
+        modal: false,
         
         hidden: true,
         bottom: 0,
         
         items: {
+            itemId: 'htmlContainer',
             html: 'Loading'
         }
     },
@@ -29,6 +30,21 @@ Ext.define('X.view.plugandplay.LoadingContainer', {
         var me = this;
         
         me.setZIndex(X.config.Config.getZINDEX_LEVEL_5());
+        
+        return me;
+    },
+    setHtml: function(html) {
+        var me = this;
+        
+        html = Ext.isString(html) ? html : '';
+        me.down('#htmlContainer').setHtml(html);
+        
+        return me;
+    },
+    resetHtml: function() {
+        var me = this;
+        
+        me.show(me.down('#htmlContainer').setHtml(''));
         
         return me;
     },
@@ -43,6 +59,17 @@ Ext.define('X.view.plugandplay.LoadingContainer', {
         var me = this;
         
         me.hide(X.config.Config.getHIDE_ANIMATION_FROM_UP_SLOW_AT_FIRST_SLOWER_CONFIG());
+        
+        return me;
+    },
+    openAndWaitAndClose: function(html, duration) {
+        var me = this;
+        
+        me.setHtml(html).open();
+        Ext.Function.defer(function() {
+            
+            me.close();
+        }, Ext.isNumber(duration) ? duration : 3000);
         
         return me;
     }

@@ -54,14 +54,20 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
                 cls: 'user-group-feeds',
                 iconCls: 'groupsfilled',
                 title: 'Groups',
-                scrollable: true,
+                
+                height: '100%',
+                scrollable: false,
+                
                 items: [
+                    {
+                        xtype: 'usergroupslist',
+                        flex: 1
+                    },
                     {
                         cls: 'tabbar-height-spacer-container'
                     },
                     {
-                        xtype: 'usergroupslist',
-                        flex: 1
+                        cls: 'tabbar-height-spacer-container'
                     }
                 ]
             },

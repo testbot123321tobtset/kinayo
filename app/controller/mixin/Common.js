@@ -44,9 +44,6 @@ Ext.define('X.controller.mixin.Common', {
                         console.log('Debug: X.controller.mixin.Factory: Might call function name: ' + generateWindowFunctionName + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
 
-                    //                    Fire an event for instance: destroyedgroup
-                    Ext.Viewport.fireEvent((actionNameInPastTense + modelName).toLowerCase(), options);
-
                     //                    Commit or reject
                     if (wasSuccessful) {
 
@@ -71,6 +68,8 @@ Ext.define('X.controller.mixin.Common', {
                             }
                         }
                         
+                        model.commit();
+                        
                         //                        This is a hack. Sencha Touch will notify the stores related to the model
                         //                        automatically if the server is able to return the deleted record on successful erase
                         //                        But, Parse sends back an empty object on successful erase. This confuses Sencha Touch,
@@ -80,11 +79,10 @@ Ext.define('X.controller.mixin.Common', {
                         //                        Related question in Sencha Touch forums:
                         //                        http://www.sencha.com/forum/showthread.php?286368-Parse.com-API-sending-empty-object-on-delete&p=1047228#post1047228
                         if(typeOfSave === 'destroy') {
+                            
                             model.setIsErased(true);
                             model.notifyStores('afterErase', model);
                         }
-                        
-                        model.commit();
                     }
                     else {
                         model.reject();
@@ -120,6 +118,9 @@ Ext.define('X.controller.mixin.Common', {
                             generateWindowFunction.call(me, options);
                         }
                     }
+
+                    //                    Fire an event for instance: destroyedgroup
+                    Ext.Viewport.fireEvent((actionNameInPastTense + modelName).toLowerCase(), options);
                 }
             }
         }

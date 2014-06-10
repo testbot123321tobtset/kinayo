@@ -11,9 +11,6 @@ Ext.define('X.view.page.user.Root', {
         cls: 'page-user-root',
         tabBarPosition: 'bottom',
         tabBar: {
-            docked: 'bottom',
-            cls: 'x-stretched x-docked-bottom x-full-width',
-            bottom: 0,
             layout: {
                 type: 'hbox',
                 align: 'center',

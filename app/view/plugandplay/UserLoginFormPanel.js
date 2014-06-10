@@ -21,19 +21,19 @@ Ext.define('X.view.plugandplay.UserLoginFormPanel', {
                 itemId: 'loginFormFieldSet',
                 cls: 'login-form-fieldset',
                 items: [
-////                  App Store guidelines say that we can't make emails 
-////                  mandatory – meaning that authentication by email 
-////                  is out of the window. We should ask for a user's email
-////                  as an optional thing in their profile UI
-////                  Don't show this in the login UI
-//                    {
-//                        xtype: 'emailfield',
-//                        itemId: 'emailField',
-//                        cls: 'email-field',
-//                        name: 'email',
-//                        placeHolder: 'Email'
-//                    },
-//                    We will need to add the phone # field here
+                    ////                  App Store guidelines say that we can't make emails 
+                    ////                  mandatory – meaning that authentication by email 
+                    ////                  is out of the window. We should ask for a user's email
+                    ////                  as an optional thing in their profile UI
+                    ////                  Don't show this in the login UI
+                    //                    {
+                    //                        xtype: 'emailfield',
+                    //                        itemId: 'emailField',
+                    //                        cls: 'email-field',
+                    //                        name: 'email',
+                    //                        placeHolder: 'Email'
+                    //                    },
+                    //                    We will need to add the phone # field here
                     {
                         xtype: 'textfield',
                         itemId: 'usernameField',
@@ -65,28 +65,58 @@ Ext.define('X.view.plugandplay.UserLoginFormPanel', {
                 xtype: 'button',
                 itemId: 'submitButton',
                 cls: 'submit-button',
-                text: 'Log in'
+                text: 'Log in',
+                hidden: (Ext.os.is.iOS || Ext.os.is.Android) ? true : false
+            }
+        ],
+        listeners: [
+            {
+                fn: 'onUserLoginFormPanelFieldAction',
+                event: 'action',
+                delegate: '#usernameField'
+            },
+            {
+                fn: 'onUserLoginFormPanelFieldAction',
+                event: 'action',
+                delegate: '#passwordField'
+            },
+            {
+                fn: 'onUserLoginFormPanelFieldAction',
+                event: 'action',
+                delegate: '#phoneNumberNumberfield'
             }
         ]
     },
+    onUserLoginFormPanelFieldAction: function(field, newValue, oldValue, eOpts ) {
+        var me = this;
+        
+        me.fireEvent('fieldaction', field, newValue, oldValue, eOpts );
+        
+        return me;
+    },
     resetAllFields: function() {
         var me = this;
-        me.resetUsernameField().resetPasswordField().resetPhoneNumberField();
+        me.resetUsernameField().
+                resetPasswordField().
+                resetPhoneNumberField();
         return me;
     },
     resetUsernameField: function() {
         var me = this;
-        me.down('#usernameField').setValue('');
+        me.down('#usernameField').
+                setValue('');
         return me;
     },
     resetPasswordField: function() {
         var me = this;
-        me.down('#passwordfield').setValue('');
+        me.down('#passwordfield').
+                setValue('');
         return me;
     },
     resetPhoneNumberField: function() {
         var me = this;
-        me.down('#phoneNumberNumberfield').setValue('');
+        me.down('#phoneNumberNumberfield').
+                setValue('');
         return me;
     }
 });

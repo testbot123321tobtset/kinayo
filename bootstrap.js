@@ -18,6 +18,7 @@ Ext.Loader.addClassPathMappings({
   "Ext.device.sqlite.SQLTransaction": "touch/src/device/sqlite/Sencha.js",
   "Ext.draw.engine.SvgContext.Gradient": "touch/src/draw/engine/SvgContext.js",
   "X": "app",
+  "X.view.plugandplay.userGroupEditContainer": "app/view/plugandplay/UserGroupEditContainer.js",
   "overrides": "app/overrides"
 });
 Ext.ClassManager.addNameAlternateMappings({
@@ -781,8 +782,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.store.DeviceContacts": [],
   "X.store.Friends": [],
   "X.store.Groups": [],
-  "X.store.GroupsAUIsMemberOf": [],
-  "X.store.GroupsCreatedByAU": [],
   "X.store.ParseSession": [],
   "X.store.Users": [],
   "X.view.Main": [],
@@ -800,6 +799,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.view.plugandplay.MessageFormPanel": [],
   "X.view.plugandplay.NonInteractiveUsersList": [],
   "X.view.plugandplay.NonInteractiveUsersListContainer": [],
+  "X.view.plugandplay.NotificationContainer": [],
   "X.view.plugandplay.PhotoMessageInputContainer": [],
   "X.view.plugandplay.SignupAndLoginContainer": [],
   "X.view.plugandplay.SignupAndLoginTabPanel": [],
@@ -808,7 +808,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.view.plugandplay.UserFriendFormPanel": [],
   "X.view.plugandplay.UserGroupAddFormPanel": [],
   "X.view.plugandplay.UserGroupContainer": [],
-  "X.view.plugandplay.UserGroupEditContainer": [],
   "X.view.plugandplay.UserGroupEditFormPanel": [],
   "X.view.plugandplay.UserGroupsList": [],
   "X.view.plugandplay.UserGroupsTabPanel": [],
@@ -816,6 +815,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "X.view.plugandplay.UserMoreTabPanel": [],
   "X.view.plugandplay.UserSignupFormPanel": [],
   "X.view.plugandplay.UsersList": [],
+  "X.view.plugandplay.userGroupEditContainer": [],
   "X.view.ux.FullScreenTextArea": [],
   "X.view.ux.ToggleableButton": [],
   "X.view.ux.plugin.SlideToRemove": [],
@@ -824,6 +824,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "overrides.TabPanel": [],
   "overrides.TitleBar": [],
   "overrides.dataview.List": [],
+  "overrides.form.Panel": [],
   "overrides.tab.Bar": []
 });
 Ext.ClassManager.addNameAliasMappings({
@@ -1805,8 +1806,6 @@ Ext.ClassManager.addNameAliasMappings({
   "X.store.DeviceContacts": [],
   "X.store.Friends": [],
   "X.store.Groups": [],
-  "X.store.GroupsAUIsMemberOf": [],
-  "X.store.GroupsCreatedByAU": [],
   "X.store.ParseSession": [],
   "X.store.Users": [],
   "X.view.Main": [],
@@ -1850,6 +1849,9 @@ Ext.ClassManager.addNameAliasMappings({
   "X.view.plugandplay.NonInteractiveUsersListContainer": [
     "widget.noninteractiveuserslistcontainer"
   ],
+  "X.view.plugandplay.NotificationContainer": [
+    "widget.notificationcontainer"
+  ],
   "X.view.plugandplay.PhotoMessageInputContainer": [
     "widget.photomessageinputcontainer"
   ],
@@ -1874,9 +1876,6 @@ Ext.ClassManager.addNameAliasMappings({
   "X.view.plugandplay.UserGroupContainer": [
     "widget.usergroupcontainer"
   ],
-  "X.view.plugandplay.UserGroupEditContainer": [
-    "widget.usergroupeditcontainer"
-  ],
   "X.view.plugandplay.UserGroupEditFormPanel": [
     "widget.usergroupeditformpanel"
   ],
@@ -1898,6 +1897,9 @@ Ext.ClassManager.addNameAliasMappings({
   "X.view.plugandplay.UsersList": [
     "widget.userslist"
   ],
+  "X.view.plugandplay.userGroupEditContainer": [
+    "widget.usergroupeditcontainer"
+  ],
   "X.view.ux.FullScreenTextArea": [
     "widget.fullscreentextarea"
   ],
@@ -1912,5 +1914,6 @@ Ext.ClassManager.addNameAliasMappings({
   "overrides.TabPanel": [],
   "overrides.TitleBar": [],
   "overrides.dataview.List": [],
+  "overrides.form.Panel": [],
   "overrides.tab.Bar": []
 });

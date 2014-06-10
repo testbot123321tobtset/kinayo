@@ -5,6 +5,10 @@ Ext.define('overrides.dataview.List', {
         bufferSize: 10,
         listeners: [
             {
+                fn: 'onInitialize',
+                event: 'initialize'
+            },
+            {
                 fn: 'onDisclose',
                 event: 'disclose'
             }

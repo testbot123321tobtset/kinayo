@@ -2,90 +2,78 @@ Ext.define('X.controller.mixin.Group', {
     /*
      * LOAD
      */
-    //    For now, these stores are not loaded from the server; when the authenticated user store loads,
-    //    we automatically grab these groups from authenticated user and set data in these stores. This
-    //    is only to initialize these stores. If you need to later on load these stores, use these methods to 
-    //    do so
-    loadAllGroupsStores: function() {
+    loadGroupsStore: function(options) {
         var me = this;
         if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.Group.loadAllGroupsStores(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            console.log('Debug: X.controller.mixin.Group.loadGroupsStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        var successCallback = false,
+                failureCallback = false,
+                callback = false,
+                existsCallback,
+                doesNotExistCallback;
+
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if (options) {
+
+            successCallback = ('successCallback' in options && Ext.isObject(options.successCallback)) ? options.successCallback : false;
+            failureCallback = ('failureCallback' in options && Ext.isObject(options.failureCallback)) ? options.failureCallback : false;
+            callback = ('callback' in options && Ext.isObject(options.callback)) ? options.callback : false;
+            existsCallback = ('existsCallback' in options && Ext.isObject(options.existsCallback)) ? options.existsCallback : false;
+            doesNotExistCallback = ('doesNotExistCallback' in options && Ext.isObject(options.doesNotExistCallback)) ? options.doesNotExistCallback : false;
         }
 
-        me.loadGroupsCreatedByAUStore().
-                loadGroupsAUIsMemberOfStore();
-
-        return me;
-    },
-    //    For now, these stores are not loaded from the server; when the authenticated user store loads,
-    //    we automatically grab these groups from authenticated user and set data in these stores. This
-    //    is only to initialize these stores. If you need to later on load these stores, use these methods to 
-    //    do so
-    loadGroupsCreatedByAUStore: function(existsCallback, doesNotExistCallback) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.Group.loadGroupsCreatedByAUStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        var groupsCreatedByAUStore = Ext.getStore('GroupsCreatedByAUStore');
-        if (Ext.isObject(groupsCreatedByAUStore)) {
-            groupsCreatedByAUStore.load(function(records, operation, success) {
+        var groupsStore = Ext.getStore('GroupsStore');
+        groupsStore = Ext.isObject(groupsStore) ? groupsStore : false;
+        if (groupsStore) {
+            
+            groupsStore.load(function(records, operation, success) {
                 if (me.getDebug()) {
-                    console.log('Debug: X.controller.mixin.User: loadGroupsCreatedByAUStore(): Success: ' + success + ': Records received:');
+                    console.log('Debug: X.controller.mixin.User: loadGroupsStore(): Success: ' + success + ': Records received:');
                     console.log(records);
                     console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                 }
-
+                
                 if (success) {
+                    
+                    if (successCallback) {
+
+                        successCallback.arguments = {
+                            groups: records
+                        };
+
+                        me.executeCallback(successCallback);
+                    }
+                    
                     if (!Ext.isEmpty(records)) {
-                        me.executeCallback(existsCallback);
+                        
+                        if (existsCallback) {
+
+                            existsCallback.arguments = {
+                                groups: records
+                            };
+
+                            me.executeCallback(existsCallback);
+                        }
                     }
                     else {
-                        me.executeCallback(doesNotExistCallback);
+                        
+                        doesNotExistCallback && me.executeCallback(doesNotExistCallback);
                     }
                 }
                 else {
-                    me.executeCallback(doesNotExistCallback);
+                    
+                    failureCallback && me.executeCallback(failureCallback);
                 }
+                
+                callback && me.executeCallback(callback);
             });
+            
+            return me;
         }
-
-        return me;
-    },
-    //    For now, these stores are not loaded from the server; when the authenticated user store loads,
-    //    we automatically grab these groups from authenticated user and set data in these stores. This
-    //    is only to initialize these stores. If you need to later on load these stores, use these methods to 
-    //    do so
-    loadGroupsAUIsMemberOfStore: function(existsCallback, doesNotExistCallback) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.Group.loadGroupsAUIsMemberOfStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        var groupsAUIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
-        if (Ext.isObject(groupsAUIsMemberOfStore)) {
-            groupsAUIsMemberOfStore.load(function(records, operation, success) {
-                if (me.getDebug()) {
-                    console.log('Debug: X.controller.mixin.User: loadGroupsAUIsMemberOfStore(): Success: ' + success + ': Records received:');
-                    console.log(records);
-                    console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-                }
-
-                if (success) {
-                    if (!Ext.isEmpty(records)) {
-                        me.executeCallback(existsCallback);
-                    }
-                    else {
-                        me.executeCallback(doesNotExistCallback);
-                    }
-                }
-                else {
-                    me.executeCallback(doesNotExistCallback);
-                }
-            });
-        }
-
-        return me;
+            
+        return false;
     },
     /*
      * SAVE
@@ -112,8 +100,10 @@ Ext.define('X.controller.mixin.Group', {
 
         options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
         if (options) {
+            
             var group = ('group' in options && Ext.isObject(options.group) && !Ext.isEmpty(options.group)) ? options.group : false;
             if (group) {
+                
                 var typeOfSave = ('typeOfSave' in options && Ext.isString(options.typeOfSave) && !Ext.isEmpty(options.typeOfSave)) ? options.typeOfSave : 'edit';
 
                 var hasBeenValidated = ('validated' in options && Ext.isBoolean(options.validated)) ? options.validated : false;
@@ -130,6 +120,7 @@ Ext.define('X.controller.mixin.Group', {
                 }
 
                 var silent = ('silent' in options && Ext.isBoolean(options.silent)) ? options.silent : false;
+                var showLoading = ('showLoading' in options && Ext.isBoolean(options.showLoading)) ? options.showLoading : true;
 
                 var optionsToSaveOperation = {
                     success: function(record, operation) {
@@ -138,6 +129,8 @@ Ext.define('X.controller.mixin.Group', {
                             console.log(operation.getResponse());
                             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
+                        
+                        showLoading && X.view.plugandplay.LoadingContainer.close();
 
                         me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
                             operation: operation,
@@ -164,6 +157,8 @@ Ext.define('X.controller.mixin.Group', {
                             console.log(operation.getResponse());
                             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
+                        
+                        showLoading && X.view.plugandplay.LoadingContainer.close();
 
                         me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
                             operation: operation,
@@ -191,12 +186,18 @@ Ext.define('X.controller.mixin.Group', {
                         if (me.getDebug()) {
                             console.log('Debug: X.controller.mixin.Group.saveGivenGroup(): Will call save(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
+                        
+                        showLoading && X.view.plugandplay.LoadingContainer.open();
+                        
                         group.save(optionsToSaveOperation);
                         break;
                     case 'destroy':
                         if (me.getDebug()) {
                             console.log('Debug: X.controller.mixin.Group.saveGivenGroup(): Will call erase(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
+                        
+                        showLoading && X.view.plugandplay.LoadingContainer.open();
+                        
                         group.erase(optionsToSaveOperation);
                         break;
                     default:
@@ -208,33 +209,5 @@ Ext.define('X.controller.mixin.Group', {
         }
 
         return false;
-    },
-    /*
-     * HELPERS
-     */
-    addToAllGroups: function(groups) {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.mixin.Group.addToAllGroups(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        groups = Ext.isObject(groups) ? [
-            groups
-        ] : groups;
-        groups = (Ext.isArray(groups) && !Ext.isEmpty(groups)) ? groups : false;
-        if (groups) {
-            var groupsAUIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
-            var groupsCreatedByAUStore = Ext.getStore('GroupsCreatedByAUStore');
-            var groupsStore = Ext.getStore('GroupsStore');
-            if (Ext.isObject(groupsAUIsMemberOfStore) && Ext.isObject(groupsCreatedByAUStore) && Ext.isObject(groupsStore)) {
-                Ext.Array.each(groups, function(thisGroup) {
-                    groupsAUIsMemberOfStore.add(thisGroup);
-                    groupsCreatedByAUStore.add(thisGroup);
-                    groupsStore.add(thisGroup);
-                });
-            }
-        }
-
-        return me;
     }
 });

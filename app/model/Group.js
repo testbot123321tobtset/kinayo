@@ -86,9 +86,15 @@ Ext.define('X.model.Group', {
             url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().GROUPS.ENDPOINT,
             appendId: true,
             batchActions: false,
+            //            We don't need to pull the whole _User objects; the members must be in the 
+            //            authenticated user's friends list. So we can query for users from friends store
+            //            with the objectIds we receive from this GET call on group
+            //                        extraParams: {
+            //                            include: 'hasMemberUsers'
+            //                        },
             reader: {
                 type: 'json',
-                rootProperty: ''
+                rootProperty: 'results'
             },
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -106,6 +112,46 @@ Ext.define('X.model.Group', {
     },
     isCreatedByMe: function() {
         return this.get('createdById') === X.authenticatedUser.get('objectId');
+    },
+    getMembers: function() {
+        var me = this;
+        
+        var membersFound = false;
+        
+        var members = me.get('hasMemberUsers');
+        members = (Ext.isArray(members) && members.length > 0) ? members : false;
+        if(members) {
+            
+            var friendsStore = Ext.getStore('FriendsStore');
+            friendsStore = (Ext.isObject(friendsStore) && friendsStore.getAllCount() > 0) ? friendsStore : false;
+            if (friendsStore) {
+                
+                membersFound = [];
+                
+                Ext.Array.each(members, function(thisMember) {
+                    
+                    thisMember = '__type' in thisMember ? thisMember : false;
+                    if(thisMember) {
+                        
+                        var objectId = 'objectId' in thisMember ? thisMember.objectId : false;
+                        if (objectId) {
+                            objectId = (Ext.isString(objectId) && !Ext.isEmpty(objectId)) ? objectId : false;
+                            if (objectId) {
+                                
+                                var memberFound = friendsStore.getById(thisMember.objectId);
+                                memberFound = (Ext.isObject(memberFound) && !Ext.isEmpty(memberFound)) ? memberFound : false;
+                                if(memberFound) {
+                                    
+                                    membersFound.push(memberFound);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        return membersFound;
     },
     getMemberObjectIds: function() {
         var me = this;
@@ -131,13 +177,13 @@ Ext.define('X.model.Group', {
     setHasMemberUsersFieldForGivenUsers: function(users) {
         var me = this;
         
-        users = (Ext.isArray(users) && !Ext.isEmpty(users)) ? users : false;
+        users = Ext.isArray(users) ? users : false;
         if(users) {
             
             //            Template for how every object in hasMemberUsers field must look like:
             //            
             //            [{"__type":"Pointer","className":"_User","objectId":"ozI0Up5tSD"}]
-            var pointers = []
+            var pointers = [];
             
             Ext.Array.each(users, function(thisUser) {
                 pointers.push({
@@ -145,7 +191,7 @@ Ext.define('X.model.Group', {
                     "__type": "Pointer",
                     "className": "_User",
                     "objectId": thisUser.get('objectId')
-                })
+                });
             });
             
             me.set('hasMemberUsers', pointers);

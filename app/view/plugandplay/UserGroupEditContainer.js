@@ -1,14 +1,14 @@
 // This is meant to be displayed as a window. This means that any other 
 // component can call this component and this component should just fill up
 // the screen. This is essentially an independent and quasi-floating window
-Ext.define('X.view.plugandplay.UserGroupEditContainer', {
+Ext.define('X.view.plugandplay.userGroupEditContainer', {
     extend: 'X.view.core.Container',
     requires: [
         'X.view.plugandplay.UserGroupEditFormPanel',
         'X.view.plugandplay.UserGroupsList'
     ],
     xtype: 'usergroupeditcontainer',
-    id: 'UserGroupEditContainer',
+    id: 'userGroupEditContainer',
     config: {
         // isWindow config just means what is explained in the beginning
         // This is an easy way to query for any and all windows and do
@@ -48,7 +48,7 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
                         text: 'Close',
                         listeners: {
                             tap: function(button, e, eOpts) {
-                                button.up('#UserGroupEditContainer').onBackButtonTap(button, e, eOpts);
+                                button.up('#userGroupEditContainer').onBackButtonTap(button, e, eOpts);
                             }
                         }
                     },
@@ -61,7 +61,7 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
                         text: 'Delete',
                         listeners: {
                             tap: function(button, e, eOpts) {
-                                button.up('#UserGroupEditContainer').onDeleteButtonTap(button, e, eOpts);
+                                button.up('#userGroupEditContainer').onDeleteButtonTap(button, e, eOpts);
                             }
                         }
                     }
@@ -75,7 +75,7 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
 //                        text: 'RO',
 //                        listeners: {
 //                            tap: function(button, e, eOpts) {
-//                                button.up('#UserGroupEditContainer').setReadOnly(true);
+//                                button.up('#userGroupEditContainer').setReadOnly(true);
 //                            }
 //                        }
 //                    },
@@ -88,7 +88,7 @@ Ext.define('X.view.plugandplay.UserGroupEditContainer', {
 //                        text: 'Reset RO',
 //                        listeners: {
 //                            tap: function(button, e, eOpts) {
-//                                button.up('#UserGroupEditContainer').setReadOnly(false);
+//                                button.up('#userGroupEditContainer').setReadOnly(false);
 //                            }
 //                        }
 //                    }

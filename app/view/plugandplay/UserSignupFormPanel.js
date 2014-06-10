@@ -65,9 +65,34 @@ Ext.define('X.view.plugandplay.UserSignupFormPanel', {
                 xtype: 'button',
                 itemId: 'submitButton',
                 cls: 'submit-button',
-                text: 'Sign up'
+                text: 'Sign up',
+                hidden: (Ext.os.is.iOS || Ext.os.is.Android) ? true : false
+            }
+        ],
+        listeners: [
+            {
+                fn: 'onUserSignupFormPanelFieldAction',
+                event: 'action',
+                delegate: '#usernameField'
+            },
+            {
+                fn: 'onUserSignupFormPanelFieldAction',
+                event: 'action',
+                delegate: '#passwordField'
+            },
+            {
+                fn: 'onUserSignupFormPanelFieldAction',
+                event: 'action',
+                delegate: '#phoneNumberNumberfield'
             }
         ]
+    },
+    onUserSignupFormPanelFieldAction: function(field, newValue, oldValue, eOpts ) {
+        var me = this;
+        
+        me.fireEvent('fieldaction', field, newValue, oldValue, eOpts );
+        
+        return me;
     },
     resetAllFields: function() {
         var me = this;

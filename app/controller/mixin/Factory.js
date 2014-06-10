@@ -334,8 +334,23 @@ Ext.define('X.controller.mixin.Factory', {
                     
                     usersList = userGroupEditFormPanel.down('interactiveuserslist');
                     
-                    membersStore = Ext.getStore('FriendsStore');
-                    //                    Show full list of friends and pre-select those who are members of this group
+                    var membersStore = usersList.getStore();
+                    membersStore = Ext.isObject(membersStore) ? membersStore : false;
+                    if(!membersStore) {
+                    
+                        membersStore = Ext.getStore('FriendsStore');
+                        membersStore = Ext.isObject(membersStore) ? membersStore : false;
+                        if(membersStore) {
+                            
+                            usersList.setStore(membersStore);
+                        }
+                    }
+                    
+                    usersList.deselectAll();
+                    
+                    usersList.select(group.getMembers(), false, true);
+                    
+                    usersList.open();
                 }
                 else {
                     
@@ -345,15 +360,8 @@ Ext.define('X.controller.mixin.Factory', {
                     
                     membersStore = Ext.getStore('FriendsStore');
                     //                    Show only members of this group
-                }
-                usersList = (Ext.isObject(usersList) && !Ext.isEmpty(usersList)) ? usersList : false;
-                if(usersList) {
                     
-                    membersStore = Ext.isObject(membersStore) ? membersStore : false;
-                    if(membersStore) {
-                        
-                        usersList.setStore(membersStore);
-                    }
+                    usersList.open();
                 }
             }
 
@@ -377,16 +385,20 @@ Ext.define('X.controller.mixin.Factory', {
         var userGroupAddFormPanel = userGroupsTabPanel.down('#userGroupAddFormPanel');
         userGroupAddFormPanel = (Ext.isObject(userGroupAddFormPanel) && !Ext.isEmpty(userGroupAddFormPanel)) ? userGroupAddFormPanel : false;
         if (userGroupAddFormPanel) {
+            
+            userGroupAddFormPanel.removeRecord();
 
-            var userslist = userGroupAddFormPanel.down('interactiveuserslist');
-            userslist = (Ext.isObject(userslist) && !Ext.isEmpty(userslist)) ? userslist : false;
-            if (userslist) {
+            var usersList = userGroupAddFormPanel.down('interactiveuserslist');
+            usersList = (Ext.isObject(usersList) && !Ext.isEmpty(usersList)) ? usersList : false;
+            if (usersList) {
 
                 var friendsStore = Ext.getStore('FriendsStore');
                 friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
                 if (friendsStore) {
 
-                    userslist.setStore(friendsStore);
+                    usersList.setStore(friendsStore);
+                    
+                    usersList.open();
                 }
             }
         }
@@ -470,7 +482,7 @@ Ext.define('X.controller.mixin.Factory', {
     //        
     //        if(listContainer) {
     //            
-    //            X.view.plugandplay.LoadingContainer.show();
+    //            X.view.plugandplay.LoadingContainer.open();
     //            
     //            listContainer.down('list').hide();
     //            listContainer.setDimensions().
@@ -487,7 +499,7 @@ Ext.define('X.controller.mixin.Factory', {
     //                                        setStore(deviceContactStore);
     //                                listContainer.down('list').show();
     //
-    //                                X.view.plugandplay.LoadingContainer.hide();
+    //                                X.view.plugandplay.LoadingContainer.close();
     //                            },
     //                            scope: me
     //                        }

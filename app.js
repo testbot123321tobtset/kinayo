@@ -103,7 +103,8 @@ Ext.application({
         'overrides.TitleBar',
         'overrides.Component',
         'overrides.dataview.List',
-        'overrides.LoadMask'
+        'overrides.LoadMask',
+        'overrides.form.Panel'
     ],
     models: [
         'ParseSession',
@@ -120,8 +121,6 @@ Ext.application({
         'AuthenticatedUser',
         'Friends',
         'Groups',
-        'GroupsAUIsMemberOf',
-        'GroupsCreatedByAU',
         'DeviceContacts'
     ],
     controllers: [

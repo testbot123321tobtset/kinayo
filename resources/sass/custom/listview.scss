@@ -39,6 +39,15 @@
     }
 }
 
+.user-groups-list {
+    
+    .x-scroll-scroller {
+        
+        padding-top: $default-edge-distance-from-toolbars !important;
+        padding-bottom: 0.4em !important;
+    }
+}
+
 .noninteractive-users-list, .interactive-users-list {
     
     margin-bottom: $default-toolbar-height !important;

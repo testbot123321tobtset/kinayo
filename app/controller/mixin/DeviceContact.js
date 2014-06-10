@@ -75,7 +75,9 @@ Ext.define('X.controller.mixin.DeviceContact', {
         
         if (Ext.browser.is.PhoneGap) {
             if (me.getDebug()) {
-                console.log('Debug: X.controller.mixin.DeviceContact.getPhoneNumbersFromDeviceContacts(): This is a Phonegap application: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): This is a Phonegap application: Options received:');
+                console.log(options);
+                console.log('Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
 
             //                    Read from the device contact book
@@ -89,30 +91,35 @@ Ext.define('X.controller.mixin.DeviceContact', {
                         }
 
                         var phoneNumbers = me.getPhoneNumbersFromGivenDeviceContacts(contacts);
-                        phoneNumbers = (Ext.isArray(phoneNumbers) && !Ext.isEmpty(phoneNumbers)) ? phoneNumbers : false;
+                        phoneNumbers = Ext.isArray(phoneNumbers) ? phoneNumbers : false;
+                        
                         if (phoneNumbers) {
                             
                             if (successCallback) {
+                                if (me.getDebug()) {
+                                    console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): navigator.contacts.find(): This is a Phonegap application: Will now execute successCallback: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                                }
 
                                 successCallback.arguments = {
                                     phoneNumbers: phoneNumbers
                                 };
 
                                 me.executeCallback(successCallback);
-                                
-                                callback && me.executeCallback(callback);
                             }
                         }
                         else {
+                            if (me.getDebug()) {
+                                console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): navigator.contacts.find(): This is a Phonegap application: Will now execute failureCallback: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                            }
                             
                             failureCallback && me.executeCallback(failureCallback);
-                        
-                            callback && me.executeCallback(callback);
                         }
+                        
+                        callback && me.executeCallback(callback);
                     },
                     function() {
                         if (me.getDebug()) {
-                            console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): navigator.contacts.find() Failed!: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+                            console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): navigator.contacts.find(): This is a Phonegap application: Will now execute failureCallback: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
 
                         failureCallback && me.executeCallback(failureCallback);
@@ -124,6 +131,10 @@ Ext.define('X.controller.mixin.DeviceContact', {
                         multiple: true
                     }
             );
+    
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): navigator.contacts.find(): This is a Phonegap application: Will now execute callback: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
 
             callback && me.executeCallback(callback);
         }
@@ -479,18 +490,14 @@ Ext.define('X.controller.mixin.DeviceContact', {
                 
                 var thisContact = contacts[i];
                 
-                var doesNameExist = ('name' in thisContact && Ext.isObject(thisContact.name));
-                if (doesNameExist) {
-                    
-                    var doesPhoneNumbersFieldExist = 'phoneNumbers' in thisContact && Ext.isArray(thisContact['phoneNumbers']);
-                    if (doesPhoneNumbersFieldExist) {
+                var doesPhoneNumbersFieldExist = 'phoneNumbers' in thisContact && Ext.isArray(thisContact['phoneNumbers']);
+                if (doesPhoneNumbersFieldExist) {
 
-                        var phoneNumbersForThisContact = me.getPhoneNumbersFromGivenDeviceContact(thisContact);
-                        phoneNumbersForThisContact = (Ext.isArray(phoneNumbersForThisContact) && !Ext.isEmpty(phoneNumbersForThisContact)) ? phoneNumbersForThisContact : false;
-                        if (phoneNumbersForThisContact) {
-                            
-                            phoneNumbers = Ext.Array.merge(phoneNumbers, phoneNumbersForThisContact);
-                        }
+                    var phoneNumbersForThisContact = me.getPhoneNumbersFromGivenDeviceContact(thisContact);
+                    phoneNumbersForThisContact = (Ext.isArray(phoneNumbersForThisContact) && !Ext.isEmpty(phoneNumbersForThisContact)) ? phoneNumbersForThisContact : false;
+                    if (phoneNumbersForThisContact) {
+
+                        phoneNumbers = Ext.Array.merge(phoneNumbers, phoneNumbersForThisContact);
                     }
                 }
             }

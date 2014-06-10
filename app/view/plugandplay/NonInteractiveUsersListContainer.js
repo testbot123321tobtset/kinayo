@@ -2,6 +2,7 @@
 // component can call this component and this component should just fill up
 // the screen. This is essentially an independent and quasi-floating window
 Ext.define('X.view.plugandplay.NonInteractiveUsersListContainer', {
+    singleton: true,
     extend: 'X.view.core.Container',
     requires: [
         'Ext.TitleBar',
@@ -67,7 +68,36 @@ Ext.define('X.view.plugandplay.NonInteractiveUsersListContainer', {
     addShine: function() {
         this.down('titlebar').addCls('shine');
     },
-    removeShine: function() {
-        this.down('titlebar').removeCls('shine');
+    close: function() {
+        var me = this;
+        
+        me.resetTitle();
+        me.resetList();
+        
+        return me.callParent(arguments);
+    },
+    setShine: function() {
+        this.down('toolbar').addCls('shine');
+    },
+    setTitle: function(title) {
+        var me = this;
+        
+        me.down('#nonInteractiveUsersListContainerToolbar').setTitle(Ext.isString(title) ? title : 'Contacts');
+        
+        return me;
+    },
+    resetTitle: function() {
+        var me = this;
+        
+        me.down('#nonInteractiveUsersListContainerToolbar').setTitle('Contacts');
+        
+        return me;
+    },
+    resetList: function() {
+        var me = this;
+        
+        me.down('#nonInteractiveUsersList').deselectAll(true);
+        
+        return me;
     }
 });

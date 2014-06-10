@@ -32,6 +32,7 @@ Ext.define('X.controller.Preflight', {
         Ext.Msg.defaultAllowedConfig.showAnimation = X.config.Config.getSHOW_ANIMATION_FROM_UP_CONFIG();
         Ext.Msg.defaultAllowedConfig.hideAnimation = X.config.Config.getHIDE_ANIMATION_FROM_DOWN_SLOW_AT_FIRST_CONFIG();
         Ext.Msg.on('painted', function() {
+            Ext.Msg.setScrollable(true);
             Ext.Msg.setZIndex(X.config.Config.getZINDEX_LEVEL_5());
         });
         
@@ -42,7 +43,7 @@ Ext.define('X.controller.Preflight', {
         Ext.Viewport.add(X.view.plugandplay.LoadingContainer);
         Ext.Viewport.add(X.view.plugandplay.NotificationContainer);
         Ext.Viewport.add(X.view.plugandplay.InteractiveUsersListContainer);
-        //        Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer);
+        Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer);
 
 //        Native string extras
         Ext.apply(String.prototype, (function() {

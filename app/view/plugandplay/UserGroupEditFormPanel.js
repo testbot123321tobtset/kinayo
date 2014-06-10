@@ -305,25 +305,17 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
     setUsersListWithCurrentGroupMembers: function() {
         var me = this;
 
-        console.log('>>>>>>>>>>>>>>>>');
-
         var thisGroup = me.getRecord();
         thisGroup = (Ext.isObject(thisGroup) && !Ext.isEmpty(thisGroup)) ? thisGroup : false;
         if (thisGroup) {
-
-            console.log('>>>>>>>>>>>>>>>>');
 
             var usersListContainer = me.down('#usersListContainer');
             usersListContainer = (Ext.isObject(usersListContainer) && !Ext.isEmpty(usersListContainer)) ? usersListContainer : false;
             if (usersListContainer) {
 
-                console.log('>>>>>>>>>>>>>>>>');
-
                 var usersList = usersListContainer.down('noninteractiveuserslist');
                 usersList = (Ext.isObject(usersList) && !Ext.isEmpty(usersList)) ? usersList : false;
                 if (!usersList) {
-
-                    console.log('!!!!!!!!!!!!!!');
 
                     usersList = Ext.create('widget.noninteractiveuserslist', {
                         emptyText: 'There are no members in this group. Consider adding a few and get chatty!'
@@ -334,8 +326,6 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                     var usersListStore = usersList.getStore();
                     usersListStore = Ext.isObject(usersListStore) ? usersListStore : false;
                     if (!usersListStore) {
-
-                        console.log('&&&&&&&&&&&&&&&&');
 
                         usersListStore = Ext.create('Ext.data.Store', {
                             model: 'X.model.DeviceContact',
@@ -348,9 +338,6 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                         });
                     }
                     if (usersListStore) {
-
-                        console.log('>>>>>>>>>>>>>>>>');
-                        console.log(usersListStore);
 
                         //                Group members should really be the existing group members we get from Parse
                         //                The code will likely do thisGroup.getMembers() as a store or get the

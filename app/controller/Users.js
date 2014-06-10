@@ -302,26 +302,28 @@ Ext.define('X.controller.Users', {
             successCallback: {
                 fn: function() {
                     
-                    me.generateAndFillViewportWithInteractiveUsersListContainer({
+                    me.generateAndFillViewportWithNonInteractiveUsersListContainer({
                         
                         callback: {
                             fn: function() {
-
+                                
                                 var args = arguments[0];
-                                var interactiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
-                                if (interactiveUsersListContainer) {
+                                var nonInteractiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
+                                if (nonInteractiveUsersListContainer) {
 
-                                    var interactiveList = interactiveUsersListContainer.down('interactiveuserslist');
-                                    var interactiveList = (Ext.isObject(interactiveList) && !Ext.isEmpty(interactiveList)) ? interactiveList : false;
-                                    if (interactiveList) {
+                                    var nonInteractiveList = nonInteractiveUsersListContainer.down('noninteractiveuserslist');
+                                    nonInteractiveList = (Ext.isObject(nonInteractiveList) && !Ext.isEmpty(nonInteractiveList)) ? nonInteractiveList : false;
+                                    if (nonInteractiveList) {
 
-                                        interactiveUsersListContainer.setTitle('Pick Group Members');
+                                        nonInteractiveUsersListContainer.setTitle('Your Friends');
 
                                         var friendsStore = Ext.getStore('FriendsStore');
                                         friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
                                         if (friendsStore) {
-
-                                            interactiveList.setStore(friendsStore);
+                                            
+                                            nonInteractiveList.setStore(friendsStore);
+                                            
+                                            nonInteractiveList.open();
                                             
                                             X.view.plugandplay.LoadingContainer.close();
                                         }

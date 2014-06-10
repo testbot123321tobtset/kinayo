@@ -8,10 +8,10 @@ $messagebox-border-color: transparent;
 $messagebox-border-visible-edge-width: $default-border-width;
 $messagebox-border-visible-edge-style: $default-border-style;
 $messagebox-border-visible-edge-color: $default-border-color;
-$messagebox-background-color: white;
-$messagebox-button-background-color: $default-darker-background-color; 
+$messagebox-background-color: $default-darker-background-color;
+$messagebox-button-background-color: $default-darker-background-color;
 $messagebox-button-pressing-background-color: lighten($messagebox-button-background-color, $default-color-variance);
-$messagebox-height-percent: 70%;
+$messagebox-height-percent: 50%;
 $messagebox-width-percent: 100%;
 
 .x-msgbox {
@@ -27,11 +27,18 @@ $messagebox-width-percent: 100%;
     @include no-border;
     @include no-border-radius;
     
-    @include mega-box-shadow-with-no-offset;
+    border-top: $messagebox-border-visible-edge-width $messagebox-border-visible-edge-style $messagebox-border-visible-edge-color !important;
+    
+    /*@include reverse-box-shadow;*/
     
     .x-msgbox-title {
         
         @include no-margin;
+        
+        @include no-background;
+        background: $messagebox-background-color !important;
+        
+        @include no-border;
         
         .x-title {
             font-size: 0.8em !important;

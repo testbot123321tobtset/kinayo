@@ -38,6 +38,7 @@ Ext.define('X.controller.mixin.Friend', {
                     var args = arguments[0];
                     
                     var phoneNumbers = ('phoneNumbers' in args && Ext.isArray(args.phoneNumbers) && !Ext.isEmpty(args.phoneNumbers)) ? args.phoneNumbers : false;
+                    
                     if (phoneNumbers) {
 
                         me.xhrUpdateFriendsOnServerForGivenPhoneNumbers({

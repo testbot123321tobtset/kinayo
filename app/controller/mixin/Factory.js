@@ -595,5 +595,41 @@ Ext.define('X.controller.mixin.Factory', {
         }
 
         return false;
+    },
+    generateAndFillViewportWithNonInteractiveUsersListContainer: function(options) {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithNonInteractiveUsersListContainer()');
+        }
+
+        var callback = false;
+
+        options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+        if (options) {
+
+            callback = ('callback' in options && Ext.isObject(options.callback)) ? options.callback : false;
+        }
+
+        var listContainer = X.view.plugandplay.NonInteractiveUsersListContainer;
+
+        listContainer = (Ext.isObject(listContainer) && !Ext.isEmpty(listContainer)) ? listContainer : false;
+        if (listContainer) {
+
+            listContainer.setDimensions().
+                    open();
+
+            if (callback) {
+                
+                callback.arguments = {
+                    listContainer: listContainer
+                };
+
+                me.executeCallback(callback);
+            }
+
+            return listContainer;
+        }
+
+        return false;
     }
 });

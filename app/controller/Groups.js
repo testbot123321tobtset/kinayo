@@ -4,6 +4,7 @@ Ext.define('X.controller.Groups', {
         'X.view.plugandplay.UserGroupContainer',
         'X.view.plugandplay.userGroupEditContainer',
         'X.view.plugandplay.InteractiveUsersListContainer',
+        'X.view.plugandplay.NonInteractiveUsersListContainer',
         'X.view.plugandplay.UsersList'
     ],
     config: {

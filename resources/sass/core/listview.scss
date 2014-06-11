@@ -1,10 +1,27 @@
 @import 'compass';
 @import '_variables';
 @import '_mixins';
+@import 'field';
 
 .x-list {
 
     @include no-background;
+    
+    .x-list-emptytext {
+        
+        height: 50px !important;
+        
+        margin: 1em 0 !important;
+        padding: 0 8px !important;
+        
+        color: $field-label-font-color !important;
+
+        font-size: 0.7em !important;
+        font-weight: $field-label-font-weight !important;
+        font-style: $field-label-font-style !important;
+        
+        text-transform: uppercase !important;
+    }
 
     /*border-bottom: 1px solid $default-border-color-for-fieldsets !important;*/
 

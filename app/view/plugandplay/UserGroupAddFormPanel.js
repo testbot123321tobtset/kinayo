@@ -259,8 +259,6 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                         
                     formPanel.setRecord(group);
                     
-                    X.view.plugandplay.NotificationContainer.setHtml('Creating ' + title + '...').open();
-                    
                     Ext.Viewport.fireEvent('addgroup', {
                         group: group,
                         validated: true,
@@ -269,7 +267,7 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                         callback: {
                             fn: function() {
                                 
-                                X.view.plugandplay.NotificationContainer.openAndWaitAndClose(title + ' was created');
+                                X.view.plugandplay.NotificationContainer.openAndWaitAndClose('Created ' + title);
                                 
                                 if (!me.hasChangedOnce) {
 

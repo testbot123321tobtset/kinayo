@@ -17,6 +17,12 @@ Ext.define('X.store.AuthenticatedUser', {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onBeforeLoad(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+        if(!me.isLoaded()) {
+            
+            X.view.plugandplay.NotificationContainer.open(X.XConfig.getMESSAGES().LOADING.USER);
+            me.triggeredLoadingContainer = true;
+        }
 
         var parseSessionStore = Ext.getStore('ParseSessionStore');
         if (Ext.isObject(parseSessionStore)) {
@@ -58,6 +64,12 @@ Ext.define('X.store.AuthenticatedUser', {
     onLoad: function(me, records, successful, operation, eOpts) {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        if(me.triggeredLoadingContainer) {
+            
+            X.view.plugandplay.NotificationContainer.close();
+            me.triggeredLoadingContainer = false;
         }
         
         //        Load group stores

@@ -4,7 +4,7 @@ Ext.define('X.config.Config', {
         //        Parse config
         //        Here is a post on Parse's authentication mechanism: http://stackoverflow.com/questions/23820720/parse-com-rest-api-authentication/23823688?noredirect=1#23823688
         //        Implementing identifying users and finding friends using phone numbers:
-        //        http://stackoverflow.com/questions/21414102/how-to-send-the-parse-users-objectid-with-the-twilio-module,
+        //        http://stackoverflow.com/questions/214142002/how-to-send-the-parse-users-objectid-with-the-twilio-module,
         //        https://www.twilio.com/docs/api/rest/sending-messages
         //        Basically, here are the steps:
         //        1. We ask user to enter his/her phone number (App Store guidelines say we cannot read the phone number from a device,
@@ -12,7 +12,7 @@ Ext.define('X.config.Config', {
         //              we can't have authenticate only by usernames because 1. it will definitely increase spam, 2. it'll be a pain point
         //              to search for a username when you are looking to add people – basically, we don't want people to anything extra to
         //              see thair network; when they sign in, they should already have their social network ready)
-        //        2. We write Cloud Code in Parse as shown here: http://stackoverflow.com/questions/21414102/how-to-send-the-parse-users-objectid-with-the-twilio-module
+        //        2. We write Cloud Code in Parse as shown here: http://stackoverflow.com/questions/214142002/how-to-send-the-parse-users-objectid-with-the-twilio-module
         //              to connect to Twilio and send a message to the phone number that the user just entered
         //        3. This message will have the objectId of the user that Parse will have created
         //        4. User then needs to enter that code somewhere in our App's UI
@@ -91,7 +91,18 @@ Ext.define('X.config.Config', {
             DEVICE_CONTACTS_ACCESS_REQUEST: 'Giving us access to your device\'s address book will help us automatically find all ' +
                     'your friends whom you can start sharing with right away.<br /><br />We promise we will not contact them on your behalf or otherwise bug you ' +
                     'guys in any way!<br /><br />Do you want to go ahead with it?',
-            PHONE_NUMBER_REQUIRED: 'Your device\'s phone number is required to proceed.'
+            PHONE_NUMBER_REQUIRED: 'Your device\'s phone number is required to proceed.',
+            
+            
+            GROUP_NO_MEMBERS_FOUND: 'You have no friends in here. Consider adding a few and get chatty!',
+            
+            LOADING: {
+                USER_LOGGING_IN: 'Logging you in...',
+                USER_LOADING: 'Laoding your information...',
+                GROUPS: 'Laoding your groups...',
+                GROUP_DATA: 'Loading group data...',
+                GROUP_CREATE: 'Creating group...'
+            }
         },
         CUSTOMER_SERVICE_EMAIL_ADDRESS: 'test@test.com',
         DEBUG: true,
@@ -113,89 +124,71 @@ Ext.define('X.config.Config', {
         // Every new window-like floating container will reduce in dimensions by this much pixels
         LAYER_HORIZONTAL_OFFSET: 0,
         LAYER_VERTICAL_OFFSET: 0,
-        // Animations
+        
+        /*
+         * ANIMATIONS
+         */
         // When you change animations, check overrides.TitleBar for consistency
-        // Animation types: 'fade', 'fadeOut', 'flip', 'pop', 'popOut', 'slide', 'slideOut' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.fx.Animation-cfg-type)
+        // Animation types: 'pop', 'fadeOut', 'flip', 'pop', 'popOut', 'slide', 'popOut' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.fx.Animation-cfg-type)
+        DEFAULT_ANIMATION_TYPE: 'pop',
         DEFAULT_ANIMATION_DURATION: 200,
-        // Easing types: 'ease', 'linear', ease-in', 'ease-out', 'ease-in-out' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.Anim-cfg-easing)
-        DEFAULT_ANIMATION_EASING: 'cubic-bezier(0,.23,0,1)',
+        // Easing types: 'ease', 'linear', ease-in', 'ease-out', 'cubic-bezier(.75,.1,.25,.9)' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.Anim-cfg-easing)
+        DEFAULT_ANIMATION_EASING: 'cubic-bezier(.75,.1,.25,.9)',
         ANIMATION_CONFIG: {
-            type: 'slide',
-            easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 200
-        },
-        SHOW_ANIMATION_WITH_NO_DIRECTION_CONFIG: {
-            type: 'slide',
-            easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 200
-        },
-        HIDE_ANIMATION_WITH_NO_DIRECTION_CONFIG: {
-            type: 'slideOut',
-            easing: 'cubic-bezier(0,.23,0,1)',
+            type: 'pop',
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
             duration: 200
         },
         SHOW_ANIMATION_CONFIG: {
             type: 'pop',
-            easing: 'cubic-bezier(0,.23,0,1)',
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
             duration: 200
         },
-        SHOW_ANIMATION_FROM_UP_CONFIG: {
+        SHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG: {
             type: 'slide',
-            direction: 'down',
-            easing: 'cubic-bezier(0,.23,0,1)',
+            direction: 'left',
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
             duration: 200
-        },
-        SHOW_ANIMATION_FROM_DOWN_CONFIG: {
-            type: 'slide',
-            direction: 'up',
-            easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 200
-        },
-        SHOW_ANIMATION_FROM_DOWN_SLOWER_CONFIG: {
-            type: 'slide',
-            direction: 'up',
-            easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 400
         },
         HIDE_ANIMATION_CONFIG: {
             type: 'popOut',
-            easing: 'cubic-bezier(.7,0,.7,1)',
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
+            duration: 100
+        },
+        HIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG: {
+            type: 'slide',
+            direction: 'right',
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
             duration: 200
         },
-        HIDE_ANIMATION_FROM_DOWN_CONFIG: {
-            type: 'slideOut',
+        ANIMATION_CONFIG_FOR_TABPANEL: {
+            type: 'slide',
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
+            duration: 200
+        },
+        SHOW_ANIMATION_CONFIG_FOR_NOTIFICATION: {
+            type: 'slide',
             direction: 'up',
-            easing: 'cubic-bezier(0,.23,0,1)',
-            duration: 200
+            easing: 'cubic-bezier(0,.63,0,1)',
+            duration: 500
         },
-        HIDE_ANIMATION_FROM_DOWN_SLOW_AT_FIRST_CONFIG: {
-            type: 'slideOut',
-            direction: 'up',
-            easing: 'cubic-bezier(.7,0,.7,1)',
-            duration: 200
-        },
-        HIDE_ANIMATION_FROM_UP_SLOW_AT_FIRST_CONFIG: {
+        HIDE_ANIMATION_CONFIG_FOR_NOTIFICATION: {
             type: 'slideOut',
             direction: 'down',
-            easing: 'cubic-bezier(.7,0,.7,1)',
-            duration: 200
+            easing: 'cubic-bezier(.7,0,.3,1)',
+            duration: 500
         },
-        HIDE_ANIMATION_FROM_UP_SLOW_AT_FIRST_SLOWER_CONFIG: {
-            type: 'slideOut',
-            direction: 'down',
-            easing: 'cubic-bezier(.7,0,.7,1)',
-            duration: 800
-        },
-        SHOW_BY_POP_ANIMATION_CONFIG: {
+        SHOW_ANIMATION_CONFIG_FOR_MESSAGEBOX: {
             type: 'pop',
-            easing: 'cubic-bezier(0,.23,0,1)',
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
             duration: 200
         },
-        HIDE_BY_POP_ANIMATION_CONFIG: {
+        HIDE_ANIMATION_CONFIG_FOR_MESSAGEBOX: {
             type: 'popOut',
-            easing: 'cubic-bezier(.7,0,.7,1)',
-            duration: 200
+            easing: 'cubic-bezier(.75,.1,.25,.9)',
+            duration: 100
         },
+        
         // Phonegap
         // Contact (http://docs.phonegap.com/en/3.3.0/cordova_contacts_contacts.md.html#Contacts)
         PG_FIELDS_REQUIRED_TO_IMPORT_DEVICE_CONTACT: [

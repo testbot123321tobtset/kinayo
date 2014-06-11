@@ -1,5 +1,12 @@
 Ext.define('overrides.Component', {
     override: 'Ext.Component',
+    
+    getLastXType: function() {
+        var me = this;
+        
+        return me.getXTypes().split('/').last();
+    },
+    
     // http://docs.sencha.com/touch/2.3.0/#!/api/Ext.Component-method-setRecord
     setRecordRecursive: function(record) {
         var me = this;
@@ -69,10 +76,10 @@ Ext.define('overrides.Component', {
      */
     open: function() {
         return this.setDimensionsToFillScreen().
-                show(X.config.Config.getSHOW_BY_POP_ANIMATION_CONFIG());
+                show(X.config.Config.getSHOW_ANIMATION_CONFIG());
     },
     close: function() {
-        return this.hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
+        return this.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
     },
     closeEverythingAboveMe: function() {
         var me = this;

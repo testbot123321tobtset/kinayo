@@ -255,7 +255,8 @@ Ext.define('X.store.Application', {
                 condition: function() {
                     return me.isLoaded();
                 },
-                scope: me
+                scope: me,
+                limit: 60000
             });
             return me;
         }

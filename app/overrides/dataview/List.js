@@ -24,6 +24,20 @@ Ext.define('overrides.dataview.List', {
             selectedRecords.push(record);
             me.select(selectedRecords);
         }
+    },
+    open: function() {
+        var me = this;
+        
+        me.show(X.config.Config.getSHOW_ANIMATION_CONFIG());
+        
+        return me;
+    },
+    close: function() {
+        var me = this;
+        
+        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+        
+        return me;
     }
 //    ,
 //    http://www.sencha.com/forum/showthread.php?276455-Ext.dataview.List-config.grouped-false-no-longer-works-in-2.3.1-for-Infinite-List.

@@ -106,7 +106,19 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
         
         me.setTitleToGroupTitle();
         
-        me.down('usergroupeditformpanel').setUsersListWithCurrentGroupMembers();
+        return me.callParent(arguments);
+    },
+    onHide: function() {
+        var me = this;
+        
+        me.resetTitle();
+        
+        var list = me.down('list');
+        list = (Ext.isObject(list) && !Ext.isEmpty(list)) ? list : false;
+        if(list) {
+            
+            list.close();
+        }
         
         return me.callParent(arguments);
     },
@@ -126,9 +138,18 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
         me.setTitleToGroupTitle();
         me.callParent(arguments);
     },
+    resetTitle: function() {
+        var me = this;
+        
+        me.down('#userGroupEditContainerToolbar').setTitle('Edit');
+        
+        return me;
+    },
     setTitleToGroupTitle: function() {
         var me = this;
+        
         me.down('#userGroupEditContainerToolbar').setTitle(me.getRecord().get('title'));
+        
         return me;
     },
     setReadOnly: function(isReadOnly) {

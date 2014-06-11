@@ -43,11 +43,8 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
             },
             {
                 xtype: 'simpleformpaneldisplaycontainer',
+                itemId: 'usersListTitleDisplayContainer',
                 html: 'Pick Group Members'
-            },
-            {
-                xtype: 'interactiveuserslist',
-                flex: 1
             }
 
 
@@ -148,6 +145,11 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
                 buffer: 1
             }
         ]
+    },
+    getIndexAtWhichListShouldBeInserted: function() {
+        var me = this;
+        
+        return me.getItems().indexOf(me.down('#usersListTitleDisplayContainer')) + 1;
     },
     resetAllFields: function() {
         var me = this;

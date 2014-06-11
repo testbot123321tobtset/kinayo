@@ -119,6 +119,8 @@ Ext.define('X.controller.Groups', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.showGroupsList(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+        var loadingContainer = X.view.plugandplay.LoadingContainer;
 
         var groupsStore = Ext.getStore('GroupsStore');
         groupsStore = Ext.isObject(groupsStore) ? groupsStore : false;
@@ -134,7 +136,7 @@ Ext.define('X.controller.Groups', {
             }
             else {
                 
-                X.view.plugandplay.LoadingContainer.open();
+                loadingContainer.open(X.XConfig.getMESSAGES().LOADING.GROUPS);
                 
                 groupsStore.
                         waitWhileLoadingAndCallbackOnLoad({
@@ -144,8 +146,8 @@ Ext.define('X.controller.Groups', {
                                 }
 
                                 me.generateGroupslist(groupsStore);
-
-                                X.view.plugandplay.LoadingContainer.close();
+                                
+                                loadingContainer.close();
                             }
                         });
             }
@@ -195,7 +197,7 @@ Ext.define('X.controller.Groups', {
                 }
                 else {
                     
-                    X.view.plugandplay.LoadingContainer.open();
+                    X.view.plugandplay.LoadingContainer.open(X.XConfig.getMESSAGES().LOADING.GROUPS);
 
                     groupsStore.
                             waitWhileLoadingAndCallbackOnLoad({
@@ -279,7 +281,7 @@ Ext.define('X.controller.Groups', {
                 }
                 else {
                     
-                    X.view.plugandplay.LoadingContainer.open();
+                    X.view.plugandplay.LoadingContainer.open(X.XConfig.getMESSAGES().LOADING.GROUPS);
 
                     groupsStore.
                             waitWhileLoadingAndCallbackOnLoad({
@@ -651,8 +653,6 @@ Ext.define('X.controller.Groups', {
                 console.log('Debug: X.controller.Groups.doCreateGroup(): Will call saveGivenGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
             
-            X.view.plugandplay.LoadingContainer.open();
-            
             var groupsStore = Ext.getStore('GroupsStore');
             groupsStore = Ext.isObject(groupsStore) ? groupsStore : false;
             if (groupsStore) {
@@ -666,7 +666,7 @@ Ext.define('X.controller.Groups', {
                 callback: {
                     fn: function() {
                         
-                        X.view.plugandplay.LoadingContainer.close();
+                        X.view.plugandplay.NotificationContainer.openAndWaitAndClose('Created ' + group.get('title'));
                     },
                     scope: me
                 }
@@ -699,8 +699,12 @@ Ext.define('X.controller.Groups', {
         userGroupsList = (Ext.isObject(userGroupsList) && !Ext.isEmpty(userGroupsList)) ? userGroupsList : false;
         if(userGroupsList) {
             
+            userGroupsList.close();
+            
             userGroupsList.setStore(groupsStore);
             userGroupsList.deselectAll();
+            
+            userGroupsList.open();
         }
 
         return me;

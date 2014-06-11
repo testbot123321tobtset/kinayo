@@ -22,6 +22,7 @@ Ext.define('X.view.plugandplay.LoadingContainer', {
         bottom: 0,
         
         items: {
+            itemId: 'htmlContainer',
             html: 'Loading'
         }
     },
@@ -32,17 +33,37 @@ Ext.define('X.view.plugandplay.LoadingContainer', {
         
         return me;
     },
-    open: function() {
+    setHtml: function(html) {
         var me = this;
         
-        me.show(X.config.Config.getSHOW_ANIMATION_FROM_DOWN_SLOWER_CONFIG());
+        html = Ext.isString(html) ? html : '';
+        me.down('#htmlContainer').setHtml(html);
+        
+        return me;
+    },
+    resetHtml: function() {
+        var me = this;
+        
+        me.show(me.down('#htmlContainer').setHtml(''));
+        
+        return me;
+    },
+    open: function(html) {
+        var me = this;
+        
+        if(Ext.isString(html)) {
+            
+            me.setHtml(html);
+        }
+            
+        me.show(X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_NOTIFICATION());
         
         return me;
     },
     close: function() {
         var me = this;
         
-        me.hide(X.config.Config.getHIDE_ANIMATION_FROM_UP_SLOW_AT_FIRST_SLOWER_CONFIG());
+        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_NOTIFICATION());
         
         return me;
     }

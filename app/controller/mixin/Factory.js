@@ -326,15 +326,53 @@ Ext.define('X.controller.mixin.Factory', {
             userGroupEditFormPanel = (Ext.isObject(userGroupEditFormPanel) && !Ext.isEmpty(userGroupEditFormPanel)) ? userGroupEditFormPanel : false;
             if (userGroupEditFormPanel) {
                 
+                var existingUsersList = userGroupEditFormPanel.down('list');
+                existingUsersList = (Ext.isObject(existingUsersList) && !Ext.isEmpty(existingUsersList)) ? existingUsersList : false;
+                
+                var indexOfExistingUsersList = false;
+                if(existingUsersList) {
+                    
+                    indexOfExistingUsersList = userGroupEditFormPanel.getItems().indexOf(existingUsersList);
+                }
+                
+                var existingUsersListXtype = false;
+                if(existingUsersList) {
+                    
+                    existingUsersListXtype = existingUsersList.getLastXType();
+                    existingUsersListXtype = (Ext.isString(existingUsersListXtype) && !Ext.isEmpty(existingUsersListXtype)) ? existingUsersListXtype : false;
+                }
+                
+                var indexAtWhichUsersListMustBeInserted = userGroupEditFormPanel.getIndexAtWhichListShouldBeInserted();
+                indexAtWhichUsersListMustBeInserted = Ext.isNumber(indexAtWhichUsersListMustBeInserted) ? indexAtWhichUsersListMustBeInserted : false;
+                
                 userGroupEditFormPanel.setRecord(group);
                 
                 var usersList = false;
                 var membersStore = false;
                 if(isGroupCreatedByMe) {
                     
-                    usersList = userGroupEditFormPanel.down('interactiveuserslist');
+                    if(existingUsersListXtype === 'interactiveuserslist') {
+                        
+                        usersList = existingUsersList;
+                    }
+                    else {
+                        
+                        usersList = Ext.create('X.view.plugandplay.InteractiveUsersList', {
+                            flex: 1
+                        });
+                        
+                        if(indexAtWhichUsersListMustBeInserted) {
+                            
+                            if(indexOfExistingUsersList) {
+                                
+                                userGroupEditFormPanel.removeAt(indexOfExistingUsersList);
+                            }
+                            
+                            console.log(userGroupEditFormPanel.insert(indexAtWhichUsersListMustBeInserted, usersList));
+                        }
+                    }
                     
-                    var membersStore = usersList.getStore();
+                    membersStore = usersList.getStore();
                     membersStore = Ext.isObject(membersStore) ? membersStore : false;
                     if(!membersStore) {
                     
@@ -347,21 +385,48 @@ Ext.define('X.controller.mixin.Factory', {
                     }
                     
                     usersList.deselectAll();
-                    
+
                     usersList.select(group.getMembers(), false, true);
-                    
-                    usersList.open();
+
+                    usersList.open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
                 }
                 else {
                     
-                    userGroupEditContainer.setReadOnly();
+                    //                    userGroupEditContainer.setReadOnly();
                     
-                    usersList = userGroupEditFormPanel.down('noninteractiveuserslist');
+                    if(existingUsersListXtype === 'noninteractiveuserslist') {
+                        
+                        usersList = existingUsersList;
+                    }
+                    else {
+                        
+                        usersList = Ext.create('X.view.plugandplay.NonInteractiveUsersList', {
+                            flex: 1
+                        });
+                        
+                        if(indexAtWhichUsersListMustBeInserted) {
+                            
+                            if(indexOfExistingUsersList) {
+                                
+                                userGroupEditFormPanel.removeAt(indexOfExistingUsersList);
+                            }
+                            
+                            userGroupEditFormPanel.insert(indexAtWhichUsersListMustBeInserted, usersList);
+                        }
+                    }
                     
-                    membersStore = Ext.getStore('FriendsStore');
-                    //                    Show only members of this group
+                    //                    Show only members of this group   
+                    //                    For now just show the whole friends list
+                    membersStore = Ext.getStore('FriendsStore');   
+                    membersStore = Ext.isObject(membersStore) ? membersStore : false;
+                    if(membersStore) {
                     
-                    usersList.open();
+                        usersList.setStore(membersStore);
+                    }
+                    
+                    usersList.deselectAll();
+                    
+                    usersList.open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
                 }
             }
 
@@ -391,15 +456,17 @@ Ext.define('X.controller.mixin.Factory', {
             var usersList = userGroupAddFormPanel.down('interactiveuserslist');
             usersList = (Ext.isObject(usersList) && !Ext.isEmpty(usersList)) ? usersList : false;
             if (usersList) {
+                
+                usersList.close();
 
                 var friendsStore = Ext.getStore('FriendsStore');
                 friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
                 if (friendsStore) {
 
                     usersList.setStore(friendsStore);
-                    
-                    usersList.open();
                 }
+                
+                usersList.open();
             }
         }
 

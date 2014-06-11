@@ -111,6 +111,7 @@ Ext.define('X.model.Group', {
         }
     },
     isCreatedByMe: function() {
+        
         return this.get('createdById') === X.authenticatedUser.get('objectId');
     },
     getMembers: function() {

@@ -113,7 +113,7 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
     open: function() {
         var me = this;
         me.setDimensionsToFillScreen().
-                show(X.config.Config.getSHOW_BY_POP_ANIMATION_CONFIG());
+                show(X.config.Config.getSHOW_ANIMATION_CONFIG());
         Ext.Viewport.fireEvent('photomessageinputcontaineropen', {
             photoMessageInputContainer: me
         });
@@ -122,7 +122,7 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
     close: function() {
         var me = this;
         
-        me.hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
+        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
         Ext.Viewport.fireEvent('photomessageinputcontainerclose', {
             photoMessageInputContainer: me
         });

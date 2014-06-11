@@ -61,7 +61,9 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
                 items: [
                     {
                         xtype: 'usergroupslist',
-                        flex: 1
+                        flex: 1,
+                        
+                        hidden: true
                     },
                     {
                         cls: 'tabbar-height-spacer-container'

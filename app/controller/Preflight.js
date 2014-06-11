@@ -29,8 +29,8 @@ Ext.define('X.controller.Preflight', {
 //        and this: http://www.sencha.com/forum/showthread.php?285246-Ext.Msg-slide-show-and-hide-animation
         Ext.Msg.defaultAllowedConfig.width = '100%';
         Ext.Msg.defaultAllowedConfig.bottom = 0;
-        Ext.Msg.defaultAllowedConfig.showAnimation = X.config.Config.getSHOW_ANIMATION_FROM_UP_CONFIG();
-        Ext.Msg.defaultAllowedConfig.hideAnimation = X.config.Config.getHIDE_ANIMATION_FROM_DOWN_SLOW_AT_FIRST_CONFIG();
+        Ext.Msg.defaultAllowedConfig.showAnimation = X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_MESSAGEBOX();
+        Ext.Msg.defaultAllowedConfig.hideAnimation = X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_MESSAGEBOX();
         Ext.Msg.on('painted', function() {
             Ext.Msg.setScrollable(true);
             Ext.Msg.setZIndex(X.config.Config.getZINDEX_LEVEL_5());
@@ -44,8 +44,15 @@ Ext.define('X.controller.Preflight', {
         Ext.Viewport.add(X.view.plugandplay.NotificationContainer);
         Ext.Viewport.add(X.view.plugandplay.InteractiveUsersListContainer);
         Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer);
-
-//        Native string extras
+        
+        //        Native array extras
+        if (!Array.prototype.last) {
+            Array.prototype.last = function() {
+                return this[this.length - 1];
+            };
+        };
+        
+        //        Native string extras
         Ext.apply(String.prototype, (function() {
             function uc(str, p1) {
                 return p1.toUpperCase();

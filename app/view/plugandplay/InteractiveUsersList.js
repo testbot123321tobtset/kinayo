@@ -14,19 +14,26 @@ Ext.define('X.view.plugandplay.InteractiveUsersList', {
         
         itemTpl: '{fullName}',
         
-        hidden: true
+        hidden: true,
+        
+        deferEmptyText: false
     },
-    open: function() {
+    onInitialize: function(me) {
+        
+        //        Set empty text
+        me.setEmptyText(X.config.Config.getMESSAGES().GROUP_NO_MEMBERS_FOUND);
+    },
+    open: function(animationConfig) {
         var me = this;
         
-        me.show(X.config.Config.getSHOW_ANIMATION_CONFIG());
+        me.show(animationConfig || X.config.Config.getSHOW_ANIMATION_CONFIG());
         
         return me;
     },
-    close: function() {
+    close: function(animationConfig) {
         var me = this;
         
-        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+        me.hide(animationConfig || X.config.Config.getHIDE_ANIMATION_CONFIG());
         
         return me;
     }

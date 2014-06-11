@@ -307,8 +307,6 @@ Ext.define('X.controller.Users', {
                         callback: {
                             fn: function() {
                                 
-                                console.log('!!!!!!!!!!!');
-                                
                                 var args = arguments[0];
                                 var nonInteractiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
                                 if (nonInteractiveUsersListContainer) {

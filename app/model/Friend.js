@@ -73,6 +73,9 @@ Ext.define('X.model.Friend', {
             url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().USERS.ENDPOINT,
             appendId: true,
             batchActions: true,
+            extraParams: {
+                includeKey: 'isFriendsWith'
+            },
             reader: {
                 type: 'json',
                 rootProperty: 'results'

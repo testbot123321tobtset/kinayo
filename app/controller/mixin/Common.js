@@ -38,6 +38,10 @@ Ext.define('X.controller.mixin.Common', {
                             successfullyOrFailedString = wasSuccessful ? 'Successfully' : 'Failed';
 
                     var generateWindowFunctionName = 'generate' + modelName + successfullyOrFailedString + actionNameInPastTense + 'Window';
+                    
+                    var userMessageKeyInConfig = (modelName + '_' + successfullyOrFailedString + '_' + actionNameInPastTense).toUpperCase();
+                    var messagesConfig = X.config.Config.getMESSAGES();
+                    var userMessage = userMessageKeyInConfig in messagesConfig ? messagesConfig[userMessageKeyInConfig] : false;
 
                     if (me.getDebug()) {
                         console.log('Debug: X.controller.mixin.Factory: commitOrRejectModelAndGenerateUserFeedbackOnSavingModel(): action: ' + action + ', wasSuccessful: ' + wasSuccessful + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
@@ -112,11 +116,19 @@ Ext.define('X.controller.mixin.Common', {
                             }
                         }
                         
-                        var generateWindowFunction = me[generateWindowFunctionName];
-                        if(Ext.isFunction(generateWindowFunction)) {
+                        //                        Lets not show a window that the user needs to click to continue; just show a notification
+                        //                        var generateWindowFunction = me[generateWindowFunctionName];
+                        //                        if(Ext.isFunction(generateWindowFunction)) {
+                        //                            
+                        //                            generateWindowFunction.call(me, options);
+                        //                        }
+                        
+                        if(userMessage) {
                             
-                            generateWindowFunction.call(me, options);
+                            X.view.plugandplay.NotificationContainer.openAndWaitAndClose(userMessage);
                         }
+                        
+                        me.executeCallback(options);
                     }
 
                     //                    Fire an event for instance: destroyedgroup

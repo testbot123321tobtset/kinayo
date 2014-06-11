@@ -175,7 +175,7 @@ Ext.define('X.config.Config', {
         HIDE_ANIMATION_CONFIG_FOR_NOTIFICATION: {
             type: 'slideOut',
             direction: 'down',
-            easing: 'cubic-bezier(.7,0,.3,1)',
+            easing: 'cubic-bezier(.72,0,1,.72)',
             duration: 500
         },
         SHOW_ANIMATION_CONFIG_FOR_MESSAGEBOX: {

@@ -120,8 +120,6 @@ Ext.define('X.controller.Groups', {
             console.log('Debug: X.controller.Groups.showGroupsList(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         
-        var loadingContainer = X.view.plugandplay.LoadingContainer;
-
         var groupsStore = Ext.getStore('GroupsStore');
         groupsStore = Ext.isObject(groupsStore) ? groupsStore : false;
         if (groupsStore) {
@@ -136,8 +134,6 @@ Ext.define('X.controller.Groups', {
             }
             else {
                 
-                loadingContainer.open(X.XConfig.getMESSAGES().LOADING.GROUPS);
-                
                 groupsStore.
                         waitWhileLoadingAndCallbackOnLoad({
                             fn: function() {
@@ -146,8 +142,6 @@ Ext.define('X.controller.Groups', {
                                 }
 
                                 me.generateGroupslist(groupsStore);
-                                
-                                loadingContainer.close();
                             }
                         });
             }
@@ -194,11 +188,13 @@ Ext.define('X.controller.Groups', {
                         
                         me.generateFeedUi(group, groupsStore);
                     }
+                    else {
+                        
+                        me.redirectTo('user/profile/groups/feeds');
+                    }
                 }
                 else {
                     
-                    X.view.plugandplay.LoadingContainer.open(X.XConfig.getMESSAGES().LOADING.GROUPS);
-
                     groupsStore.
                             waitWhileLoadingAndCallbackOnLoad({
                                 fn: function() {
@@ -213,8 +209,10 @@ Ext.define('X.controller.Groups', {
 
                                         me.generateFeedUi(group, groupsStore);
                                     }
+                                    else {
 
-                                    X.view.plugandplay.LoadingContainer.close();
+                                        me.redirectTo('user/profile/groups/feeds');
+                                    }
                                 }
                             });
                 }
@@ -278,11 +276,13 @@ Ext.define('X.controller.Groups', {
                         
                         me.generateEditGroupUi(group, groupsStore);
                     }
+                    else {
+                        
+                        me.redirectTo('user/profile/groups/feeds');
+                    }
                 }
                 else {
                     
-                    X.view.plugandplay.LoadingContainer.open(X.XConfig.getMESSAGES().LOADING.GROUPS);
-
                     groupsStore.
                             waitWhileLoadingAndCallbackOnLoad({
                                 fn: function() {
@@ -297,8 +297,10 @@ Ext.define('X.controller.Groups', {
 
                                         me.generateEditGroupUi(group, groupsStore);
                                     }
+                                    else {
 
-                                    X.view.plugandplay.LoadingContainer.close();
+                                        me.redirectTo('user/profile/groups/feeds');
+                                    }
                                 }
                             });
                 }

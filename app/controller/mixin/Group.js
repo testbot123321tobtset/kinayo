@@ -130,7 +130,7 @@ Ext.define('X.controller.mixin.Group', {
                             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
                         
-                        showLoading && X.view.plugandplay.LoadingContainer.close();
+                        //                        showLoading && X.view.plugandplay.LoadingContainer.close();
 
                         me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
                             operation: operation,
@@ -158,7 +158,7 @@ Ext.define('X.controller.mixin.Group', {
                             console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
                         
-                        showLoading && X.view.plugandplay.LoadingContainer.close();
+                        //                        showLoading && X.view.plugandplay.LoadingContainer.close();
 
                         me.commitOrRejectModelAndGenerateUserFeedbackOnSavingModel({
                             operation: operation,
@@ -187,7 +187,7 @@ Ext.define('X.controller.mixin.Group', {
                             console.log('Debug: X.controller.mixin.Group.saveGivenGroup(): Will call save(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
                         
-                        showLoading && X.view.plugandplay.LoadingContainer.open();
+                        //                        showLoading && X.view.plugandplay.LoadingContainer.open();
                         
                         group.save(optionsToSaveOperation);
                         break;
@@ -196,7 +196,7 @@ Ext.define('X.controller.mixin.Group', {
                             console.log('Debug: X.controller.mixin.Group.saveGivenGroup(): Will call erase(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                         }
                         
-                        showLoading && X.view.plugandplay.LoadingContainer.open();
+                        //                        showLoading && X.view.plugandplay.LoadingContainer.open();
                         
                         group.erase(optionsToSaveOperation);
                         break;

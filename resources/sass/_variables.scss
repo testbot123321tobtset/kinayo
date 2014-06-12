@@ -85,6 +85,7 @@ $default-darker-background-color: $white-99;
 $default-border-width: 1px;
 $default-border-style: solid;
 $default-border-color: $silver;
+$default-border: $default-border-width $default-border-style $default-border-color;
 $default-border-lighter-color: $white-94;
 
 /* Default colors on pressed and such events */

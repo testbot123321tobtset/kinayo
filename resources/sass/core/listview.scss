@@ -1,7 +1,7 @@
 @import 'compass';
 @import '_variables';
 @import '_mixins';
-@import 'field';
+@import 'core/field';
 
 .x-list {
 
@@ -59,6 +59,11 @@
 
                 @include no-border;
             }
+            
+            &.x-list-item-first {
+                
+                @include no-border;
+            }
         }
 
         .x-innerhtml {
@@ -87,6 +92,11 @@
                 &.x-list-item-last {
 
                     &:before {
+
+                        @include no-border;
+                    }
+
+                    &.x-list-item-first {
 
                         @include no-border;
                     }
@@ -131,6 +141,11 @@
 
                         @include no-border;
                     }
+
+                    &.x-list-item-first {
+
+                        @include no-border;
+                    }
                 }
 
                 &:last-of-type {
@@ -163,10 +178,5 @@
         @include no-border;
         border-top: $default-border-width $default-border-style $default-border-color !important;
         border-bottom: $default-border-width $default-border-style $default-border-color !important;
-
-        .x-innerhtml {
-
-
-        }
     }
 }

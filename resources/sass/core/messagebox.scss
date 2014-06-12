@@ -27,7 +27,8 @@ $messagebox-width-percent: 100%;
     @include no-border;
     @include no-border-radius;
     
-    border-top: $messagebox-border-visible-edge-width $messagebox-border-visible-edge-style $messagebox-border-visible-edge-color !important;
+    outline: $messagebox-border-visible-edge-width $messagebox-border-visible-edge-style $messagebox-border-visible-edge-color !important;
+    border: $messagebox-border-visible-edge-width $messagebox-border-visible-edge-style $messagebox-background-color !important;
     
     /*@include reverse-box-shadow;*/
     

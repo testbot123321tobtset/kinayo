@@ -89,9 +89,11 @@ Ext.define('X.model.Group', {
             //            We don't need to pull the whole _User objects; the members must be in the 
             //            authenticated user's friends list. So we can query for users from friends store
             //            with the objectIds we receive from this GET call on group
-            //                        extraParams: {
-            //                            include: 'hasMemberUsers'
-            //                        },
+            extraParams: {
+                include: 'hasMemberUsers',
+                order: '-updatedAt,createdAt,title'
+            },
+            sortParam: undefined,
             reader: {
                 type: 'json',
                 rootProperty: 'results'

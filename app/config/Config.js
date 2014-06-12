@@ -147,19 +147,19 @@ Ext.define('X.config.Config', {
         SHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG: {
             type: 'slide',
             direction: 'left',
-            easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
+            easing: 'cubic-bezier(0,1,0,1)',
+            duration: 500
         },
         HIDE_ANIMATION_CONFIG: {
             type: 'popOut',
             easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 100
+            duration: 200
         },
         HIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG: {
             type: 'slide',
             direction: 'right',
-            easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
+            easing: 'cubic-bezier(1,0,1,0)',
+            duration: 500
         },
         ANIMATION_CONFIG_FOR_TABPANEL: {
             type: 'slide',
@@ -186,7 +186,7 @@ Ext.define('X.config.Config', {
         HIDE_ANIMATION_CONFIG_FOR_MESSAGEBOX: {
             type: 'popOut',
             easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 100
+            duration: 200
         },
         
         // Phonegap

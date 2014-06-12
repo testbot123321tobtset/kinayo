@@ -74,7 +74,7 @@ Ext.define('X.model.Friend', {
             appendId: true,
             batchActions: true,
             extraParams: {
-                includeKey: 'isFriendsWith'
+                include: 'isFriendsWith'
             },
             reader: {
                 type: 'json',

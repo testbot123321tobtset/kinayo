@@ -701,12 +701,8 @@ Ext.define('X.controller.Groups', {
         userGroupsList = (Ext.isObject(userGroupsList) && !Ext.isEmpty(userGroupsList)) ? userGroupsList : false;
         if(userGroupsList) {
             
-            userGroupsList.close();
-            
             userGroupsList.setStore(groupsStore);
             userGroupsList.deselectAll();
-            
-            userGroupsList.open();
         }
 
         return me;

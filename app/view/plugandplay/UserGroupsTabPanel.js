@@ -20,28 +20,6 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
             }
         },
         items: [
-//            We don't yet have a good use case for why we should have this UI
-//            Since for now, we only have the user chat by forming groups, its not that
-//            we could tap on a user in this UI and start chatting with her. This is
-//            definitely something we should look into in future
-//            {
-//                // This will display all contacts that the user can interact with
-//                // on our app. This list is determined using the phone numbers
-//                // we have registered with us
-//                layout: {
-//                    type: 'fit'
-//                },
-//                itemId: 'userContacts',
-//                cls: 'user-contacts',
-//                iconCls: 'contactfilled',
-//                title: 'Contacts',
-//                scrollable: true,
-//                items: [
-//                    {
-//                        xtype: 'userslist'
-//                    }
-//                ]
-//            },
             {
                 // This will have the UI to first display all groups
                 // then on click, will display group feed
@@ -54,16 +32,12 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
                 cls: 'user-group-feeds',
                 iconCls: 'groupsfilled',
                 title: 'Groups',
-                
                 height: '100%',
                 scrollable: false,
-                
                 items: [
                     {
                         xtype: 'usergroupslist',
-                        flex: 1,
-                        
-                        hidden: true
+                        flex: 1
                     },
                     {
                         cls: 'tabbar-height-spacer-container'
@@ -75,15 +49,20 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
             },
             {
                 layout: {
-                    type: 'fit'
+                    type: 'vbox',
+                    pack: 'center',
+                    align: 'stretch'
                 },
                 itemId: 'userAddGroups',
                 cls: 'user-add-groups',
                 iconCls: 'plus',
                 title: 'New Group',
+                height: '100%',
+                scrollable: false,
                 items: [
                     {
-                        xtype: 'usergroupaddformpanel'
+                        xtype: 'usergroupaddformpanel',
+                        flex: 1
                     }
                 ]
             }

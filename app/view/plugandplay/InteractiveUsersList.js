@@ -12,9 +12,9 @@ Ext.define('X.view.plugandplay.InteractiveUsersList', {
         
         scrollToTopOnRefresh: true,
         
-        itemTpl: '{fullName}',
+        itemTpl: '<tpl if="fullName">{fullName}<tpl else>{username}</tpl>',
         
-        hidden: true,
+        hidden: false,
         
         deferEmptyText: false
     },
@@ -22,19 +22,9 @@ Ext.define('X.view.plugandplay.InteractiveUsersList', {
         
         //        Set empty text
         me.setEmptyText(X.config.Config.getMESSAGES().GROUP_NO_MEMBERS_FOUND);
-    },
-    open: function(animationConfig) {
-        var me = this;
         
-        me.show(animationConfig || X.config.Config.getSHOW_ANIMATION_CONFIG());
-        
-        return me;
-    },
-    close: function(animationConfig) {
-        var me = this;
-        
-        me.hide(animationConfig || X.config.Config.getHIDE_ANIMATION_CONFIG());
-        
-        return me;
+        //        Set animations
+        me.setShowAnimation(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
+        me.setHideAnimation(X.config.Config.getHIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG());
     }
 });

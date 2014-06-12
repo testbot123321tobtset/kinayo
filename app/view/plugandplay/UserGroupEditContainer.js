@@ -65,39 +65,14 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
                             }
                         }
                     }
-//                    ,
-//                    {
-//                        xtype: 'button',
-//                        itemId: 'removeMeSetButton',
-//                        cls: 'button-stacked delete-button',
-//                        align: 'right',
-//                        iconCls: 'close',
-//                        text: 'RO',
-//                        listeners: {
-//                            tap: function(button, e, eOpts) {
-//                                button.up('#userGroupEditContainer').setReadOnly(true);
-//                            }
-//                        }
-//                    },
-//                    {
-//                        xtype: 'button',
-//                        itemId: 'removeMeResetButton',
-//                        cls: 'button-stacked delete-button',
-//                        align: 'right',
-//                        iconCls: 'close',
-//                        text: 'Reset RO',
-//                        listeners: {
-//                            tap: function(button, e, eOpts) {
-//                                button.up('#userGroupEditContainer').setReadOnly(false);
-//                            }
-//                        }
-//                    }
                 ]
             },
             {
                 xtype: 'usergroupeditformpanel',
                 flex: 1,
-                scrollable: true
+                scrollable: true,
+                
+                hidden: true
             }
         ]
     },
@@ -106,6 +81,8 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
         
         me.setTitleToGroupTitle();
         
+        me.down('usergroupeditformpanel').open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
+        
         return me.callParent(arguments);
     },
     onHide: function() {
@@ -113,12 +90,7 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
         
         me.resetTitle();
         
-        var list = me.down('list');
-        list = (Ext.isObject(list) && !Ext.isEmpty(list)) ? list : false;
-        if(list) {
-            
-            list.close();
-        }
+        me.down('usergroupeditformpanel').close(X.config.Config.getHIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG());
         
         return me.callParent(arguments);
     },

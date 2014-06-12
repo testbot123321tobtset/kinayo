@@ -106,7 +106,9 @@ Ext.define('X.model.AuthenticatedUser', {
                 //                include v/s includeKey does seem unreliable. For some reason, isFriendsWith randomly starts wotking with include
                 //                But then when you update the user, isFriendsWith stops working with include and starts working with
                 //                includeKey...Keep an eye out for this TODO
-                includeKey: 'isMemberOf,hasCreated,isFriendsWith'
+                //                Okay, so this is very weird – sometimes include works perfectly, sometimes it totally fails i.e. server returns error.
+                //                and includeKey works only for the first record in its array
+                include: 'isMemberOf,hasCreated,isFriendsWith'
             },
             reader: {
                 type: 'json',

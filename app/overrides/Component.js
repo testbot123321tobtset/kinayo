@@ -74,12 +74,15 @@ Ext.define('overrides.Component', {
      * mainViewEl.parentNode.removeChild(mainViewEl); (Remove the node from DOM)
      * this.mainViewParentNode.appendChild(mainViewEl); (Inject it back into DOM on demand)
      */
-    open: function() {
-        return this.setDimensionsToFillScreen().
-                show(X.config.Config.getSHOW_ANIMATION_CONFIG());
+    open: function(animationConfig) {
+        return this.show(animationConfig || X.config.Config.getSHOW_ANIMATION_CONFIG());
     },
-    close: function() {
-        return this.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+    openFullScreen: function(animationConfig) {
+        return this.setDimensionsToFillScreen().
+                show(animationConfig || X.config.Config.getSHOW_ANIMATION_CONFIG());
+    },
+    close: function(animationConfig) {
+        return this.hide(animationConfig || X.config.Config.getHIDE_ANIMATION_CONFIG());
     },
     closeEverythingAboveMe: function() {
         var me = this;

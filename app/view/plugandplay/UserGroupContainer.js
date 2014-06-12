@@ -71,20 +71,32 @@ Ext.define('X.view.plugandplay.UserGroupContainer', {
                 itemId: 'feedContainer',
                 cls: 'user-group-container-feed-container',
                 flex: 1,
-                tpl: new Ext.XTemplate('{title}'),
-                scrollable: true
+                scrollable: true,
+                
+                hidden: true
             }
         ]
+    },
+    onShow: function() {
+        var me = this;
+        
+        me.setTitleToGroupTitle();
+        
+        me.down('#feedContainer').open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
+        
+        return me.callParent(arguments);
+    },
+    onHide: function() {
+        var me = this;
+        
+        me.down('#feedContainer').close(X.config.Config.getHIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG());
+        
+        return me.callParent(arguments);
     },
     onBackButtonTap: function(button, e, eOpts) {
         var me = this;
         me.callParent(arguments);
         return me;
-    },
-    onShow: function() {
-        var me = this;
-        me.setTitleToGroupTitle();
-        me.callParent(arguments);
     },
     onUpdateData: function() {
         var me = this;

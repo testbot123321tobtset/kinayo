@@ -209,8 +209,7 @@ Ext.define('X.controller.mixin.Factory', {
         }
         if (Ext.isObject(pageUserRoot) && !Ext.isEmpty(pageUserRoot)) {
             Ext.Viewport.removeAll(false, false).
-                    add(pageUserRoot).
-                    open();
+                    add(pageUserRoot);
         }
 
         return me;
@@ -227,7 +226,7 @@ Ext.define('X.controller.mixin.Factory', {
                     xtype: 'pageuserroot'
                 }));
 
-        return pageUserRoot.open();
+        return pageUserRoot;
     },
     // User :: More
     generateUserRootPageTabPanelAndActivateUserMoreTab: function() {
@@ -387,8 +386,6 @@ Ext.define('X.controller.mixin.Factory', {
                     usersList.deselectAll();
 
                     usersList.select(group.getMembers(), false, true);
-
-                    usersList.open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
                 }
                 else {
                     
@@ -425,8 +422,6 @@ Ext.define('X.controller.mixin.Factory', {
                     }
                     
                     usersList.deselectAll();
-                    
-                    usersList.open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
                 }
             }
 
@@ -457,16 +452,12 @@ Ext.define('X.controller.mixin.Factory', {
             usersList = (Ext.isObject(usersList) && !Ext.isEmpty(usersList)) ? usersList : false;
             if (usersList) {
                 
-                usersList.close();
-
                 var friendsStore = Ext.getStore('FriendsStore');
                 friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
                 if (friendsStore) {
 
                     usersList.setStore(friendsStore);
                 }
-                
-                usersList.open();
             }
         }
 

@@ -3,18 +3,29 @@
 @import '_mixins';
 @import 'core/formpanel';
 @import 'core/button';
+@import 'core/field';
 
 .x-form {
 
     .simple-formpanel-display-container {
 
-        margin-top: $default-edge-distance-from-toolbars !important;
+        margin-top: 2.5em !important;
+        margin-bottom: 0.5em !important;
         
         color: $magnesium !important;
         
         padding: 0 $default-button-label-side-padding !important;
         
         font-weight: 300 !important;
+        
+        color: $field-label-font-color !important;
+
+        font-size: 0.7em !important;
+        font-weight: $field-label-font-weight !important;
+        font-style: $field-label-font-style !important;
+        
+        text-transform: uppercase !important;
+        text-align: center !important;
     }
 }
 

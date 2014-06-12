@@ -17,6 +17,7 @@ Ext.define('X.view.page.user.Root', {
                 pack: 'center'
             }
         },
+        
         items: [
 //            {
 //                layout: {

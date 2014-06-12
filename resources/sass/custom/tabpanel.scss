@@ -3,3 +3,18 @@
 @import '_mixins';
 @import 'core/tabpanel';
 
+.user-groups-tab-panel {
+    
+    .user-group-feeds {
+        
+        @include no-border;
+        outline: 1px $default-border-style $default-border-color !important;
+    }
+    
+    .user-add-groups {
+        
+        @include no-border;
+        outline: 1px $default-border-style $default-border-color !important;
+    }
+}
+

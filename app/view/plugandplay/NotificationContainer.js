@@ -33,46 +33,26 @@ Ext.define('X.view.plugandplay.NotificationContainer', {
         
         return me;
     },
-    setHtml: function(html) {
+    setMessage: function(message) {
         var me = this;
         
-        html = Ext.isString(html) ? html : '';
-        me.down('#htmlContainer').setHtml(html);
+        me.down('#htmlContainer').setHtml(Ext.isString(message) ? message : '');
         
         return me;
     },
-    resetHtml: function() {
+    resetMessge: function() {
         var me = this;
         
-        me.show(me.down('#htmlContainer').setHtml(''));
+        me.down('#htmlContainer').setHtml('');
         
         return me;
     },
-    open: function(html) {
+    openAndWaitAndClose: function(message, duration) {
         var me = this;
         
-        if(Ext.isString(html)) {
-            
-            me.setHtml(html);
-        }
-            
-        me.show(X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_NOTIFICATION());
+        me.setMessage(message).open();
         
-        return me;
-    },
-    close: function() {
-        var me = this;
-        
-        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_NOTIFICATION());
-        
-        return me;
-    },
-    openAndWaitAndClose: function(html, duration) {
-        var me = this;
-        
-        me.setHtml(html).open();
         Ext.Function.defer(function() {
-            
             me.close();
         }, Ext.isNumber(duration) ? duration : 3000);
         

@@ -295,7 +295,10 @@ Ext.define('X.controller.Users', {
         //        
         //        For a clearer picture of the workflow, refer to: https://docs.google.com/document/d/12HrIs4C6R0h9j1maSMkHIci4OrSnuXkNia87V_luNXI/edit?usp=sharing
         
-        X.view.plugandplay.LoadingContainer.open();
+        var loadingContainer = me.loadingContainer;
+        loadingContainer = (Ext.isObject(loadingContainer) && !Ext.isEmpty(loadingContainer)) ? loadingContainer : false;
+        
+        loadingContainer && loadingContainer.open();
         
         return me.fetchFriendsFromServerForPhoneNumbersOfDeviceContactsAndSetFriendsStore({
             
@@ -324,9 +327,7 @@ Ext.define('X.controller.Users', {
                                             
                                             nonInteractiveList.setStore(friendsStore);
                                             
-                                            nonInteractiveList.open();
-                                            
-                                            X.view.plugandplay.LoadingContainer.close();
+                                            loadingContainer && loadingContainer.close();
                                         }
                                     }
                                 }
@@ -526,7 +527,10 @@ Ext.define('X.controller.Users', {
             console.log('Debug: X.controller.Users.xhrLogin(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         
-        X.view.plugandplay.LoadingContainer.open(X.config.Config.getMESSAGES().LOADING.USER_LOGGING_IN);
+        var loadingContainer = me.loadingContainer;
+        loadingContainer = (Ext.isObject(loadingContainer) && !Ext.isEmpty(loadingContainer)) ? loadingContainer : false;
+        
+        loadingContainer && loadingContainer.open();
 
         //        Parse: https://www.parse.com/docs/rest#users-login
         var parseMetaData = me.getParseMetaData({
@@ -558,7 +562,7 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
                     
-                    X.view.plugandplay.LoadingContainer.close();
+                    loadingContainer && loadingContainer.close();
 
                     var loggedInUser = Ext.decode(serverResponse.responseText);
                     loggedInUser = (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser)) ? loggedInUser : false;
@@ -586,7 +590,7 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
                     
-                    X.view.plugandplay.LoadingContainer.close();
+                    loadingContainer && loadingContainer.close();
 
                     //                    TEMPLATE: Use this as a template to extract information from Parse's response
                     //                    var operationStatus = serverResponse.status,
@@ -674,13 +678,6 @@ Ext.define('X.controller.Users', {
                 });
             }
         });
-    },
-    show: function(id) {
-        var me = this;
-        if (X.XConfig.getDEBUG()) {
-            console.log('Debug: X.controller.Users.show(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return me;
     },
     authenticate: function(action) {
         var me = this;

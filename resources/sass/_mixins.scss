@@ -166,7 +166,7 @@
 }
 
 @mixin mega-box-shadow-with-no-offset {
-    @include box-shadow($default-box-shadow-color 0px 0px 30px);
+    @include box-shadow($default-box-shadow-color 0px 0px 10px);
 }
 
 @mixin mega-reverse-box-shadow {
@@ -190,7 +190,7 @@
 }
 
 @mixin ultra-box-shadow-with-no-offset {
-    @include box-shadow($default-box-shadow-color 0px 0px 50px);
+    @include box-shadow($default-box-shadow-color 0px 0px 20px);
 }
 
 @mixin netflix-search-widget-shadow {

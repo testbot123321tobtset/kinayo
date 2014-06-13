@@ -22,9 +22,5 @@ Ext.define('X.view.plugandplay.InteractiveUsersList', {
         
         //        Set empty text
         me.setEmptyText(X.config.Config.getMESSAGES().GROUP_NO_MEMBERS_FOUND);
-        
-        //        Set animations
-        me.setShowAnimation(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
-        me.setHideAnimation(X.config.Config.getHIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG());
     }
 });

@@ -40,6 +40,8 @@ $container-border-visible-edge-color: $default-border-color;
     @include no-background;
     background: $loading-container-background-color !important;
     
+    @include mini-reverse-box-shadow;
+    
     .x-innerhtml {
         
         background: $loading-container-background-color !important;
@@ -89,7 +91,8 @@ $container-border-visible-edge-color: $default-border-color;
     @include single-transition;
     
     @include no-border;
-    outline: 2px $default-border-style $default-border-color !important;
+    
+    @include mini-reverse-box-shadow;
 
     @include no-background;
     background-color: $container-background-color !important;

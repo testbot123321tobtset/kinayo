@@ -95,6 +95,7 @@ Ext.define('X.config.Config', {
             
             
             GROUP_NO_MEMBERS_FOUND: 'You have no friends in here. Consider adding a few and get chatty!',
+            NO_GROUPS_FOUND: 'You have no groups yet. Consider creating one with your friends!',
             
             LOADING: {
                 USER_LOGGING_IN: 'Logging you in...',
@@ -130,19 +131,27 @@ Ext.define('X.config.Config', {
          */
         // When you change animations, check overrides.TitleBar for consistency
         // Animation types: 'pop', 'fadeOut', 'flip', 'pop', 'popOut', 'slide', 'popOut' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.fx.Animation-cfg-type)
-        DEFAULT_ANIMATION_TYPE: 'pop',
-        DEFAULT_ANIMATION_DURATION: 200,
+        DEFAULT_ANIMATION_TYPE: 'slide',
+        DEFAULT_ANIMATION_DURATION: 250,
         // Easing types: 'ease', 'linear', ease-in', 'ease-out', 'cubic-bezier(.75,.1,.25,.9)' (http://docs.sencha.com/touch/2.3.1/#!/api/Ext.Anim-cfg-easing)
         DEFAULT_ANIMATION_EASING: 'cubic-bezier(.75,.1,.25,.9)',
-        ANIMATION_CONFIG: {
-            type: 'pop',
-            easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
-        },
+        // This is the delay – for instance, between nested animated components
+        DEFAULT_ANIMATION_DELAY: 150,
+        //        SHOW_ANIMATION_CONFIG: {
+        //            type: 'pop',
+        //            easing: 'cubic-bezier(.75,.1,.25,.9)',
+        //            duration: 200
+        //        },
         SHOW_ANIMATION_CONFIG: {
-            type: 'pop',
-            easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
+            type: 'slide',
+            direction: 'up',
+            easing: 'cubic-bezier(0,.63,0,1)',
+            duration: 500
+        },
+        SHOW_ANIMATION_FADE_CONFIG: {
+            type: 'fade',
+            easing: 'cubic-bezier(0,.63,0,1)',
+            duration: 500
         },
         SHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG: {
             type: 'slide',
@@ -150,21 +159,38 @@ Ext.define('X.config.Config', {
             easing: 'cubic-bezier(0,1,0,1)',
             duration: 500
         },
+        //        HIDE_ANIMATION_CONFIG: {
+        //            type: 'popOut',
+        //            easing: 'cubic-bezier(.75,.1,.25,.9)',
+        //            duration: 200
+        //        },
         HIDE_ANIMATION_CONFIG: {
-            type: 'popOut',
-            easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
+            type: 'slideOut',
+            direction: 'down',
+            easing: 'cubic-bezier(.72,0,1,.72)',
+            duration: 500
+        },
+        HIDE_ANIMATION_FADE_CONFIG: {
+            type: 'fadeOut',
+            easing: 'cubic-bezier(0,.63,0,1)',
+            duration: 500
         },
         HIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG: {
-            type: 'slide',
+            type: 'slideOut',
             direction: 'right',
+            easing: 'cubic-bezier(1,0,1,0)',
+            duration: 500
+        },
+        HIDE_ANIMATION_SLIDE_TO_UP_CONFIG: {
+            type: 'slideOut',
+            direction: 'up',
             easing: 'cubic-bezier(1,0,1,0)',
             duration: 500
         },
         ANIMATION_CONFIG_FOR_TABPANEL: {
             type: 'slide',
             easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
+            duration: 250
         },
         SHOW_ANIMATION_CONFIG_FOR_NOTIFICATION: {
             type: 'slide',
@@ -179,14 +205,22 @@ Ext.define('X.config.Config', {
             duration: 500
         },
         SHOW_ANIMATION_CONFIG_FOR_MESSAGEBOX: {
-            type: 'pop',
-            easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
+            //            type: 'pop',
+            //            easing: 'cubic-bezier(.75,.1,.25,.9)',
+            //            duration: 200
+            type: 'slide',
+            direction: 'up',
+            easing: 'cubic-bezier(0,.63,0,1)',
+            duration: 500
         },
         HIDE_ANIMATION_CONFIG_FOR_MESSAGEBOX: {
-            type: 'popOut',
-            easing: 'cubic-bezier(.75,.1,.25,.9)',
-            duration: 200
+            //            type: 'popOut',
+            //            easing: 'cubic-bezier(.75,.1,.25,.9)',
+            //            duration: 200
+            type: 'slideOut',
+            direction: 'down',
+            easing: 'cubic-bezier(.72,0,1,.72)',
+            duration: 500
         },
         
         // Phonegap

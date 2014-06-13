@@ -512,9 +512,9 @@ Ext.define('X.controller.Groups', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.onUserGroupCreateSubmitButtonTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-
-        me.doCreateGroup();
-
+        
+        me.doValidateGroup();
+        
         return me;
     },
     onuserGroupEditContainerBackButtonTap: function(button) {
@@ -612,6 +612,47 @@ Ext.define('X.controller.Groups', {
     /*
      *    HELPERS
      */
+    doValidateGroup: function() {
+        var me = this;
+        if (me.getDebug()) {
+            console.log('Debug: X.controller.Groups.doValidateGroup(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        var formPanel = me.getUserGroupAddFormPanel();
+        var formData = formPanel.getValues();
+        var title = formData.title;
+        var description = formData.description;
+
+        var newGroup = {
+            title: title,
+            description: description,
+            createdById: X.authenticatedUser.get('objectId')
+        };
+        var group = Ext.create('X.model.Group', newGroup);
+        
+        var userGroupAddFormPanelUserList = me.getUserGroupAddFormPanelUserList();
+        userGroupAddFormPanelUserList = (Ext.isObject(userGroupAddFormPanelUserList) && !Ext.isEmpty(userGroupAddFormPanelUserList)) ? userGroupAddFormPanelUserList : false;
+        if(userGroupAddFormPanelUserList) {
+            
+            group.setHasMemberUsersFieldForGivenUsers(userGroupAddFormPanelUserList.getSelection());
+        }
+        
+        var errors = group.validate();
+        if (!errors.isValid()) {
+            if (me.getDebug()) {
+                console.log('Debug: X.controller.Groups.doCreateGroup(): Group validation failed: Found errors:');
+                console.log(errors);
+                console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+            }
+            me.generateFailedWindow({
+                message: errors.getAt(0).
+                        getMessage()
+            });
+        }
+        group.reject();
+        
+        return me;
+    },
     doCreateGroup: function(button) {
         var me = this;
         if (me.getDebug()) {
@@ -668,7 +709,7 @@ Ext.define('X.controller.Groups', {
                 callback: {
                     fn: function() {
                         
-                        X.view.plugandplay.NotificationContainer.openAndWaitAndClose('Created ' + group.get('title'));
+                        Ext.Viewport.notificationContainer.openAndWaitAndClose('Created ' + group.get('title'));
                     },
                     scope: me
                 }

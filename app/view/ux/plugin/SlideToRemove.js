@@ -23,7 +23,7 @@ Ext.define('X.view.ux.plugin.SlideToRemove', {
         if (e.direction === 'left' && element.down('.x-list-item-remove') === null) {
             Ext.DomHelper.append(element, '<div class="x-list-delete-comp"></div>');
             var button = this.createButton(element, rec);
-            button.show(X.config.Config.getSHOW_ANIMATION_CONFIG());
+            button.show(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
         } else if (e.direction === 'right' && element.down('.x-list-item-remove')) {
             this.hideDelete(element.down('.x-list-item-remove'));
         }
@@ -65,8 +65,8 @@ Ext.define('X.view.ux.plugin.SlideToRemove', {
             bottom: ((element.getHeight() - parseInt(element.getStyle('min-height'))) / 2),
             right: 0,
             hidden: true,
-            showAnimation: X.config.Config.getSHOW_ANIMATION_CONFIG(),
-            hideAnimation: X.config.Config.getHIDE_ANIMATION_CONFIG(),
+            showAnimation: X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG(),
+            hideAnimation: X.config.Config.getHIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG(),
             renderTo: element.down('.x-list-delete-comp'),
             handler: function(btn, e) {
                 e.preventDefault();

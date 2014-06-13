@@ -72,15 +72,5 @@ Ext.define('X.view.page.user.Root', {
                 ]
             }
         ]
-    },
-    open: function() {
-        var me = this;
-        me.setDimensionsToFillScreen().show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-        return me;
-    },
-    close: function() {
-        var me = this;
-        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
-        return me;
     }
 });

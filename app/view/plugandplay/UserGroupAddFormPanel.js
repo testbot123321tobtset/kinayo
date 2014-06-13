@@ -12,10 +12,8 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
             pack: 'start',
             align: 'stretch'
         },
-        
         height: '100%',
         scrollable: false,
-        
         cls: 'user-group-add-form-panel',
         items: [
             //            {
@@ -49,9 +47,7 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                                 itemId: 'titleTextfield',
                                 cls: 'title-textfield',
                                 name: 'title',
-                                
                                 hasChangedOnce: false,
-                                
                                 placeHolder: 'Name your Group'
                             }
                             //                    ,
@@ -64,12 +60,20 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                         ]
                     },
                     {
+                        xtype: 'button',
+                        itemId: 'submitButton',
+                        cls: 'submit-button',
+                        text: 'Create'
+                    },
+                    {
                         xtype: 'simpleformpaneldisplaycontainer',
-                        html: 'Pick Group Members'
+                        html: 'Pick Group Members',
+                        hidden: true
                     },
                     {
                         xtype: 'interactiveuserslist',
-                        flex: 1
+                        flex: 1,
+                        hidden: true
                     }
                 ]
             }
@@ -139,9 +143,38 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
     },
     onRemovedRecord: function(me, record) {
         var me = this;
-        
+
         me.down('#titleTextfield').hasChangedOnce = false;
-        
+
+        return me;
+    },
+    openList: function() {
+        var me = this;
+
+        me.down('#submitButton').
+                close(X.config.Config.getHIDE_ANIMATION_FADE_CONFIG());
+
+        Ext.Function.defer(function() {
+
+            me.down('simpleformpaneldisplaycontainer').
+                    open();
+            me.down('interactiveuserslist').
+                    open();
+
+        }, 2.6 * X.config.Config.getDEFAULT_ANIMATION_DELAY());
+
+        return me;
+    },
+    closeList: function() {
+        var me = this;
+
+        me.down('#submitButton').
+                open();
+        me.down('simpleformpaneldisplaycontainer').
+                close();
+        me.down('interactiveuserslist').
+                close();
+
         return me;
     },
     onInteractiveListItemTap: function(me, index, target, record, e, eOpts) {
@@ -149,11 +182,11 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
         if (isDebug) {
             console.log('Debug: X.view.plugandplay.UserGroupAddFormPanel.onInteractiveListItemTap(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var formPanel = me.up('#userGroupAddFormPanel');
         formPanel = (Ext.isObject(formPanel) && !Ext.isEmpty(formPanel)) ? formPanel : false;
-        if(formPanel) {
-            
+        if (formPanel) {
+
             var groupRecord = formPanel.getRecord();
             groupRecord = (Ext.isObject(groupRecord) && !Ext.isEmpty(groupRecord)) ? groupRecord : false;
             if (groupRecord) {
@@ -186,7 +219,7 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                 dummyGroupRecord.destroy();
             }
         }
-        
+
         return me;
     },
     onFormPanelFieldChange: function(me, newValue, oldValue, eOpts) {
@@ -194,9 +227,9 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
         if (isDebug) {
             console.log('Debug: X.view.plugandplay.UserGroupAddFormPanel.onFormPanelFieldChange(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        
+
         var isThisGroupBeingCreated = !me.hasChangedOnce;
-        
+
         if (isThisGroupBeingCreated) {
 
             //            This means that group is being created
@@ -204,43 +237,43 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
             var groupsStore = Ext.getStore('GroupsStore');
             groupsStore = Ext.isObject(groupsStore) ? groupsStore : false;
             if (groupsStore) {
-                
+
                 var formPanel = me.up('#userGroupAddFormPanel');
                 var formData = formPanel.getValues();
                 var title = formData.title;
                 var description = formData.description;
-                
+
                 var newGroup = {
                     title: title,
                     description: description,
                     createdById: X.authenticatedUser.get('objectId')
                 };
-                
+
                 var group = Ext.create('X.model.Group', newGroup);
 
                 var userGroupAddFormPanelUserList = formPanel.down('interactiveuserslist');
                 userGroupAddFormPanelUserList = (Ext.isObject(userGroupAddFormPanelUserList) && !Ext.isEmpty(userGroupAddFormPanelUserList)) ? userGroupAddFormPanelUserList : false;
                 if (userGroupAddFormPanelUserList) {
-                    
+
                     var selectedRecords = userGroupAddFormPanelUserList.getSelection();
                     selectedRecords = (Ext.isArray(selectedRecords) && !Ext.isEmpty(selectedRecords)) ? selectedRecords : false;
-                    if(selectedRecords) {
-                        
+                    if (selectedRecords) {
+
                         group.setHasMemberUsersFieldForGivenUsers(userGroupAddFormPanelUserList.getSelection());
                     }
                 }
-                
+
                 var errors = group.validate();
                 if (!errors.isValid()) {
 
                     formPanel.setRecord(group);
-                    
+
                     if (userGroupAddFormPanelUserList) {
-                        
+
                         var friendsStore = Ext.getStore('FriendsStore');
                         friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
-                        if(friendsStore) {
-                            
+                        if (friendsStore) {
+
                             userGroupAddFormPanelUserList.setStore(friendsStore);
                         }
                     }
@@ -256,9 +289,9 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
 
                         groupsStore.add(group);
                     }
-                        
+
                     formPanel.setRecord(group);
-                    
+
                     Ext.Viewport.fireEvent('addgroup', {
                         group: group,
                         validated: true,
@@ -266,13 +299,15 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                         showLoading: false,
                         callback: {
                             fn: function() {
-                                
-                                X.view.plugandplay.NotificationContainer.openAndWaitAndClose('Created ' + title);
-                                
+
+                                Ext.Viewport.notificationContainer.openAndWaitAndClose('Created ' + title);
+
                                 if (!me.hasChangedOnce) {
 
                                     me.hasChangedOnce = true;
                                 }
+
+                                formPanel.openList();
                             },
                             scope: me
                         }
@@ -281,25 +316,25 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
             }
         }
         else {
-            
+
             //            This means that group is being updated
-            
+
             var formPanel = me.up('#userGroupAddFormPanel');
-            
+
             var groupRecord = formPanel.getRecord();
             groupRecord = (Ext.isObject(groupRecord) && !Ext.isEmpty(groupRecord)) ? groupRecord : false;
-            
+
             if (groupRecord) {
-                
+
                 var field = me;
                 var groupRecordId = groupRecord.get('objectId');
                 var fieldName = field.getName();
                 var groupsStore = Ext.getStore('GroupsStore');
                 var groupFromGroupsStore = groupsStore.getById(groupRecordId);
                 var groupFieldValueFromGroupsStore = groupFromGroupsStore.get(fieldName);
-                
+
                 if (groupFieldValueFromGroupsStore !== newValue) {
-                    
+
                     var formValues = formPanel.getValues();
                     formValues['createdById'] = groupRecord.get('createdById');
                     var dummyGroupRecord = Ext.create('X.model.Group', formValues);
@@ -340,7 +375,7 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
                 }
             }
         }
-        
+
         return me;
     }
 });

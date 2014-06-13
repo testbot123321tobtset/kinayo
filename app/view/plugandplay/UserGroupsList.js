@@ -7,6 +7,13 @@ Ext.define('X.view.plugandplay.UserGroupsList', {
         itemTpl: '{title}',
         deselectOnContainerClick: true,
         onItemDisclosure: true,
-        preventSelectionOnDisclose: false
+        preventSelectionOnDisclose: false,
+        
+        deferEmptyText: false
+    },
+    onInitialize: function(me) {
+        
+        //        Set empty text
+        me.setEmptyText(X.config.Config.getMESSAGES().NO_GROUPS_FOUND);
     }
 });

@@ -74,15 +74,106 @@ Ext.define('overrides.Component', {
      * mainViewEl.parentNode.removeChild(mainViewEl); (Remove the node from DOM)
      * this.mainViewParentNode.appendChild(mainViewEl); (Inject it back into DOM on demand)
      */
+    getCustomShowAnimationConfig: function() {
+        var me = this;;
+        
+        var lastXType = me.getLastXType();
+        var animationConfig = false;
+        
+        switch (lastXType) {
+
+            case 'loadingcontainer':
+                animationConfig = X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            case 'notificationcontainer':
+                animationConfig = X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            default:
+                animationConfig = X.config.Config.getSHOW_ANIMATION_CONFIG();
+                break;
+        }
+        
+        return animationConfig;
+    },
+    getCustomHideAnimationConfig: function() {
+        var me = this;;
+        
+        var lastXType = me.getLastXType();
+        var animationConfig = false;
+        
+        switch (lastXType) {
+
+            case 'loadingcontainer':
+                animationConfig = X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            case 'notificationcontainer':
+                animationConfig = X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            default:
+                animationConfig = X.config.Config.getHIDE_ANIMATION_CONFIG();
+                break;
+        }
+        
+        return animationConfig;
+    },
     open: function(animationConfig) {
-        return this.show(animationConfig || X.config.Config.getSHOW_ANIMATION_CONFIG());
+        var me = this;
+
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : me.getCustomShowAnimationConfig();
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : false;
+        if (animationConfig) {
+            
+            me.show(animationConfig);
+            
+            var lastXType = me.getLastXType();
+
+            Ext.Viewport.fireEvent(lastXType + 'close', {
+                component: me
+            });
+        }
+        
+        return me;
     },
     openFullScreen: function(animationConfig) {
-        return this.setDimensionsToFillScreen().
-                show(animationConfig || X.config.Config.getSHOW_ANIMATION_CONFIG());
+        var me = this;
+        
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : me.getCustomShowAnimationConfig();
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : false;
+        if (animationConfig) {
+            
+            me.setDimensionsToFillScreen().
+                    show(animationConfig);
+            
+            var lastXType = me.getLastXType();
+            
+            Ext.Viewport.fireEvent(lastXType + 'open', {
+                component: me
+            });
+            
+            Ext.Viewport.fireEvent(lastXType + 'openfullscreen', {
+                component: me
+            });
+        }
+        
+        return me;
     },
     close: function(animationConfig) {
-        return this.hide(animationConfig || X.config.Config.getHIDE_ANIMATION_CONFIG());
+        var me = this;
+
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : me.getCustomHideAnimationConfig();
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : false;
+        if (animationConfig) {
+            
+            me.hide(animationConfig);
+            
+            var lastXType = me.getLastXType();
+
+            Ext.Viewport.fireEvent(lastXType + 'close', {
+                component: me
+            });
+        }
+        
+        return me;
     },
     closeEverythingAboveMe: function() {
         var me = this;

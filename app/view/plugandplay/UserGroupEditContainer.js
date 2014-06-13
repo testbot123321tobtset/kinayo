@@ -76,39 +76,43 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
             }
         ]
     },
-    onShow: function() {
+    openFullScreen: function(animationConfig) {
         var me = this;
         
-        me.setTitleToGroupTitle();
+        Ext.Function.defer(function() {
+            
+            me.down('usergroupeditformpanel').open(animationConfig);
         
-        me.down('usergroupeditformpanel').open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
+        }, X.config.Config.getDEFAULT_ANIMATION_DELAY());
         
         return me.callParent(arguments);
     },
-    onHide: function() {
+    close: function(animationConfig) {
         var me = this;
         
-        me.resetTitle();
+        me.down('usergroupeditformpanel').close(animationConfig);
         
-        me.down('usergroupeditformpanel').close(X.config.Config.getHIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG());
+        Ext.Function.defer(function() {
+            
+            me.resetTitle();
+        
+        }, 4 * X.config.Config.getDEFAULT_ANIMATION_DELAY());
         
         return me.callParent(arguments);
-    },
-    onBackButtonTap: function(button, e, eOpts) {
-        var me = this;
-        me.callParent(arguments);
-        return me;
     },
     onDeleteButtonTap: function(button, e, eOpts) {
         var me = this;
+        
         me.down('usergroupeditformpanel').fireEvent('deletebuttontap', button, e);
-        me.callParent(arguments);
-        return me;
+        
+        return me.callParent(arguments);
     },
     onUpdateData: function() {
         var me = this;
+        
         me.setTitleToGroupTitle();
-        me.callParent(arguments);
+        
+        return me.callParent(arguments);
     },
     resetTitle: function() {
         var me = this;

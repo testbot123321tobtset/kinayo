@@ -33,37 +33,17 @@ Ext.define('X.view.plugandplay.LoadingContainer', {
         
         return me;
     },
-    setHtml: function(html) {
+    setMessage: function(message) {
         var me = this;
         
-        html = Ext.isString(html) ? html : '';
-        me.down('#htmlContainer').setHtml(html);
+        me.down('#htmlContainer').setHtml(Ext.isString(message) ? message : '');
         
         return me;
     },
-    resetHtml: function() {
+    resetMessage: function() {
         var me = this;
         
-        me.show(me.down('#htmlContainer').setHtml(''));
-        
-        return me;
-    },
-    open: function(html) {
-        var me = this;
-        
-        if(Ext.isString(html)) {
-            
-            me.setHtml(html);
-        }
-            
-        me.show(X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_NOTIFICATION());
-        
-        return me;
-    },
-    close: function() {
-        var me = this;
-        
-        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_NOTIFICATION());
+        me.down('#htmlContainer').setHtml('');
         
         return me;
     }

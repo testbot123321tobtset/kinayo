@@ -110,33 +110,6 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
         me.close();
         return me;
     },
-    open: function() {
-        var me = this;
-        me.setDimensionsToFillScreen().
-                show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-        Ext.Viewport.fireEvent('photomessageinputcontaineropen', {
-            photoMessageInputContainer: me
-        });
-        return me;
-    },
-    close: function() {
-        var me = this;
-        
-        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
-        Ext.Viewport.fireEvent('photomessageinputcontainerclose', {
-            photoMessageInputContainer: me
-        });
-        
-//        Delay this a bit so the UI doesn't abruptly show the text's disappearance
-//        Delaying this will reset the form panel after it hides
-        Ext.create('Ext.util.DelayedTask', function() {
-            me.down('messageformpanel').
-                    reset();
-        }).
-                delay(1);
-                        
-        return me;
-    },
     setImageUsingBase64Data: function(imageData) {
         var me = this;
         if (!Ext.isEmpty(imageData)) {

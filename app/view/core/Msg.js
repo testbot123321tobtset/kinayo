@@ -123,6 +123,9 @@ Ext.define('X.view.core.Msg', {
         me.setTitle(title || null);
         me.setMessage(message || null);
         me.setButtons(me.YESNO);
+        
+        //        Don't use open() here, because Ext.Msg is a singleton without an xtype, and open() relies on xtype
+        //        Also, we set default config on Msg using Ext.Msg.defaultAllowedConfig.<> (see in Preflight)
         me.show();
     }
 });

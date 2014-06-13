@@ -77,19 +77,19 @@ Ext.define('X.view.plugandplay.UserGroupContainer', {
             }
         ]
     },
-    onShow: function() {
+    onOpen: function() {
         var me = this;
         
         me.setTitleToGroupTitle();
         
-        me.down('#feedContainer').open(X.config.Config.getSHOW_ANIMATION_SLIDE_TO_LEFT_CONFIG());
+        me.down('#feedContainer').open();
         
         return me.callParent(arguments);
     },
-    onHide: function() {
+    onClose: function() {
         var me = this;
         
-        me.down('#feedContainer').close(X.config.Config.getHIDE_ANIMATION_SLIDE_TO_RIGHT_CONFIG());
+        me.down('#feedContainer').close();
         
         return me.callParent(arguments);
     },
@@ -100,11 +100,16 @@ Ext.define('X.view.plugandplay.UserGroupContainer', {
     },
     onUpdateData: function() {
         var me = this;
+        
         me.setTitleToGroupTitle();
-        me.callParent(arguments);
+        
+        return me.callParent(arguments);
     },
     setTitleToGroupTitle: function() {
         var me = this;
+        
         me.down('#userGroupContainerToolbar').setTitle(me.getRecord().get('title'));
+        
+        return me;
     }
 });

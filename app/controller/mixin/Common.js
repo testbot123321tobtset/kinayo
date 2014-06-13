@@ -125,7 +125,7 @@ Ext.define('X.controller.mixin.Common', {
                         
                         if(userMessage) {
                             
-                            X.view.plugandplay.NotificationContainer.openAndWaitAndClose(userMessage);
+                            Ext.Viewport.notificationContainer.openAndWaitAndClose(userMessage);
                         }
                         
                         me.executeCallback(options);

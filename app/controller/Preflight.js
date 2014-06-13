@@ -39,11 +39,17 @@ Ext.define('X.controller.Preflight', {
         /*
          * Singleton Initializations
          */
+        Ext.Viewport.loadingContainer = Ext.Viewport.add(X.view.plugandplay.LoadingContainer),
+                me.loadingContainer = Ext.Viewport.loadingContainer;
         
-        Ext.Viewport.add(X.view.plugandplay.LoadingContainer);
-        Ext.Viewport.add(X.view.plugandplay.NotificationContainer);
-        Ext.Viewport.add(X.view.plugandplay.InteractiveUsersListContainer);
-        Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer);
+        Ext.Viewport.notificationContainer = Ext.Viewport.add(X.view.plugandplay.NotificationContainer),
+                me.notificationContainer = Ext.Viewport.notificationContainer;
+        
+        Ext.Viewport.interactiveUsersListContainer = Ext.Viewport.add(X.view.plugandplay.InteractiveUsersListContainer),
+                me.interactiveUsersListContainer = Ext.Viewport.interactiveUsersListContainer;
+        
+        Ext.Viewport.nonInteractiveUsersListContainer = Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer),
+                me.nonInteractiveUsersListContainer = Ext.Viewport.interactiveUsersListContainer;
         
         //        Native array extras
         if (!Array.prototype.last) {

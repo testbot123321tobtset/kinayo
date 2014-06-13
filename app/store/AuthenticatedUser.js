@@ -18,9 +18,15 @@ Ext.define('X.store.AuthenticatedUser', {
             console.log('Debug: X.store.AuthenticatedUser.onBeforeLoad(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
         
+        
+        
         if(!me.isLoaded()) {
             
-            X.view.plugandplay.NotificationContainer.open(X.XConfig.getMESSAGES().LOADING.USER);
+            var notificationContainer = me.notificationContainer;
+            notificationContainer = (Ext.isObject(notificationContainer) && !Ext.isEmpty(notificationContainer)) ? notificationContainer : false;
+            
+            notificationContainer && notificationContainer.open();
+            
             me.triggeredLoadingContainer = true;
         }
 
@@ -68,7 +74,11 @@ Ext.define('X.store.AuthenticatedUser', {
         
         if(me.triggeredLoadingContainer) {
             
-            X.view.plugandplay.NotificationContainer.close();
+            var notificationContainer = me.notificationContainer;
+            notificationContainer = (Ext.isObject(notificationContainer) && !Ext.isEmpty(notificationContainer)) ? notificationContainer : false;
+            
+            notificationContainer && notificationContainer.close();
+            
             me.triggeredLoadingContainer = false;
         }
         

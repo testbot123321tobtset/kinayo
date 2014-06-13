@@ -1,0 +1,26 @@
+dependencies: \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVViewController.m \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDV.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVAvailability.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVPlugin.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVPluginResult.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVCommandDelegate.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVInvokedUrlCommand.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVViewController.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVCommandQueue.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVWhitelist.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVScreenOrientationDelegate.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVURLProtocol.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVDebug.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVLocalStorage.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVTimer.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/NSArray+Comparisons.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/NSData+Base64.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/NSDictionary+Extensions.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/UIDevice+Extensions.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVJSON.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVCommandDelegateImpl.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVConfigParser.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVUserAgentUtil.h \
+  /Library/WebServer/Documents/myapps/touch/kinayo/phonegap/platforms/ios/CordovaLib/Classes/CDVWebViewDelegate.h

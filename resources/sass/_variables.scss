@@ -52,6 +52,7 @@ $ios7-music-red-r: 236;
 $ios7-music-red-g: 33;
 $ios7-music-red-b: 84;
 $ios7-music-red-lighten: lighten($ios7-music-red, 30%);
+$ios7-background-color: #EFEFF4;
 $my-green: #40c19c;
 $my-green-r: 64;
 $my-green-g: 193;
@@ -98,8 +99,10 @@ $layer-reduction-percent: 1.5%;
 
 /* Default heights */
 $default-toolbar-height: 3.2em;
-$default-edge-distance-from-toolbars: 1.5em;
-$default-button-height: 2.1em;
+$default-line-item-height: 2.5em;
+$default-edge-distance-from-toolbars: 2.5em;
+$default-stacked-components-separation: 2.5em;
+$default-button-height: 2.5em;
 $default-field-height: 2.5em;
 
 /* Default font */
@@ -155,148 +158,8 @@ Buttons
 */
 $default-button-label-side-padding: 8px;
 
-/*$default-button-border-width: $default-border-width;
-$default-button-border-style: $default-border-style;
-$default-button-border-color: $default-border-color;
-
-
-$default-button-height: $default-line-item-component-height;
-$default-button-margin: $default-margin;
-$default-button-border-radius: $default-border-radius;
-$default-button-background-color: $default-darker-background-color;*/
-
-/* Default margins */
-/*$default-margin: 1em;*/
-
-/* Default borders */
-/*$default-border-radius: 0;*/
-
-/* Other defaults */
-/*$default-line-item-component-height: 2.5em;
-$default-toolbar-like-component-height: 2.9em;
-$default-toolbar-like-component-width: 2.9em;*/
-
-/*
-Buttons
-*/
-/*$default-button-border-width: $default-border-width;
-$default-button-border-style: $default-border-style;
-$default-button-border-color: $default-border-color;
-
-
-$default-button-height: $default-line-item-component-height;
-$default-button-margin: $default-margin;
-$default-button-border-radius: $default-border-radius;
-$default-button-background-color: $default-darker-background-color;*/
-
-
-
-/*$default-button-font-size: $default-font-size;*/
-/* Core */
-/*$button-height: $default-button-height;*/
-/*$button-radius: $default-button-border-radius;
-$button-stroke-weight: $default-button-border-width;*/
-/*$toolbar-icon-size: 2.5em;*/
-/* Iconned buttons */
-/*$default-iconned-button-border-width: 0;
-$default-iconned-button-border-style: solid;
-$default-iconned-button-border-color: transparent;
-$default-iconned-button-border-radius: $default-button-border-radius;
-$default-iconned-button-font-size: 2.5em;
-$default-iconned-button-line-height: 1.2em;
-$default-iconned-button-color-variance: 80%;
-$default-iconned-button-color: $silver;
-$default-iconned-button-pressed-color: darken($default-iconned-button-color, $default-iconned-button-color-variance);
-$default-iconned-button-active-color: $default-theme-color;
-$default-iconned-button-borer-color: transparent;
-$default-iconned-button-borer-active-color: transparent;
-$default-iconned-button-borer-pressed-color: transparent;
-$default-iconned-button-background-color: transparent;
-$default-iconned-button-active-background-color: transparent;
-$default-iconned-button-pressed-background-color: transparent;
-$default-iconned-button-outer-container-opacity: $default-theme-transparency-opacity;*/
-
-/*
-Tabbar
-*/
-/* Tabbar */
-/*$tabbar-min-height: $default-toolbar-like-component-height;
-$tabbar-height: $default-toolbar-like-component-height;
-$tabbar-margin: 0;
-$tabbar-margin-from-edge: 0;
-$tabbar-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
-$tabbar-border-width: 0;
-$tabbar-border-style: solid;
-$tabbar-border-color: transparent;
-$tabbar-border-visible-edge-width: $default-border-width;
-$tabbar-border-visible-edge-style: $default-border-style;
-$tabbar-border-visible-edge-color: $default-border-color;*/
-/* Tabbar > Tab */
-/*$tabbar-tab-min-width: $default-toolbar-like-component-width;
-$tabbar-tab-width: $default-toolbar-like-component-width;
-$tabbar-tab-border-radius: $default-iconned-button-border-radius;
-$tabbar-tab-border-width: 0;
-$tabbar-tab-border-style: solid;
-$tabbar-tab-border-color: transparent;
-$tabbar-tab-active-border-color: $default-iconned-button-borer-active-color;
-$tabbar-tab-pressed-border-color: $default-iconned-button-borer-pressed-color;
-$tabbar-tab-background-color: $default-iconned-button-background-color;
-$tabbar-tab-active-background-color: $default-iconned-button-active-background-color;
-$tabbar-tab-pressed-background-color: $default-iconned-button-pressed-background-color;*/
-/* Tabbar > Tab > Button */
-/*$tabbar-tab-button-border-width: 0;
-$tabbar-tab-button-border-style: solid;
-$tabbar-tab-button-border-color: transparent;
-$tabbar-tab-button-font-size: $default-iconned-button-font-size;
-$tabbar-tab-button-line-height: $default-iconned-button-line-height;
-$tabbar-tab-button-color: $default-iconned-button-color;
-$tabbar-tab-button-pressed-color: $default-iconned-button-pressed-color;
-$tabbar-tab-button-active-color: $default-iconned-button-active-color;*/
-
-/* Toolbar */
-/*$toolbar-min-height: $tabbar-min-height;
-$toolbar-height: $tabbar-height;
-$toolbar-border-width: $tabbar-border-width;
-$toolbar-border-style: $tabbar-border-style;
-$toolbar-border-color: $tabbar-border-color;
-$toolbar-border-visible-edge-width: $toolbar-border-width;
-$toolbar-border-visible-edge-style: $toolbar-border-style;
-$toolbar-border-visible-edge-color: $toolbar-border-color;
-$toolbar-margin: $tabbar-margin;
-$toolbar-margin-from-edge: $tabbar-margin-from-edge;
-$toolbar-background-color: $tabbar-background-color;*/
-/* Toolbar > Button */
-/*$toolbar-button-border-width: $tabbar-tab-border-width;
-$toolbar-button-border-style: $tabbar-tab-border-style;
-$toolbar-button-border-color: $tabbar-tab-border-color;
-$toolbar-button-min-height: $toolbar-min-height;
-$toolbar-button-height: $toolbar-height;
-$toolbar-button-min-width: $tabbar-tab-min-width;
-$toolbar-button-width: $tabbar-tab-width;
-$toolbar-button-font-size: 1.8em;
-$toolbar-button-line-height: 0.9em;*/
-/* Toolbar > Title */
-/*$toolbar-title-border-width: $toolbar-button-border-width;
-$toolbar-title-border-style: $toolbar-button-border-style;
-$toolbar-title-border-color: $toolbar-button-border-color;
-$toolbar-title-padding: 0.9em;
-$toolbar-title-font-weight: $default-font-weight;
-$toolbar-title-font-size: 1em;
-$toolbar-title-color: $default-theme-color;*/
-
-/*$default-absolute-top-margin: 20px;
-
-$default-opacity-on-floating-foreground-element: 0.95;
-$default-background-color-on-floating-foreground-element: white;*/
-
 /*
 Box shadow
 */
 /* Core */
 $default-box-shadow-color: $aluminum;
-
-/*$list-item-selected-color: $white-97;
-$list-item-pressed-color: $white-97;
-$list-disclosure-size: 10px;
-
-$default-background-color-on-separated-sections-panel: $white-94;*/

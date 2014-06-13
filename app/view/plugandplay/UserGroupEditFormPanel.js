@@ -14,8 +14,6 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
             pack: 'start',
             align: 'stretch'
         },
-        height: '100%',
-        scrollable: false,
         cls: 'user-group-edit-form-panel',
         items: [
             {

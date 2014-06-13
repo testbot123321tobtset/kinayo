@@ -192,7 +192,7 @@ Ext.define('X.model.AuthenticatedUser', {
         if (friendsStore) {
             
             var myFriends = me.get('isFriendsWith');
-            myFriends = (Ext.isArray(myFriends) && !Ext.isEmpty(myFriends)) ? myFriends : false;
+            myFriends = Ext.isArray(myFriends) ? myFriends : false;
             if (myFriends) {
                 
                 friendsStore.setData(myFriends);

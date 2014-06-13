@@ -68,6 +68,10 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
                 ]
             },
             {
+                xtype: 'corecontainer',
+                cls: 'tabbar-height-spacer-container'
+            },
+            {
                 xtype: 'usergroupeditformpanel',
                 flex: 1,
                 scrollable: true,

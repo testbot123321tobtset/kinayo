@@ -1,4 +1,4 @@
-Ext.define('overrides.TitleBar', {
+Ext.define('overrides.Toolbar', {
     override: 'Ext.TitleBar',
     config: {
         minHeight: '3.2em',

@@ -823,6 +823,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "overrides.LoadMask": [],
   "overrides.TabPanel": [],
   "overrides.TitleBar": [],
+  "overrides.Toolbar": [],
   "overrides.dataview.List": [],
   "overrides.form.Panel": [],
   "overrides.tab.Bar": []
@@ -1913,6 +1914,7 @@ Ext.ClassManager.addNameAliasMappings({
   "overrides.LoadMask": [],
   "overrides.TabPanel": [],
   "overrides.TitleBar": [],
+  "overrides.Toolbar": [],
   "overrides.dataview.List": [],
   "overrides.form.Panel": [],
   "overrides.tab.Bar": []

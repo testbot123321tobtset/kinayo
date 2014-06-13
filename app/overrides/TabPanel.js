@@ -9,8 +9,9 @@ Ext.define('overrides.TabPanel', {
         ]
     },
     onInitialize: function(me) {
-        
+
         //        Configure animation
-        me.getLayout().setAnimation(X.config.Config.getANIMATION_CONFIG_FOR_TABPANEL());
+        me.getLayout().
+                setAnimation(X.config.Config.getANIMATION_CONFIG_FOR_TABPANEL());
     }
 });

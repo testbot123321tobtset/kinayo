@@ -3,68 +3,17 @@
 @import '_mixins';
 @import 'button';
 
-$form-panel-background-color: $default-background-color;
+$form-panel-background-color: $ios7-background-color;
 
 .x-form {
     
     @include no-background;
+    background-color: $form-panel-background-color !important;
     
     @include no-border;
     
     .x-scroll-container {
         
         @include no-background;
-    }
-
-    .x-button {
-        
-        @include no-margin;
-        margin-top: $default-edge-distance-from-toolbars !important;
-        
-        .x-button-label {
-
-            color: $my-blue !important;
-        }
-            
-        &.x-button-pressing {
-
-            .x-button-label {
-
-                color: $my-blue-lighten !important;
-            }
-        }
-    }
-
-    .x-form-fieldset {
-
-        @include no-margin;
-        margin-top: $default-edge-distance-from-toolbars !important;
-        
-        .x-button {
-
-            @include no-margin;
-            
-            @include no-top-border;
-            
-            &:first-of-type {
-
-                border-top: $button-border-visible-edge-width $button-border-visible-edge-style $button-border-visible-edge-color !important;
-            }
-            
-            .x-button-label {
-                
-                text-align: left !important;
-                
-                color: $my-blue !important;
-            }
-            
-            &.x-button-pressing {
-                
-                .x-button-label {
-
-                    color: $my-blue-lighten !important;
-                }
-            }
-        }
     }
 }

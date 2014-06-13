@@ -74,6 +74,10 @@ Ext.define('X.view.plugandplay.UserAccountFormPanel', {
                         text: 'Log out'
                     }
                 ]
+            },
+            {
+                xtype: 'corecontainer',
+                cls: 'stacked-components-separation-container'
             }
         ],
         listeners: [

@@ -94,6 +94,17 @@ Parse.Cloud.define("setFriendsForPhoneNumbers", function(request, response) {
             var phoneNumbers = params.phoneNumbers;
             phoneNumbers = phoneNumbers.split(',');
             if (_.isArray(phoneNumbers) && !_.isEmpty(phoneNumbers)) {
+        
+                var currentIsFriendsWithFieldValue = me.get('isFriendsWith');
+                
+                console.log('*********');
+                console.log(me.get('isFriendsWith'));
+                
+                me.set('isFriendsWith', [
+                ]);
+                
+                console.log('*********');
+                console.log(me.get('isFriendsWith'));
                 
                 var query = new Parse.Query(Parse.User);
                 
@@ -146,6 +157,9 @@ Parse.Cloud.define("setFriendsForPhoneNumbers", function(request, response) {
                         response.error(error.message);
                     }
                 });
+                
+                console.log('*********');
+                console.log(me.get('isFriendsWith'));
             }
             else {
 

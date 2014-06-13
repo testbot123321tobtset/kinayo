@@ -6,29 +6,21 @@
 .x-list {
 
     @include no-background;
-    
+
     .x-list-emptytext {
-        
+
         height: 50px !important;
-        
+
         margin: 1em 0 !important;
         padding: 0 8px !important;
-        
+
         color: $field-label-font-color !important;
 
         font-size: 0.7em !important;
         font-weight: $field-label-font-weight !important;
         font-style: $field-label-font-style !important;
-        
+
         text-transform: uppercase !important;
-    }
-
-    /*border-bottom: 1px solid $default-border-color-for-fieldsets !important;*/
-
-    /*We need these spacers to make sure that when the list scrolls, it scrolls behind the tab bars but
-        the top and the bottom portions of the list are still clickable when you scroll to either end*/
-    .tabbar-spacer {
-        height: $default-toolbar-height !important;
     }
 
     .x-list-disclosure {
@@ -59,9 +51,9 @@
 
                 @include no-border;
             }
-            
+
             &.x-list-item-first {
-                
+
                 @include no-border;
             }
         }

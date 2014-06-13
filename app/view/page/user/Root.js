@@ -17,26 +17,7 @@ Ext.define('X.view.page.user.Root', {
                 pack: 'center'
             }
         },
-        
         items: [
-//            {
-//                layout: {
-//                    type: 'vbox',
-//                    pack: 'center',
-//                    align: 'stretch'
-//                },
-//                itemId: 'userFriends',
-//                cls: 'user-friends',
-//                iconCls: 'groupsfilled',
-//                title: 'Friends',
-//                items: [
-//                  {
-//                      xtype: 'userfriendformpanel',
-//                      flex: 1,
-//                      scrollable: null
-//                  }
-//                ]
-//            },
             {
                 layout: {
                     type: 'vbox',
@@ -50,7 +31,9 @@ Ext.define('X.view.page.user.Root', {
                 items: [
                     {
                         flex: 1,
-                        xtype: 'usergroupstabpanel'
+                        xtype: 'usergroupstabpanel',
+                        
+                        scrollable: true
                     }
                 ]
             },
@@ -67,7 +50,9 @@ Ext.define('X.view.page.user.Root', {
                 items: [
                     {
                         flex: 1,
-                        xtype: 'usermoretabpanel'
+                        xtype: 'usermoretabpanel',
+                        
+                        scrollable: true
                     }
                 ]
             }

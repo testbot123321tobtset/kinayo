@@ -12,8 +12,6 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
             pack: 'start',
             align: 'stretch'
         },
-        height: '100%',
-        scrollable: false,
         cls: 'user-group-add-form-panel',
         items: [
             //            {
@@ -25,58 +23,121 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
             //                    text: 'Create'
             //                }
             //            },
+            
+            
             {
-                xtype: 'corecontainer',
-                flex: 1,
-                scrollable: true,
-                layout: {
-                    type: 'vbox',
-                    pack: 'start',
-                    align: 'stretch'
+                xtype: 'fieldset',
+                itemId: 'groupAddTitleAndDescriptionFormFieldSet',
+                cls: 'group-add-title-and-description-form-fieldset',
+                defaults: {
+                    xtype: 'textfield'
                 },
                 items: [
                     {
-                        xtype: 'fieldset',
-                        itemId: 'groupAddTitleAndDescriptionFormFieldSet',
-                        cls: 'group-add-title-and-description-form-fieldset',
-                        defaults: {
-                            xtype: 'textfield'
-                        },
-                        items: [
-                            {
-                                itemId: 'titleTextfield',
-                                cls: 'title-textfield',
-                                name: 'title',
-                                hasChangedOnce: false,
-                                placeHolder: 'Name your Group'
-                            }
-                            //                    ,
-                            //                    {
-                            //                        itemId: 'descriptionTextfield',
-                            //                        cls: 'description-textfield',
-                            //                        placeHolder: 'Description',
-                            //                        name: 'description'
-                            //                    }
-                        ]
-                    },
-                    {
-                        xtype: 'button',
-                        itemId: 'submitButton',
-                        cls: 'submit-button',
-                        text: 'Create'
-                    },
-                    {
-                        xtype: 'simpleformpaneldisplaycontainer',
-                        html: 'Pick Group Members',
-                        hidden: true
-                    },
-                    {
-                        xtype: 'interactiveuserslist',
-                        flex: 1,
-                        hidden: true
+                        itemId: 'titleTextfield',
+                        cls: 'title-textfield',
+                        name: 'title',
+                        hasChangedOnce: false,
+                        placeHolder: 'Name your Group'
                     }
+                    //                    ,
+                    //                    {
+                    //                        itemId: 'descriptionTextfield',
+                    //                        cls: 'description-textfield',
+                    //                        placeHolder: 'Description',
+                    //                        name: 'description'
+                    //                    }
                 ]
+            },
+            {
+                xtype: 'fieldset',
+                itemId: 'submitButtonFieldset',
+                items: {
+                    xtype: 'button',
+                    itemId: 'submitButton',
+                    cls: 'submit-button',
+                    text: 'Create'
+                }
+            },
+            {
+                xtype: 'simpleformpaneldisplaycontainer',
+                html: 'Pick Group Members',
+                
+                hidden: true
+            },
+            {
+                xtype: 'interactiveuserslist',
+                flex: 1,
+                
+                hidden: true
             }
+            
+            
+            
+            
+//            {
+//                xtype: 'corecontainer',
+//                flex: 1,
+//                scrollable: true,
+//                layout: {
+//                    type: 'vbox',
+//                    pack: 'start',
+//                    align: 'stretch'
+//                },
+//                items: [
+//                    {
+//                        xtype: 'fieldset',
+//                        itemId: 'groupAddTitleAndDescriptionFormFieldSet',
+//                        cls: 'group-add-title-and-description-form-fieldset',
+//                        defaults: {
+//                            xtype: 'textfield'
+//                        },
+//                        items: [
+//                            {
+//                                itemId: 'titleTextfield',
+//                                cls: 'title-textfield',
+//                                name: 'title',
+//                                hasChangedOnce: false,
+//                                placeHolder: 'Name your Group'
+//                            }
+//                            //                    ,
+//                            //                    {
+//                            //                        itemId: 'descriptionTextfield',
+//                            //                        cls: 'description-textfield',
+//                            //                        placeHolder: 'Description',
+//                            //                        name: 'description'
+//                            //                    }
+//                        ]
+//                    },
+//                    {
+//                        xtype: 'fieldset',
+//                        items: {
+//                            xtype: 'button',
+//                            itemId: 'submitButton',
+//                            cls: 'submit-button',
+//                            text: 'Create'
+//                        }
+//                    },
+//                    {
+//                        xtype: 'simpleformpaneldisplaycontainer',
+//                        html: 'Pick Group Members',
+//                        hidden: true
+//                    },
+//                    {
+//                        xtype: 'interactiveuserslist',
+//                        flex: 1,
+//                        hidden: true
+//                    }
+//                ]
+//            }
+            
+            
+            
+            
+            
+            
+            
+            
             //            ,
             //            {
             //                xtype: 'button',
@@ -151,7 +212,7 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
     openList: function() {
         var me = this;
 
-        me.down('#submitButton').
+        me.down('#submitButtonFieldset').
                 close(X.config.Config.getHIDE_ANIMATION_FADE_CONFIG());
 
         Ext.Function.defer(function() {
@@ -168,7 +229,7 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
     closeList: function() {
         var me = this;
 
-        me.down('#submitButton').
+        me.down('#submitButtonFieldset').
                 open();
         me.down('simpleformpaneldisplaycontainer').
                 close();
@@ -306,8 +367,18 @@ Ext.define('X.view.plugandplay.UserGroupAddFormPanel', {
 
                                     me.hasChangedOnce = true;
                                 }
+                                
+                                if (userGroupAddFormPanelUserList) {
+                                    
+                                    var friendsStore = Ext.getStore('FriendsStore');
+                                    friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
+                                    if (friendsStore) {
 
-                                formPanel.openList();
+                                        userGroupAddFormPanelUserList.setStore(friendsStore);
+                                        
+                                        formPanel.openList();
+                                    }
+                                }
                             },
                             scope: me
                         }

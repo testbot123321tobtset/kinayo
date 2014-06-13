@@ -56,9 +56,36 @@ Ext.define('X.view.plugandplay.NonInteractiveUsersListContainer', {
             },
             {
                 xtype: 'noninteractiveuserslist',
-                flex: 1
+                flex: 1,
+                
+                hidden: true
             }
         ]
+    },
+    openFullScreen: function(animationConfig) {
+        var me = this;
+        
+        Ext.Function.defer(function() {
+            
+            me.down('noninteractiveuserslist').open(animationConfig);
+        
+        }, X.config.Config.getDEFAULT_ANIMATION_DELAY());
+        
+        return me.callParent(arguments);
+    },
+    close: function(animationConfig) {
+        var me = this;
+        
+        me.down('noninteractiveuserslist').close(animationConfig);
+        
+        Ext.Function.defer(function() {
+            
+            me.resetTitle();
+            me.resetList();
+        
+        }, 4 * X.config.Config.getDEFAULT_ANIMATION_DELAY());
+        
+        return me.callParent(arguments);
     },
     onBackButtonTap: function(button, e, eOpts) {
         var me = this;
@@ -67,14 +94,6 @@ Ext.define('X.view.plugandplay.NonInteractiveUsersListContainer', {
     },
     addShine: function() {
         this.down('titlebar').addCls('shine');
-    },
-    close: function() {
-        var me = this;
-        
-        me.resetTitle();
-        me.resetList();
-        
-        return me.callParent(arguments);
     },
     setShine: function() {
         this.down('toolbar').addCls('shine');

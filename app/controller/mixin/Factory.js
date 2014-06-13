@@ -389,7 +389,7 @@ Ext.define('X.controller.mixin.Factory', {
                                 }
                             }
 
-                            usersList.deselectAll();
+                            usersList.deselectAll(true);
 
                             usersList.select(group.getMembers(), false, true);
                         }
@@ -427,7 +427,7 @@ Ext.define('X.controller.mixin.Factory', {
                                 usersList.setStore(membersStore);
                             }
 
-                            usersList.deselectAll();
+                            usersList.deselectAll(true);
                         }
                     }
                 }, 50);
@@ -469,7 +469,7 @@ Ext.define('X.controller.mixin.Factory', {
                     usersList.setStore(friendsStore);
                     
                     usersList.
-                            deselectAll();
+                            deselectAll(true);
                 }
             }
         }

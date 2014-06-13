@@ -8,6 +8,8 @@
 .x-form {
 
     .simple-formpanel-display-container {
+        
+        @include no-background;
 
         margin-top: 2.5em !important;
         margin-bottom: 0.5em !important;
@@ -27,18 +29,25 @@
         text-transform: uppercase !important;
         text-align: center !important;
     }
+    
+    .x-list {
+        
+        @include no-border;
+        border-top: $default-border-width $default-border-style $default-border-color !important;
+        border-bottom: $default-border-width $default-border-style $default-border-color !important;
+    }
 }
 
 .user-account-form-panel {
     
     .x-form-fieldset:first-child {
         
-        /*margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
+    
     }
     
     .logout-button {
         
-        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
+    
     }
 }
 
@@ -46,12 +55,12 @@
     
     .x-form-fieldset:first-child {
         
-        /*margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
+    
     }
     
     .submit-button {
         
-        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
+    
     }
 }
 
@@ -59,12 +68,12 @@
     
     .x-form-fieldset:first-child {
         
-        /*margin-top: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
+    
     }
     
     .delete-button {
         
-        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
+    
     }
 }
 
@@ -73,7 +82,6 @@
     .x-form-fieldset {
         
         @include no-margin;
-        /*margin-bottom: $default-toolbar-height + $default-margin-for-fieldsets !important;*/
         
         .message-textarea-field {
             
@@ -89,11 +97,6 @@
 .user-signup-form-panel, .user-login-form-panel {
     
     .submit-button {
-        
-/*        
-        For some reason if the width of 1px is used here, then the actual rendering is invisible i.e. 0px width
-        Using a width of 2px renders 1px border
-*/
-        /*border-bottom-width: 2px !important;*/
+    
     }
 }

@@ -1,16 +1,22 @@
 @import 'compass';
 @import '_variables';
 @import '_mixins';
+@import 'button';
 
 .x-form-fieldset {
     
     @include no-margin;
-    @include no-padding;
-    @include no-border;
-    @include no-background;
+    margin-top: $default-stacked-components-separation !important;
     
-    margin-top: $default-edge-distance-from-toolbars !important;
-
+    @include no-padding;
+    
+    @include no-border;
+    border-top: $default-border-width $default-border-style $default-border-color !important;
+    border-bottom: $default-border-width $default-border-style $default-border-color !important;
+    
+    @include no-background;
+    background-color: $default-background-color !important;
+    
     .x-form-fieldset-inner {
         
         @include no-margin;
@@ -40,15 +46,49 @@
         
         @include no-border;
     }
+    
+    .x-button {
+
+        @include line-item-height;
+
+        @include no-margin;
+
+        @include no-top-border;
+
+        &:first-of-type {
+
+            border-top-width: 0px !important;
+        }
+        
+        &:last-of-type {
+
+            border-bottom-width: 0px !important;
+        }
+
+        .x-button-label {
+
+            text-align: left !important;
+
+            color: $default-theme-color !important;
+        }
+
+        &.x-button-pressing {
+
+            .x-button-label {
+
+                color: $default-theme-color-lighten !important;
+            }
+        }
+    }
 }
 
 .x-form-fieldset-title {
+    
     text-align: center;
     text-transform: uppercase;
 }
 
 .x-form-fieldset-instructions {
-/*    color: #555555;
-    margin: 1em;
-    font-size: .8em;*/
+
+
 }

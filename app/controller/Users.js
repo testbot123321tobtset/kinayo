@@ -295,50 +295,56 @@ Ext.define('X.controller.Users', {
         //        
         //        For a clearer picture of the workflow, refer to: https://docs.google.com/document/d/12HrIs4C6R0h9j1maSMkHIci4OrSnuXkNia87V_luNXI/edit?usp=sharing
         
-        var loadingContainer = me.loadingContainer;
+        var loadingContainer = Ext.Viewport.loadingContainer;
         loadingContainer = (Ext.isObject(loadingContainer) && !Ext.isEmpty(loadingContainer)) ? loadingContainer : false;
+        
+        console.log(loadingContainer);
         
         loadingContainer && loadingContainer.open();
         
-        return me.fetchFriendsFromServerForPhoneNumbersOfDeviceContactsAndSetFriendsStore({
-            
-            successCallback: {
-                fn: function() {
-                    
-                    me.generateAndFillViewportWithNonInteractiveUsersListContainer({
-                        
-                        callback: {
-                            fn: function() {
-                                
-                                var args = arguments[0];
-                                var nonInteractiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
-                                if (nonInteractiveUsersListContainer) {
-                                    
-                                    var nonInteractiveList = nonInteractiveUsersListContainer.down('noninteractiveuserslist');
-                                    nonInteractiveList = (Ext.isObject(nonInteractiveList) && !Ext.isEmpty(nonInteractiveList)) ? nonInteractiveList : false;
-                                    if (nonInteractiveList) {
-                                        
-                                        nonInteractiveUsersListContainer.setTitle('Your Friends');
+        Ext.Function.defer(function() {
 
-                                        var friendsStore = Ext.getStore('FriendsStore');
-                                        friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
-                                        
-                                        if (friendsStore) {
-                                            
-                                            nonInteractiveList.setStore(friendsStore);
-                                            
-                                            loadingContainer && loadingContainer.close();
+            return me.fetchFriendsFromServerForPhoneNumbersOfDeviceContactsAndSetFriendsStore({
+                successCallback: {
+                    fn: function() {
+
+                        me.generateAndFillViewportWithNonInteractiveUsersListContainer({
+                            callback: {
+                                fn: function() {
+
+                                    var args = arguments[0];
+                                    var nonInteractiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
+                                    if (nonInteractiveUsersListContainer) {
+
+                                        var nonInteractiveList = nonInteractiveUsersListContainer.down('noninteractiveuserslist');
+                                        nonInteractiveList = (Ext.isObject(nonInteractiveList) && !Ext.isEmpty(nonInteractiveList)) ? nonInteractiveList : false;
+                                        if (nonInteractiveList) {
+
+                                            nonInteractiveUsersListContainer.setTitle('Your Friends');
+
+                                            nonInteractiveUsersListContainer.openFullScreen();
+
+                                            var friendsStore = Ext.getStore('FriendsStore');
+                                            friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
+
+                                            if (friendsStore) {
+
+                                                nonInteractiveList.setStore(friendsStore);
+
+                                                loadingContainer && loadingContainer.close();
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            scope: me
-                        }
-                    });
-                },
-                scope: me
-            }
-        });
+                                },
+                                scope: me
+                            }
+                        });
+                    },
+                    scope: me
+                }
+            });
+        
+        }, X.config.Config.getDEFAULT_ANIMATION_DELAY());
     },
     //    MESSAGE CONTAINER
     onPhotoMessageInputContainerSubmitButtonTap: function() {

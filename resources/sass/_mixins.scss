@@ -9,9 +9,15 @@
 @mixin full-height {
     height: 100% !important;
 }
-
+@mixin toolbar-height {
+    height: $default-toolbar-height !important;
+}
 @mixin auto-height {
     height: auto !important;
+}
+@mixin line-item-height {
+    min-height: $default-line-item-height !important;
+    height: $default-line-item-height !important;
 }
 
 /* Margins and Paddings */
@@ -20,6 +26,16 @@
 }
 @mixin no-margin-not-important {
     margin: 0;
+}
+@mixin toolbar-margin {
+    margin-top: $default-toolbar-height !important;
+    margin-bottom: $default-toolbar-height !important;
+}
+@mixin toolbar-margin-top {
+    margin-top: $default-toolbar-height !important;
+}
+@mixin toolbar-margin-bottom {
+    margin-bottom: $default-toolbar-height !important;
 }
 
 @mixin no-padding {

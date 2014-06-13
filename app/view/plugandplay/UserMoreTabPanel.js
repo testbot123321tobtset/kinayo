@@ -10,8 +10,8 @@ Ext.define('X.view.plugandplay.UserMoreTabPanel', {
         tabBarPosition: 'top',
         tabBar: {
             docked: 'top',
-            cls: 'x-stretched x-docked-bottom x-docked-bottom-that-is-top x-full-width',
             top: 0,
+            cls: 'x-stretched x-docked-bottom x-docked-bottom-that-is-top x-full-width',
             layout: {
                 type: 'hbox',
                 align: 'center',
@@ -21,7 +21,9 @@ Ext.define('X.view.plugandplay.UserMoreTabPanel', {
         items: [
             {
                 layout: {
-                    type: 'fit'
+                    type: 'vbox',
+                    pack: 'center',
+                    align: 'stretch'
                 },
                 itemId: 'userAccount',
                 cls: 'user-account',
@@ -29,29 +31,15 @@ Ext.define('X.view.plugandplay.UserMoreTabPanel', {
                 title: 'Account',
                 items: [
                     {
+                        xtype: 'corecontainer',
+                        cls: 'tabbar-height-spacer-container'
+                    },
+                    {
                         xtype: 'useraccountformpanel',
                         flex: 1
                     }
                 ]
             }
-//            ,
-//            {
-//                layout: {
-//                    type: 'vbox',
-//                    pack: 'center',
-//                    align: 'stretch'
-//                },
-//                itemId: 'userLogout',
-//                cls: 'user-logout',
-//                title: 'Log out',
-//                items: {
-//                    xtype: 'button',
-//                    itemId: 'logoutButton',
-//                    cls: 'logout-button',
-//                    text: 'Log out',
-//                    ui: 'decline'
-//                }
-//            }
         ]
     }
 });

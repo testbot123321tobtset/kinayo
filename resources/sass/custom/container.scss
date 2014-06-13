@@ -4,6 +4,7 @@
 @import 'core/container';
 @import 'core/tabpanel';
 @import 'core/messagebox';
+@import 'core/formpanel';
 
 $container-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
 $loading-container-background-color: $default-theme-color;
@@ -25,7 +26,18 @@ $container-border-visible-edge-color: $default-border-color;
 
 .tabbar-height-spacer-container {
     
-    height: $default-edge-distance-from-toolbars !important;
+    @include no-background;
+    
+    min-height: $default-toolbar-height !important;
+    height: $default-toolbar-height !important;
+}
+
+.stacked-components-separation-container {
+    
+    @include no-background;
+    
+    min-height: $default-stacked-components-separation !important;
+    height: $default-stacked-components-separation !important;
 }
 
 .loading-container, .notification-container {
@@ -51,30 +63,6 @@ $container-border-visible-edge-color: $default-border-color;
         color: white;
         text-align: center !important;
     }
-    
-    /*padding-right: 1.4em !important;*/
-    
-    /*http://blog.42at.com/emulating-iphones-slide-to-unlock*/
-    /*    -webkit-mask-image: -webkit-gradient(
-            linear, 
-            0% top, 
-            90% top,
-            from(rgba(0, 0, 0, .1)), 
-            color-stop(.6, $default-theme-color-lighten), 
-            to(rgba(0, 0, 0, .1))
-            );
-        -webkit-mask-size: 50%;
-    
-        -webkit-animation-name: spotlight;
-        -webkit-animation-timing-function: linear;
-        -webkit-animation-duration: 2000ms;
-        -webkit-animation-iteration-count: infinite;*/
-    
-/*    min-width: $default-toolbar-height !important;
-    width: $default-toolbar-height !important;
-    
-    background: transparent url('../images/loading.gif') no-repeat center !important; 
-    background-size: 24px 24px !important;*/
 }
 
 .simple-display-container {
@@ -95,7 +83,8 @@ $container-border-visible-edge-color: $default-border-color;
     @include mini-reverse-box-shadow;
 
     @include no-background;
-    background-color: $container-background-color !important;
+    /*background-color: $container-background-color !important;*/
+    background-color: $form-panel-background-color !important;
     
     .user-group-container-feed-container {
         
@@ -103,7 +92,7 @@ $container-border-visible-edge-color: $default-border-color;
         
         .x-scroll-view {
 
-            /*padding-top: $default-toolbar-height !important;*/
+        
         }
     }
     
@@ -111,7 +100,7 @@ $container-border-visible-edge-color: $default-border-color;
         
         .x-scroll-view {
 
-            /*padding-top: 0 !important;*/
+        
         }
     }
 }

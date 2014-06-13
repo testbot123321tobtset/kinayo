@@ -36,14 +36,12 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
                 scrollable: false,
                 items: [
                     {
+                        xtype: 'corecontainer',
+                        cls: 'tabbar-height-spacer-container'
+                    },
+                    {
                         xtype: 'usergroupslist',
                         flex: 1
-                    },
-                    {
-                        cls: 'tabbar-height-spacer-container'
-                    },
-                    {
-                        cls: 'tabbar-height-spacer-container'
                     }
                 ]
             },
@@ -60,6 +58,10 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
                 height: '100%',
                 scrollable: false,
                 items: [
+                    {
+                        xtype: 'corecontainer',
+                        cls: 'tabbar-height-spacer-container'
+                    },
                     {
                         xtype: 'usergroupaddformpanel',
                         flex: 1

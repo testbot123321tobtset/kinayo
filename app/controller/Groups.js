@@ -502,9 +502,12 @@ Ext.define('X.controller.Groups', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Groups.onUserGroupContainerHide(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
         me.getUserGroupsList().
-                deselectAll();
+                deselectAll(true);
+        
         me.redirectTo('user/profile/groups/feeds');
+        
         return me;
     },
     onUserGroupCreateSubmitButtonTap: function(button) {
@@ -743,7 +746,7 @@ Ext.define('X.controller.Groups', {
         if(userGroupsList) {
             
             userGroupsList.setStore(groupsStore);
-            userGroupsList.deselectAll();
+            userGroupsList.deselectAll(true);
         }
 
         return me;

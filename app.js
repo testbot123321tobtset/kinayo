@@ -101,6 +101,7 @@ Ext.application({
         'Ext.device.Notification',
         'overrides.TabPanel',
         'overrides.TitleBar',
+        'overrides.Toolbar',
         'overrides.Component',
         'overrides.dataview.List',
         'overrides.LoadMask',

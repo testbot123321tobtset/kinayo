@@ -17,15 +17,31 @@ Ext.define('X.store.AuthenticatedUser', {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onBeforeLoad(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+        
+        
+        if(!me.isLoaded()) {
+            
+            var notificationContainer = me.notificationContainer;
+            notificationContainer = (Ext.isObject(notificationContainer) && !Ext.isEmpty(notificationContainer)) ? notificationContainer : false;
+            
+            notificationContainer && notificationContainer.open();
+            
+            me.triggeredLoadingContainer = true;
+        }
 
         var parseSessionStore = Ext.getStore('ParseSessionStore');
         if (Ext.isObject(parseSessionStore)) {
+            
             var session = parseSessionStore.getSession();
             if (Ext.isObject(session) && !Ext.isEmpty(session)) {
+                
                 var userIdFromSession = ('userId' in session && Ext.isString(session.userId) && !Ext.isEmpty(session.userId)) ? session.userId : false;
                 if (userIdFromSession) {
+                    
                     var sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
                     if (sessionToken) {
+                        
                         var isAuthenticatedUserStoreEmpty = me.isEmpty();
                         if (!isAuthenticatedUserStoreEmpty) {
                             //                            When authenticated user store is not empty, check if the user in store
@@ -44,40 +60,54 @@ Ext.define('X.store.AuthenticatedUser', {
                         me.setSessionHeaderForAllStores(sessionToken);
 
                         me.callParent(arguments);
-                        return me;
                     }
                 }
             }
         }
-
-        //        Only load if a session is found in localstorage
-        if (X.config.Config.getDEBUG()) {
-            console.log('Debug: X.store.AuthenticatedUser.onBeforeLoad(): Failed: Where clause in the URL could not be correctly edited: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return false;
     },
     //    Every time the authenticated user store loads, make sure that you take the group information from this store and 
     //    update all group data stored in all of the group stores locally
-    onLoad: function(store, records, successful, operation, eOpts) {
-        var me = this;
+    onLoad: function(me, records, successful, operation, eOpts) {
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.AuthenticatedUser.onLoad(): Found ' + (me.getAllCount() || 'no') + ' records: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-
-        //        Refresh all group stores
+        
+        if(me.triggeredLoadingContainer) {
+            
+            var notificationContainer = me.notificationContainer;
+            notificationContainer = (Ext.isObject(notificationContainer) && !Ext.isEmpty(notificationContainer)) ? notificationContainer : false;
+            
+            notificationContainer && notificationContainer.close();
+            
+            me.triggeredLoadingContainer = false;
+        }
+        
+        //        Load group stores
         if (successful) {
             var authenticatedUser = records[0];
             authenticatedUser = (Ext.isObject(authenticatedUser) && !Ext.isEmpty(authenticatedUser)) ? authenticatedUser : false;
             if (authenticatedUser) {
+                
                 var sessionToken = authenticatedUser.get('sessionToken');
                 sessionToken = (Ext.isString(sessionToken) && !Ext.isEmpty(sessionToken)) ? sessionToken : false;
                 if (sessionToken) {
+                    
                     me.setSessionHeaderForAllStores(sessionToken);
-                    //                    This only happens when the authenticated user store loads
+                    //                    This is a one-way update. Changes made to the group stores from elsewhere
+                    //                    doesn't sync back to this array
                     //                    Don't rely on this to get the relevant groups – always use the group
                     //                    stores. For instance when a group is created by the user, the arrays in
                     //                    authenticated user are not updated
-                    authenticatedUser.updateAllGroupStores();
+                    //                    authenticatedUser.updateAllGroupStores();
+                    
+                    var groupsStore = Ext.getStore('GroupsStore');
+                    groupsStore = Ext.isObject(groupsStore) ? groupsStore : false;
+                    if (groupsStore) {
+
+                        groupsStore.load();
+                    }
+                    
+                    authenticatedUser.updateFriendsStore();
                 }
 
                 Ext.Viewport.fireEvent('authenticateduserstoreload', {

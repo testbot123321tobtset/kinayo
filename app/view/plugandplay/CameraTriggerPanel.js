@@ -49,21 +49,5 @@ Ext.define('X.view.plugandplay.CameraTriggerPanel', {
         var me = this;
         me.close();
         return me;
-    },
-    open: function() {
-        var me = this;
-        me.show(X.config.Config.getSHOW_BY_POP_ANIMATION_CONFIG());
-        Ext.Viewport.fireEvent('cameratriggerpanelopen', {
-            photoMessageInputContainer: me
-        });
-        return me;
-    },
-    close: function() {
-        var me = this;
-        me.hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
-        Ext.Viewport.fireEvent('cameratriggerpanelclose', {
-            photoMessageInputContainer: me
-        });
-        return me;
     }
 });

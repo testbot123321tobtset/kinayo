@@ -3,3 +3,23 @@
 @import '_mixins';
 @import 'core/tabpanel';
 
+.page-user-root {
+    
+    .user-groups, .user-more {
+        
+        @include no-border;
+        
+        @include mini-left-side-box-shadow;
+    }
+}
+
+.user-groups-tab-panel {
+    
+    .user-group-feeds, .user-add-groups {
+        
+        @include no-border;
+        
+        @include mini-left-side-box-shadow;
+    }
+}
+

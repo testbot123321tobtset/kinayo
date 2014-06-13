@@ -14,21 +14,28 @@ Ext.define('X.controller.mixin.Parse', {
                 var config = X.XConfig,
                         parseConfig = config.getPARSE(),
                         parseConfigEndpoint = parseConfig.ENDPOINT;
-                
+
                 var applicationId = parseConfig.APPLICATION_ID,
-                        restApiKey = parseConfig.REST_API_KEY,
-                        sessionToken = Ext.getStore('ParseSessionStore').getToken();
+                        restApiKey = parseConfig.REST_API_KEY;
+
+                var sessionStore = Ext.getStore('ParseSessionStore'),
+                        session = Ext.isObject(sessionStore) ? sessionStore.getSession() : false,
+                        sessionToken = false;
+                if (session) {
+
+                    sessionToken = ('sessionToken' in session && Ext.isString(session.sessionToken) && !Ext.isEmpty(session.sessionToken)) ? session.sessionToken : false;
+                }
                 
                 var shouldMakeRequest = true, // Set this to false if any of the conditions are not met in the switch underneath
                         message = null;
-                
-                if(Ext.isString(applicationId) && applicationId.length > 0 && Ext.isString(restApiKey) && restApiKey.length > 0) {
-                    var url = null, 
-                        method = null,
-                        headers = null;
-                
+
+                if (Ext.isString(applicationId) && applicationId.length > 0 && Ext.isString(restApiKey) && restApiKey.length > 0) {
+                    var url = null,
+                            method = null,
+                            headers = null;
+
                     switch (typeOfRequest) {
-//                    https://www.parse.com/docs/rest#users-signup
+                        //                    https://www.parse.com/docs/rest#users-signup
                         case 'signup':
                             url = parseConfigEndpoint + parseConfig.SIGNUP.ENDPOINT;
                             method = parseConfig.SIGNUP.METHOD,
@@ -38,21 +45,23 @@ Ext.define('X.controller.mixin.Parse', {
                                         'X-Parse-REST-API-Key': restApiKey
                                     };
                             break;
-//                    https://www.parse.com/docs/rest#users-login
+                            //                    https://www.parse.com/docs/rest#users-login
                         case 'login':
                             url = parseConfigEndpoint + parseConfig.LOGIN.ENDPOINT;
                             method = parseConfig.LOGIN.METHOD,
                                     headers = {
+                                        'Content-Type': 'application/json;charset=utf-8',
                                         'X-Parse-Application-Id': applicationId,
                                         'X-Parse-REST-API-Key': restApiKey
                                     };
                             break;
-//                    https://www.parse.com/docs/rest#users-validating
+                            //                    https://www.parse.com/docs/rest#users-validating
                         case 'me':
                             if (Ext.isString(sessionToken)) {
                                 url = parseConfigEndpoint + parseConfig.ME.ENDPOINT;
                                 method = parseConfig.ME.METHOD,
                                         headers = {
+                                            'Content-Type': 'application/json;charset=utf-8',
                                             'X-Parse-Application-Id': applicationId,
                                             'X-Parse-REST-API-Key': restApiKey,
                                             'X-Parse-Session-Token': sessionToken
@@ -63,6 +72,45 @@ Ext.define('X.controller.mixin.Parse', {
                                 message = 'X-Parse-Session-Token not found: no point making a call to "me" endpoint';
                             }
                             break;
+
+                            /*
+                             * Custom parse cloud functions
+                             */
+                            //                        https://www.parse.com/docs/cloud_code_guide#functions
+                        case 'setFriendsForPhoneNumbers':
+                            if (Ext.isString(sessionToken)) {
+                                url = parseConfigEndpoint + parseConfig.CUSTOM_CLOUD_FUNCTIONS.ENDPOINT + '/setFriendsForPhoneNumbers';
+                                method = parseConfig.CUSTOM_CLOUD_FUNCTIONS.METHOD,
+                                        headers = {
+                                            'Content-Type': 'application/json;charset=utf-8',
+                                            'X-Parse-Application-Id': applicationId,
+                                            'X-Parse-REST-API-Key': restApiKey,
+                                            'X-Parse-Session-Token': sessionToken
+                                        };
+                            }
+                            else {
+                                shouldMakeRequest = false;
+                                message = 'X-Parse-Session-Token not found: no point making a call to "setFriendsForPhoneNumbers" endpoint';
+                            }
+                            break;
+                            
+                        case 'setMembersForGroup':
+                            if (Ext.isString(sessionToken)) {
+                                url = parseConfigEndpoint + parseConfig.CUSTOM_CLOUD_FUNCTIONS.ENDPOINT + '/setMembersForGroup';
+                                method = parseConfig.CUSTOM_CLOUD_FUNCTIONS.METHOD,
+                                        headers = {
+                                            'Content-Type': 'application/json;charset=utf-8',
+                                            'X-Parse-Application-Id': applicationId,
+                                            'X-Parse-REST-API-Key': restApiKey,
+                                            'X-Parse-Session-Token': sessionToken
+                                        };
+                            }
+                            else {
+                                shouldMakeRequest = false;
+                                message = 'X-Parse-Session-Token not found: no point making a call to "setMembersForGroup" endpoint';
+                            }
+                            break;
+
                         default:
                             break;
                     }

@@ -8,6 +8,8 @@
     @include no-padding;
     @include no-border;
     @include no-background;
+    
+    margin-top: $default-edge-distance-from-toolbars !important;
 
     .x-form-fieldset-inner {
         

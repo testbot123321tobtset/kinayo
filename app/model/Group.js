@@ -1,7 +1,7 @@
 Ext.define('X.model.Group', {
     extend: 'X.model.Application',
     requires: [
-        'Ext.data.proxy.Proxy'
+        'Ext.data.proxy.Rest'
     ],
     config: {
         fields: [
@@ -39,25 +39,31 @@ Ext.define('X.model.Group', {
             {
                 name: 'description',
                 type: 'string'
+            },
+            {
+                name: 'hasMemberUsers'
             }
         ],
         belongsTo: [
-            //                We only show groups that are either created by the authenticated user
-            //                or ones that the authenticated user is a member of. But, authenticated user
-            //                can only be part of groups that are either created by the authenticated user
-            //                himself/herself or created by his/her friends. So a friend can have groups as well
+            //            We only show groups that are either created by the authenticated user
+            //            or ones that the authenticated user is a member of. But, authenticated user
+            //            can only be part of groups that are either created by the authenticated user
+            //            himself/herself or created by his/her friends. So a friend can have groups as well
+            //            You can't have 2 getters with the same name, but a group can be created by either
+            //            the authenticated user or a friend. So, we have 2 getters and doing:
+            //                  var createdBy = group.getCreatorWhoIsTheAuthenticatedUser() || group.getCreatorWhoIsAFriend()
+            //            should give you back the correct user record. i haven't tried it yet, so confirm this!
+            //            TODO
             {
                 model: 'X.model.AuthenticatedUser',
                 foreignKey: 'createdById',
-                getterName: 'getCreator'
+                getterName: 'getCreatorWhoIsTheAuthenticatedUser'
+            },
+            {
+                model: 'X.model.Friend',
+                foreignKey: 'createdById',
+                getterName: 'getCreatorWhoIsAFriend'
             }
-            //            Can't have 2 associations with the same getterName!!
-            //            ,
-            //            {
-            //                model: 'X.model.Friend',
-            //                foreignKey: 'createdById',
-            //                getterName: 'getCreator'
-            //            }
         ],
         hasMany: [
             {
@@ -80,9 +86,17 @@ Ext.define('X.model.Group', {
             url: X.config.Config.getPARSE().ENDPOINT + X.config.Config.getPARSE().GROUPS.ENDPOINT,
             appendId: true,
             batchActions: false,
+            //            We don't need to pull the whole _User objects; the members must be in the 
+            //            authenticated user's friends list. So we can query for users from friends store
+            //            with the objectIds we receive from this GET call on group
+            extraParams: {
+                include: 'hasMemberUsers',
+                order: '-updatedAt,createdAt,title'
+            },
+            sortParam: undefined,
             reader: {
                 type: 'json',
-                rootProperty: ''
+                rootProperty: 'results'
             },
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -99,6 +113,93 @@ Ext.define('X.model.Group', {
         }
     },
     isCreatedByMe: function() {
+        
         return this.get('createdById') === X.authenticatedUser.get('objectId');
+    },
+    getMembers: function() {
+        var me = this;
+        
+        var membersFound = false;
+        
+        var members = me.get('hasMemberUsers');
+        members = (Ext.isArray(members) && members.length > 0) ? members : false;
+        if(members) {
+            
+            var friendsStore = Ext.getStore('FriendsStore');
+            friendsStore = (Ext.isObject(friendsStore) && friendsStore.getAllCount() > 0) ? friendsStore : false;
+            if (friendsStore) {
+                
+                membersFound = [];
+                
+                Ext.Array.each(members, function(thisMember) {
+                    
+                    thisMember = '__type' in thisMember ? thisMember : false;
+                    if(thisMember) {
+                        
+                        var objectId = 'objectId' in thisMember ? thisMember.objectId : false;
+                        if (objectId) {
+                            objectId = (Ext.isString(objectId) && !Ext.isEmpty(objectId)) ? objectId : false;
+                            if (objectId) {
+                                
+                                var memberFound = friendsStore.getById(thisMember.objectId);
+                                memberFound = (Ext.isObject(memberFound) && !Ext.isEmpty(memberFound)) ? memberFound : false;
+                                if(memberFound) {
+                                    
+                                    membersFound.push(memberFound);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        return membersFound;
+    },
+    getMemberObjectIds: function() {
+        var me = this;
+        
+        var memberObjectIds = false;
+        
+        var members = me.get('hasMemberUsers');
+        members = Ext.isArray(members) ? members : false;
+        if(members) {
+            
+            memberObjectIds = [];
+            if(members.length > 0) {
+                
+                Ext.Array.each(members, function(thisMember) {
+                    
+                    memberObjectIds.push(thisMember.objectId);
+                });
+            }
+        }
+        
+        return memberObjectIds;
+    },
+    setHasMemberUsersFieldForGivenUsers: function(users) {
+        var me = this;
+        
+        users = Ext.isArray(users) ? users : false;
+        if(users) {
+            
+            //            Template for how every object in hasMemberUsers field must look like:
+            //            
+            //            [{"__type":"Pointer","className":"_User","objectId":"ozI0Up5tSD"}]
+            var pointers = [];
+            
+            Ext.Array.each(users, function(thisUser) {
+                pointers.push({
+                    
+                    "__type": "Pointer",
+                    "className": "_User",
+                    "objectId": thisUser.get('objectId')
+                });
+            });
+            
+            me.set('hasMemberUsers', pointers);
+        }
+        
+        return me;
     }
 });

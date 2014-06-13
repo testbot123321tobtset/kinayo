@@ -24,27 +24,41 @@ Ext.define('X.view.plugandplay.UserGroupsTabPanel', {
                 // This will have the UI to first display all groups
                 // then on click, will display group feed
                 layout: {
-                    type: 'fit'
+                    type: 'vbox',
+                    pack: 'center',
+                    align: 'stretch'
                 },
                 itemId: 'userGroupFeeds',
                 cls: 'user-group-feeds',
-                iconCls: 'chatbubblefilled',
-                title: 'Chats',
-                scrollable: true,
+                iconCls: 'groupsfilled',
+                title: 'Groups',
+                height: '100%',
+                scrollable: false,
                 items: [
                     {
-                        xtype: 'usergroupslist'
+                        xtype: 'usergroupslist',
+                        flex: 1
+                    },
+                    {
+                        cls: 'tabbar-height-spacer-container'
+                    },
+                    {
+                        cls: 'tabbar-height-spacer-container'
                     }
                 ]
             },
             {
                 layout: {
-                    type: 'fit'
+                    type: 'vbox',
+                    pack: 'center',
+                    align: 'stretch'
                 },
                 itemId: 'userAddGroups',
                 cls: 'user-add-groups',
                 iconCls: 'plus',
                 title: 'New Group',
+                height: '100%',
+                scrollable: false,
                 items: [
                     {
                         xtype: 'usergroupaddformpanel',

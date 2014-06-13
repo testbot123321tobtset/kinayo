@@ -1,5 +1,12 @@
 Ext.define('overrides.Component', {
     override: 'Ext.Component',
+    
+    getLastXType: function() {
+        var me = this;
+        
+        return me.getXTypes().split('/').last();
+    },
+    
     // http://docs.sencha.com/touch/2.3.0/#!/api/Ext.Component-method-setRecord
     setRecordRecursive: function(record) {
         var me = this;
@@ -31,9 +38,12 @@ Ext.define('overrides.Component', {
             if ('getItems' in me && Ext.isFunction(me.getItems)) {
                 me.getItems().
                         each(function(item) {
-                            me.updateRecordDataRecursive.apply(item, [
-                                record
-                            ]);
+                            if('updateRecordDataRecursive' in item && Ext.isFunction(item.updateRecordDataRecursive)) {
+                                item.updateRecordDataRecursive(record);
+                            }
+//                            me.updateRecordDataRecursive.apply(item, [
+//                                record
+//                            ]);
                         });
             }
         }
@@ -52,63 +62,9 @@ Ext.define('overrides.Component', {
         }
         return me;
     },
-    //    This is not being used right now. If used, this will have every window-like element 
-    //    render with an offset from the sides and the window itself with a drop shadow to
-    //    give the user a sense of spatial context
-    setDimensionsBasedOnDepthOffsetRelativeToGivenComponentAdjustingForLayer: function(referenceComponent) {
+    setDimensions: function() {
         var me = this;
-        referenceComponent = Ext.isObject(referenceComponent) ? referenceComponent : Ext.Viewport;
-        if (Ext.isObject(referenceComponent) && Ext.isNumber(me.getLayer())) {
-            var myLayer = me.getLayer();
-            var referenceComponentSize = referenceComponent.getSize();
-            var referenceComponentWidth = referenceComponentSize.width;
-            var referenceComponentHeight = referenceComponentSize.height;
-            var layerHorizontalOffset = X.config.Config.getLAYER_HORIZONTAL_OFFSET();
-            var layerVerticalOffset = X.config.Config.getLAYER_VERTICAL_OFFSET();
-
-            me.setWidth(referenceComponentWidth - (2 * myLayer * layerHorizontalOffset));
-            me.setLeft(myLayer * layerHorizontalOffset);
-            me.setRight(myLayer * layerHorizontalOffset);
-
-            me.setHeight(referenceComponentHeight - (myLayer * layerVerticalOffset));
-            me.setTop(myLayer * layerVerticalOffset);
-        }
-        return me;
-    },
-    setDimensions: function(referenceComponent) {
-        var me = this;
-        referenceComponent = Ext.isObject(referenceComponent) ? referenceComponent : Ext.Viewport;
-        if (X.config.Config.getLAYER_DEPTH_BASED_ON_OFFSET() && me.getDepthBasedOnOffset()) {
-            me.setDimensionsBasedOnDepthOffsetRelativeToGivenComponentAdjustingForLayer(referenceComponent);
-        }
-        else {
-            me.setDimensionsToFillScreen();
-        }
-        return me;
-    },
-    //    This is not being used right now
-    setBlurredBackgroundForDepth: function() {
-        var me = this;
-        Ext.each(Ext.Viewport.query('corecontainer'), function(thisCoreContainer) {
-            if (thisCoreContainer.getId() !== me.getId() && !thisCoreContainer.isHidden() && thisCoreContainer.getZIndex() < me.getZIndex()) {
-                thisCoreContainer.addCls('blurred-background');
-            }
-        });
-        Ext.each(Ext.Viewport.query('tabpanel'), function(thisTabPanel) {
-            if (!thisTabPanel.isHidden() && thisTabPanel.getZIndex() < me.getZIndex()) {
-                thisTabPanel.addCls('blurred-background');
-            }
-        });
-        return me;
-    },
-    resetBlurredBackgroundForDepth: function() {
-        var me = this;
-        Ext.each(Ext.Viewport.query('corecontainer'), function(thisCoreContainer) {
-            thisCoreContainer.removeCls('blurred-background');
-        });
-        Ext.each(Ext.Viewport.query('tabpanel'), function(thisTabPanel) {
-            thisTabPanel.removeCls('blurred-background');
-        });
+        me.setDimensionsToFillScreen();
         return me;
     },
     /*
@@ -118,80 +74,106 @@ Ext.define('overrides.Component', {
      * mainViewEl.parentNode.removeChild(mainViewEl); (Remove the node from DOM)
      * this.mainViewParentNode.appendChild(mainViewEl); (Inject it back into DOM on demand)
      */
-    createOptimizedLayeredEffect: function() {
+    getCustomShowAnimationConfig: function() {
+        var me = this;;
+        
+        var lastXType = me.getLastXType();
+        var animationConfig = false;
+        
+        switch (lastXType) {
+
+            case 'loadingcontainer':
+                animationConfig = X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            case 'notificationcontainer':
+                animationConfig = X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            default:
+                animationConfig = X.config.Config.getSHOW_ANIMATION_CONFIG();
+                break;
+        }
+        
+        return animationConfig;
+    },
+    getCustomHideAnimationConfig: function() {
+        var me = this;;
+        
+        var lastXType = me.getLastXType();
+        var animationConfig = false;
+        
+        switch (lastXType) {
+
+            case 'loadingcontainer':
+                animationConfig = X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            case 'notificationcontainer':
+                animationConfig = X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_NOTIFICATION();
+                break;
+            default:
+                animationConfig = X.config.Config.getHIDE_ANIMATION_CONFIG();
+                break;
+        }
+        
+        return animationConfig;
+    },
+    open: function(animationConfig) {
         var me = this;
-        var visibleComponent = me;
-        var querySelectorsForComponentsToBeHidden = Ext.isFunction(visibleComponent.getQuerySelectorsForComponentsToBeHiddenToOptimizeLayer) ? visibleComponent.getQuerySelectorsForComponentsToBeHiddenToOptimizeLayer() : false;
-        var querySelectorsForComponentsToBeBlurred = Ext.isFunction(visibleComponent.getQuerySelectorsForComponentsToBeBlurredToOptimizeLayer) ? visibleComponent.getQuerySelectorsForComponentsToBeBlurredToOptimizeLayer() : false;
-        var viewport = Ext.Viewport;
-        if (Ext.isArray(querySelectorsForComponentsToBeHidden) && !Ext.isEmpty(querySelectorsForComponentsToBeHidden)) {
-            Ext.each(querySelectorsForComponentsToBeHidden, function(thisComponentQuerySelector) {
-                Ext.each(viewport.query(thisComponentQuerySelector), function(thisComponent) {
-                    thisComponent.hide();
-                });
+
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : me.getCustomShowAnimationConfig();
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : false;
+        if (animationConfig) {
+            
+            me.show(animationConfig);
+            
+            var lastXType = me.getLastXType();
+
+            Ext.Viewport.fireEvent(lastXType + 'close', {
+                component: me
             });
         }
-        if (Ext.isArray(querySelectorsForComponentsToBeBlurred) && !Ext.isEmpty(querySelectorsForComponentsToBeBlurred)) {
-            Ext.each(querySelectorsForComponentsToBeBlurred, function(thisComponentQuerySelector) {
-                Ext.each(viewport.query(thisComponentQuerySelector), function(thisComponent) {
-                    thisComponent.addCls('blurred-background');
-                });
-            });
-        }
+        
         return me;
     },
-    revertOptimizedLayeredEffect: function() {
+    openFullScreen: function(animationConfig) {
         var me = this;
-        var visibleComponent = me;
-        var querySelectorsForComponentsToBeShown = Ext.isFunction(visibleComponent.getQuerySelectorsForComponentsToBeHiddenToOptimizeLayer) ? visibleComponent.getQuerySelectorsForComponentsToBeHiddenToOptimizeLayer() : false;
-        var querySelectorsForComponentsToBeUnblurred = Ext.isFunction(visibleComponent.getQuerySelectorsForComponentsToBeBlurredToOptimizeLayer) ? visibleComponent.getQuerySelectorsForComponentsToBeBlurredToOptimizeLayer() : false;
-        var viewport = Ext.Viewport;
-        if (Ext.isArray(querySelectorsForComponentsToBeShown) && !Ext.isEmpty(querySelectorsForComponentsToBeShown)) {
-            Ext.each(querySelectorsForComponentsToBeShown, function(thisComponentQuerySelector) {
-                Ext.each(viewport.query(thisComponentQuerySelector), function(thisComponent) {
-                    thisComponent.show();
-                });
+        
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : me.getCustomShowAnimationConfig();
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : false;
+        if (animationConfig) {
+            
+            me.setDimensionsToFillScreen().
+                    show(animationConfig);
+            
+            var lastXType = me.getLastXType();
+            
+            Ext.Viewport.fireEvent(lastXType + 'open', {
+                component: me
+            });
+            
+            Ext.Viewport.fireEvent(lastXType + 'openfullscreen', {
+                component: me
             });
         }
-        if (Ext.isArray(querySelectorsForComponentsToBeUnblurred) && !Ext.isEmpty(querySelectorsForComponentsToBeUnblurred)) {
-            var layerOfComponentToBeUnblurred = false;
-            var componentToBeUnblurred = false;
-            Ext.each(querySelectorsForComponentsToBeUnblurred, function(thisComponentQuerySelector) {
-                Ext.each(viewport.query(thisComponentQuerySelector), function(thisComponent) {
-                    if (!thisComponent.isHidden()) {
-//                        Unblur only the topmost layer that is not hidden
-                        var layerOfThisComponent = ('getLayer' in thisComponent && Ext.isFunction(thisComponent.getLayer)) ? thisComponent.getLayer() : 0;
-                        if (Ext.isNumeric(layerOfComponentToBeUnblurred)) {
-                            if (layerOfComponentToBeUnblurred < layerOfThisComponent) {
-                                layerOfComponentToBeUnblurred = layerOfThisComponent;
-                                componentToBeUnblurred = thisComponent;
-                            }
-                        }
-                        else {
-                            layerOfComponentToBeUnblurred = layerOfThisComponent;
-                            componentToBeUnblurred = thisComponent;
-                        }
-                    }
-                    else {
-//                        Unblur all hidden layer10
-                        thisComponent.removeCls('blurred-background');
-                    }
-                });
-            });
-            if (Ext.isObject(componentToBeUnblurred)) {
-                componentToBeUnblurred.removeCls('blurred-background');
-            }
-        }
+        
         return me;
     },
-    open: function() {
-        return this.setDimensionsToFillScreen().
-                createOptimizedLayeredEffect().
-                show(X.config.Config.getSHOW_BY_POP_ANIMATION_CONFIG());
-    },
-    close: function() {
-        return this.revertOptimizedLayeredEffect().
-                hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
+    close: function(animationConfig) {
+        var me = this;
+
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : me.getCustomHideAnimationConfig();
+        animationConfig = (Ext.isObject(animationConfig) && !Ext.isEmpty(animationConfig)) ? animationConfig : false;
+        if (animationConfig) {
+            
+            me.hide(animationConfig);
+            
+            var lastXType = me.getLastXType();
+
+            Ext.Viewport.fireEvent(lastXType + 'close', {
+                component: me
+            });
+        }
+        
+        return me;
     },
     closeEverythingAboveMe: function() {
         var me = this;

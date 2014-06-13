@@ -23,6 +23,8 @@ Ext.define('X.controller.Users', {
     requires: [
         'X.model.validation.UserLogin',
         'X.view.plugandplay.SignupAndLoginContainer',
+        'X.view.plugandplay.NonInteractiveUsersListContainer',
+        'X.view.plugandplay.InteractiveUsersListContainer',
         'X.view.plugandplay.PhotoMessageInputContainer'
     ],
     config: {
@@ -55,6 +57,7 @@ Ext.define('X.controller.Users', {
         control: {
             viewport: {
                 authenticateduserloggedin: 'onAuthenticatedUserLoggedIn',
+                //                authenticateduserstoreload: 'onAuthenticatedUserStoreLoad',
                 authenticateduserdataedit: 'onAuthenticatedUserDataEdit',
                 devicecontactsstorerefreshuserrequest: 'onDeviceContactsStoreRefreshUserRequest'
             },
@@ -63,10 +66,16 @@ Ext.define('X.controller.Users', {
                 activeitemchange: 'onSignupAndLoginTabPanelActiveItemChange'
             },
             //            Signup
+            userSignupFormPanel: {
+                fieldaction: 'doSignup'
+            },
             userSignupFormSubmitButton: {
                 tap: 'doSignup'
             },
             //            Login
+            userLoginFormPanel: {
+                fieldaction: 'doLogin'
+            },
             userLoginFormSubmitButton: {
                 tap: 'doLogin'
             },
@@ -81,8 +90,8 @@ Ext.define('X.controller.Users', {
                 activeitemchange: 'onUserMoreTabPanelPanelActiveItemChange'
             },
             // User account info panel
-            importFriendsFromDeviceContactsButton: {
-                tap: 'addFriendsFromDeviceContacts'
+            findFriendsFromDeviceContactsButton: {
+                tap: 'onImportFriendsFromDeviceContactsButtonTap'
             },
             // Logout
             logoutButton: {
@@ -112,12 +121,12 @@ Ext.define('X.controller.Users', {
             // User :: More
             userMoreTabPanel: '#userMoreTabPanel',
             userAccountFormPanel: '#userMoreTabPanel #userAccountFormPanel',
-            importFriendsFromDeviceContactsButton: '#userMoreTabPanel #userAccountFormPanel #importFriendsFromDeviceContactsButton',
+            findFriendsFromDeviceContactsButton: '#userMoreTabPanel #userAccountFormPanel #findFriendsFromDeviceContactsButton',
             // User :: Logout
             logoutButton: '#userAccountFormPanel #logoutButton',
             //            userLogoutPanel: '#userMoreTabPanel #userLogout',
             //            logoutButton: '#userMoreTabPanel #userLogout #logoutButton'
-
+            
             //            Messaging
             photoMessageInputContainer: '#photoMessageInputContainer',
             photoMessageInputContainerFormPanel: '#photoMessageInputContainer #messageFormPanel',
@@ -167,7 +176,9 @@ Ext.define('X.controller.Users', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.onDeviceContactsStoreRefreshUserRequest(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-        return me.addFriendsFromDeviceContacts();
+        
+        //        Refresh device contacts store, then show a window containing
+        //        users list with an attached device contacts store
     },
     /*
      *    ROUTE HANDLERS
@@ -252,6 +263,7 @@ Ext.define('X.controller.Users', {
         }
         return me;
     },
+    //    USER ACCOUNT PANEL
     onUserMoreTabPanelPanelActiveItemChange: function(tabPanel, activeItem, previousActiveItem, eOpts) {
         var me = this;
         if (Ext.isObject(tabPanel) && Ext.isObject(activeItem)) {
@@ -268,6 +280,67 @@ Ext.define('X.controller.Users', {
         }
         return me;
     },
+    onImportFriendsFromDeviceContactsButtonTap: function() {
+        var me = this;
+        
+        //        The logic:
+        //        1. freshly read device contacts from the device and get all the phone numbers
+        //        2. POST to parse cloud function setFriendsForPhoneNumbers, which if executed successfully
+        //              will automatically trigger authenticated user store load
+        //        3. Pass a successCallback from here which will be execute as a callback after the 
+        //              authenticated user store loads
+        //        4. When the authenticated user store loads, it will automatically update the friends store
+        //        5. Generate the friends list in an interactive user list (so the user can pick members for her group)
+        //              inside of the successCallback sent in step #3
+        //        
+        //        For a clearer picture of the workflow, refer to: https://docs.google.com/document/d/12HrIs4C6R0h9j1maSMkHIci4OrSnuXkNia87V_luNXI/edit?usp=sharing
+        
+        var loadingContainer = me.loadingContainer;
+        loadingContainer = (Ext.isObject(loadingContainer) && !Ext.isEmpty(loadingContainer)) ? loadingContainer : false;
+        
+        loadingContainer && loadingContainer.open();
+        
+        return me.fetchFriendsFromServerForPhoneNumbersOfDeviceContactsAndSetFriendsStore({
+            
+            successCallback: {
+                fn: function() {
+                    
+                    me.generateAndFillViewportWithNonInteractiveUsersListContainer({
+                        
+                        callback: {
+                            fn: function() {
+                                
+                                var args = arguments[0];
+                                var nonInteractiveUsersListContainer = 'listContainer' in args ? args.listContainer : false;
+                                if (nonInteractiveUsersListContainer) {
+                                    
+                                    var nonInteractiveList = nonInteractiveUsersListContainer.down('noninteractiveuserslist');
+                                    nonInteractiveList = (Ext.isObject(nonInteractiveList) && !Ext.isEmpty(nonInteractiveList)) ? nonInteractiveList : false;
+                                    if (nonInteractiveList) {
+                                        
+                                        nonInteractiveUsersListContainer.setTitle('Your Friends');
+
+                                        var friendsStore = Ext.getStore('FriendsStore');
+                                        friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
+                                        
+                                        if (friendsStore) {
+                                            
+                                            nonInteractiveList.setStore(friendsStore);
+                                            
+                                            loadingContainer && loadingContainer.close();
+                                        }
+                                    }
+                                }
+                            },
+                            scope: me
+                        }
+                    });
+                },
+                scope: me
+            }
+        });
+    },
+    //    MESSAGE CONTAINER
     onPhotoMessageInputContainerSubmitButtonTap: function() {
         var me = this;
         if (me.getDebug()) {
@@ -323,13 +396,16 @@ Ext.define('X.controller.Users', {
 
             //            Don't use formpanel's submit method – it always url encodes the params, and
             //            Parse expects json encoded params
+            
             var formValues = form.getValues();
+            
+            var params = formValues;
+            
             Ext.Ajax.request({
-                //                Parse
                 url: url,
                 method: method,
                 headers: headers,
-                jsonData: formValues,
+                jsonData: params,
                 success: function(serverResponse) {
                     if (me.getDebug()) {
                         console.log('Debug: X.controller.Users.xhrSignup(): Successful. Received serverResponse:');
@@ -337,22 +413,36 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
 
-                    me.generateUserSuccessfullyCreatedWindow({
-                        message: false,
-                        fn: function() {
-                            var createdUser = Ext.decode(serverResponse.responseText);
-                            //                            username is not sent by Parse, so grab it from form values
-                            createdUser.username = formValues.username;
-                            if (Ext.isObject(createdUser) && !Ext.isEmpty(createdUser) && me.logUserIn({
-                                user: createdUser
-                            })) {
-                                me.getSignupAndLoginContainer().
-                                        close();
-                                me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
-                            }
-                        },
-                        scope: me
-                    });
+                    var signedUpUser = Ext.decode(serverResponse.responseText);
+                    signedUpUser = (Ext.isObject(signedUpUser) && !Ext.isEmpty(signedUpUser)) ? signedUpUser : false;
+                    if (signedUpUser) {
+                        
+                        //                            username and phoneNumber is not sent by Parse, so grab it from form values
+                        signedUpUser.username = params.username;
+                        signedUpUser.phoneNumber = params.phoneNumber
+
+                        var hasLoggedIn = false;
+                        hasLoggedIn = me.logUserIn({
+                            user: signedUpUser
+                        });
+                        
+                        if (hasLoggedIn) {
+                            
+                            me.generateUserSuccessfullyCreatedWindow({
+                                message: false,
+                                fn: function() {
+
+                                    me.getSignupAndLoginContainer().
+                                            close();
+                                    //                            This redirect will automatically load the authenticated user store
+                                    //                            which is when we get the full authenticated user with all her
+                                    //                            associated groups from Parse
+                                    me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                                },
+                                scope: me
+                            });
+                        }
+                    }
                 },
                 failure: function(serverResponse) {
                     if (me.getDebug()) {
@@ -361,9 +451,10 @@ Ext.define('X.controller.Users', {
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
 
-                    var operationStatus = serverResponse.status,
-                            operationStatusText = serverResponse.statusText;
-
+                    //                    TEMPLATE: Use this as a template to extract information from Parse's response
+                    //                    var operationStatus = serverResponse.status,
+                    //                            operationStatusText = serverResponse.statusText;
+                    //
                     var serverResponseText = Ext.decode(serverResponse.responseText),
                             serverResponseCode = serverResponseText.code,
                             serverResponseError = serverResponseText.error;
@@ -396,7 +487,8 @@ Ext.define('X.controller.Users', {
 
             var errors = Ext.create('X.model.validation.UserLogin', {
                 username: formData.username,
-                password: formData.password
+                password: formData.password,
+                phoneNumber: formData.phoneNumber
             }).
                     validate();
 
@@ -434,6 +526,11 @@ Ext.define('X.controller.Users', {
         if (me.getDebug()) {
             console.log('Debug: X.controller.Users.xhrLogin(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
+        
+        var loadingContainer = me.loadingContainer;
+        loadingContainer = (Ext.isObject(loadingContainer) && !Ext.isEmpty(loadingContainer)) ? loadingContainer : false;
+        
+        loadingContainer && loadingContainer.open();
 
         //        Parse: https://www.parse.com/docs/rest#users-login
         var parseMetaData = me.getParseMetaData({
@@ -446,27 +543,44 @@ Ext.define('X.controller.Users', {
                     method = parseMetaData.method,
                     headers = parseMetaData.headers;
 
+            //            Don't use formpanel's submit method – it always url encodes the params, and
+            //            Parse expects json encoded params
+            
             var formValues = form.getValues();
+            
+            var params = formValues;
 
             Ext.Ajax.request({
                 url: url,
                 method: method,
                 headers: headers,
-                params: formValues,
+                params: params,
                 success: function(serverResponse) {
                     if (me.getDebug()) {
                         console.log('Debug: X.controller.Users.xhrLogin(): Successful. Received serverResponse:');
                         console.log(serverResponse);
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
+                    
+                    loadingContainer && loadingContainer.close();
 
                     var loggedInUser = Ext.decode(serverResponse.responseText);
-                    if (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser) && me.logUserIn({
-                        user: loggedInUser
-                    })) {
-                        me.getSignupAndLoginContainer().
-                                close();
-                        me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                    loggedInUser = (Ext.isObject(loggedInUser) && !Ext.isEmpty(loggedInUser)) ? loggedInUser : false;
+                    if (loggedInUser) {
+
+                        var hasLoggedIn = false;
+                        hasLoggedIn = me.logUserIn({
+                            user: loggedInUser
+                        });
+
+                        if (hasLoggedIn) {
+                            me.getSignupAndLoginContainer().
+                                    close();
+                            //                            This redirect will automatically load the authenticated user store
+                            //                            which is when we get the full authenticated user with all her
+                            //                            associated groups from Parse
+                            me.redirectTo(X.config.Config.getDEFAULT_USER_PAGE());
+                        }
                     }
                 },
                 failure: function(serverResponse) {
@@ -475,6 +589,8 @@ Ext.define('X.controller.Users', {
                         console.log(serverResponse);
                         console.log('Debug: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
+                    
+                    loadingContainer && loadingContainer.close();
 
                     //                    TEMPLATE: Use this as a template to extract information from Parse's response
                     //                    var operationStatus = serverResponse.status,
@@ -532,56 +648,6 @@ Ext.define('X.controller.Users', {
     //    
     //    METHODS TO BE SORTED OUT
     // 
-
-    addFriendsFromDeviceContacts: function() {
-        var me = this;
-        if (me.getDebug()) {
-            console.log('Debug: X.controller.Users.addFriendsFromDeviceContacts()');
-        }
-        me.setDeviceContactsStoreAndCallback({
-            successCallback: {
-                fn: function() {
-                    //                    var args = arguments[0];
-                    //                    args.contacts should have all contacts
-                    me.xhrAddFriendsFromDeviceContacts();
-                },
-                scope: me
-            },
-            failureCallback: {
-                fn: function() {
-                    console.log('Debug: X.controller.Users.addFriendsFromDeviceContacts(): Failed to retrieve contacts from device\'s address book');
-                },
-                scope: me
-            }
-        });
-        return me;
-    },
-    xhrAddFriendsFromDeviceContacts: function() {
-        var me = this;
-        var deviceContactsStore = Ext.getStore('DeviceContactStore');
-        var deviceContactsStoreCount = deviceContactsStore.getCount();
-        if (deviceContactsStoreCount > 0) {
-            var emails = deviceContactsStore.getEmails();
-            if (Ext.isArray(emails) && !Ext.isEmpty(emails)) {
-                Ext.Ajax.request({
-                    url: '/friendships/usingemails',
-                    method: 'POST',
-                    params: {
-                        emails: emails.join(';')
-                    },
-                    success: function(response) {
-                        //                        When you get this response, either refresh authenticated user store
-                        //                        that should now give you the authenticated user with all of the contacts
-                        //                        whom he/she can see or have POST to /friendships/usingemails send back the
-                        //                        this data and update authenticated user store locally, so we get all friends back
-                        //                        See: http://www.sencha.com/forum/showthread.php?284514-How-to-mimic-store.load()-with-local-data&p=1040738#post1040738
-                        console.log(response);
-                    }
-                });
-            }
-        }
-        return me;
-    },
     doAddFriend: function(button, e, eOpts) {
         var me = this;
         if (me.getDebug()) {
@@ -612,13 +678,6 @@ Ext.define('X.controller.Users', {
                 });
             }
         });
-    },
-    show: function(id) {
-        var me = this;
-        if (X.XConfig.getDEBUG()) {
-            console.log('Debug: X.controller.Users.show(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-        return me;
     },
     authenticate: function(action) {
         var me = this;

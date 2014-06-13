@@ -32,6 +32,9 @@ Ext.define('X.store.Application', {
             },
             addrecords: function(store, records, successful, operation, eOpts) {
                 this.onAddRecords(store, records, eOpts);
+            },
+            removerecords: function(store, records, indices, eOpts) {
+                this.onRemoveRecords(store, records, indices, eOpts);
             }
             //            ,
             //            updaterecord: function(store, record, newIndex, oldIndex, modifiedFieldNames, modifiedValues, eOpts) {
@@ -65,7 +68,7 @@ Ext.define('X.store.Application', {
             var idsOfRecordsBeforeLoad = [
             ];
             me.each(function(thisRecord) {
-                idsOfRecordsBeforeLoad.push(thisRecordget('objectId'));
+                idsOfRecordsBeforeLoad.push(thisRecord.get('objectId'));
             });
             me.setIdsOfRecordsBeforeLoad(idsOfRecordsBeforeLoad);
         }
@@ -76,8 +79,6 @@ Ext.define('X.store.Application', {
         else {
             me.setEmptyOnLastLoad(false);
         }
-
-        return me;
     },
     onLoad: function(store, records, successful, operation, eOpts) {
         var me = this;
@@ -103,8 +104,6 @@ Ext.define('X.store.Application', {
         else if (me.getIsFirstLoad()) {
             me.setIsFirstLoad(false);
         }
-
-        return me;
     },
     onAddRecords: function(store, records, eOpts) {
         var me = this;
@@ -115,28 +114,24 @@ Ext.define('X.store.Application', {
         if(!store.isLoaded()) {
             store.loaded = true;
         }
-
-        return me;
+    },
+    onRemoveRecords: function(store, records, indices, eOpts) {
+        var me = this;
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.store.Application: ' + me.getStoreId() + ': onRemoveRecords(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
     },
     onUpdateRecord: function(store, record, newIndex, oldIndex, modifiedFieldNames, modifiedValues, eOpts) {
         var me = this;
         if (X.config.Config.getDEBUG()) {
             console.log('Debug: X.store.Application: ' + me.getStoreId() + ': onUpdateRecord(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
         }
-
-        return me;
     },
     //    
     //    HELPER METHODS
     //
     getAllStores: function() {
-        return [
-            Ext.getStore('AuthenticatedUserStore'),
-            Ext.getStore('GroupsStore'),
-            Ext.getStore('GroupsAUIsMemberOfStore'),
-            Ext.getStore('GroupsCreatedByAUStore'),
-            Ext.getStore('UsersStore')
-        ];
+        return X.app.getStores();
     },
     isEmpty: function() {
         return this.getAllCount() === 0;
@@ -152,7 +147,7 @@ Ext.define('X.store.Application', {
         var allStores = me.getAllStores();
         if (!Ext.isEmpty(allStores)) {
             Ext.Array.each(allStores, function(thisStore) {
-                if(Ext.isObject(thisStore) && !Ext.isEmpty(thisStore)) {
+                if(Ext.isObject(thisStore) && 'setSessionHeader' in thisStore && Ext.isFunction(thisStore.setSessionHeader)) {
                     thisStore.setSessionHeader(sessionToken);
                 }
             });
@@ -260,7 +255,8 @@ Ext.define('X.store.Application', {
                 condition: function() {
                     return me.isLoaded();
                 },
-                scope: me
+                scope: me,
+                limit: 60000
             });
             return me;
         }

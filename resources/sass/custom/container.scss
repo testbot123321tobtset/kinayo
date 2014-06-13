@@ -3,8 +3,10 @@
 @import '_mixins';
 @import 'core/container';
 @import 'core/tabpanel';
+@import 'core/messagebox';
 
 $container-background-color: rgba(255, 255, 255, $default-theme-transparency-opacity);
+$loading-container-background-color: $default-theme-color;
 $container-border-width: 0;
 $container-border-style: solid;
 $container-border-color: transparent;
@@ -21,6 +23,65 @@ $container-border-visible-edge-color: $default-border-color;
     @include single-transition;
 }
 
+.tabbar-height-spacer-container {
+    
+    height: $default-edge-distance-from-toolbars !important;
+}
+
+.loading-container, .notification-container {
+    
+    @include no-border;
+    @include no-margin;
+    
+    min-height: $default-toolbar-height !important;
+    height: $default-toolbar-height !important;
+    @include full-width;
+    
+    @include no-background;
+    background: $loading-container-background-color !important;
+    
+    @include mini-reverse-box-shadow;
+    
+    .x-innerhtml {
+        
+        background: $loading-container-background-color !important;
+        
+        font-size: 0.7em !important;
+        text-transform: uppercase !important;
+        color: white;
+        text-align: center !important;
+    }
+    
+    /*padding-right: 1.4em !important;*/
+    
+    /*http://blog.42at.com/emulating-iphones-slide-to-unlock*/
+    /*    -webkit-mask-image: -webkit-gradient(
+            linear, 
+            0% top, 
+            90% top,
+            from(rgba(0, 0, 0, .1)), 
+            color-stop(.6, $default-theme-color-lighten), 
+            to(rgba(0, 0, 0, .1))
+            );
+        -webkit-mask-size: 50%;
+    
+        -webkit-animation-name: spotlight;
+        -webkit-animation-timing-function: linear;
+        -webkit-animation-duration: 2000ms;
+        -webkit-animation-iteration-count: infinite;*/
+    
+/*    min-width: $default-toolbar-height !important;
+    width: $default-toolbar-height !important;
+    
+    background: transparent url('../images/loading.gif') no-repeat center !important; 
+    background-size: 24px 24px !important;*/
+}
+
+.simple-display-container {
+    
+    height: $default-button-height !important;
+}
+
 .page-user-root {
     @include single-transition;
 }
@@ -30,6 +91,8 @@ $container-border-visible-edge-color: $default-border-color;
     @include single-transition;
     
     @include no-border;
+    
+    @include mini-reverse-box-shadow;
 
     @include no-background;
     background-color: $container-background-color !important;
@@ -40,7 +103,7 @@ $container-border-visible-edge-color: $default-border-color;
         
         .x-scroll-view {
 
-            padding-top: $default-toolbar-height !important;
+            /*padding-top: $default-toolbar-height !important;*/
         }
     }
     
@@ -48,7 +111,7 @@ $container-border-visible-edge-color: $default-border-color;
         
         .x-scroll-view {
 
-            padding-top: 0 !important;
+            /*padding-top: 0 !important;*/
         }
     }
 }

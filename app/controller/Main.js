@@ -11,10 +11,13 @@ Ext.define('X.controller.Main', {
     mixins: {
         util: 'X.controller.mixin.Util',
         parse: 'X.controller.mixin.Parse',
+        phonenumber: 'X.controller.mixin.PhoneNumber',
         common: 'X.controller.mixin.Common',
         factory: 'X.controller.mixin.Factory',
         page: 'X.controller.mixin.Page',
+        loginlogout: 'X.controller.mixin.LoginLogout',
         user: 'X.controller.mixin.User',
+        friend: 'X.controller.mixin.Friend',
         group: 'X.controller.mixin.Group',
         deviceContact: 'X.controller.mixin.DeviceContact'
     },

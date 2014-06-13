@@ -1,121 +1,182 @@
 @import 'compass';
 @import '_variables';
 @import '_mixins';
+@import 'core/field';
 
 .x-list {
-    
+
     @include no-background;
     
+    .x-list-emptytext {
+        
+        height: 50px !important;
+        
+        margin: 1em 0 !important;
+        padding: 0 8px !important;
+        
+        color: $field-label-font-color !important;
+
+        font-size: 0.7em !important;
+        font-weight: $field-label-font-weight !important;
+        font-style: $field-label-font-style !important;
+        
+        text-transform: uppercase !important;
+    }
+
     /*border-bottom: 1px solid $default-border-color-for-fieldsets !important;*/
-    
-/*    We need these spacers to make sure that when the list scrolls, it scrolls behind the tab bars but
-    the top and the bottom portions of the list are still clickable when you scroll to either end*/
+
+    /*We need these spacers to make sure that when the list scrolls, it scrolls behind the tab bars but
+        the top and the bottom portions of the list are still clickable when you scroll to either end*/
     .tabbar-spacer {
         height: $default-toolbar-height !important;
     }
-    
+
     .x-list-disclosure {
-        
+
         &:before {
-            
+
             font-family: $list-disclosure-icon-font-family;
             font-size: $list-disclosure-icon-font-size;
             line-height: $list-disclosure-icon-font-line-height;
             content: ''
-                
+
         }
     }
-    
+
     .x-list-item {
-        
+
         @include no-background;
         background-color: $list-background-color !important;
-        
+
         &:before {
 
-            border-bottom: 1px solid $default-border-color-for-fieldsets;
+            border-bottom: 1px solid $default-border-color-for-fieldsets !important;
+        }
+
+        &.x-list-item-last {
+
+            &:before {
+
+                @include no-border;
+            }
+            
+            &.x-list-item-first {
+                
+                @include no-border;
+            }
+        }
+
+        .x-innerhtml {
+
+            /*Use this to make sure that the input element aligns itself with the border underneath*/
+            padding: .7em 1em !important;
         }
 
         &.x-item-pressed {
-            
+
             @include no-background;
             background-color: $list-pressed-background-color !important;
-            
+
             &.x-list-item-tpl {
-                
+
                 @include no-background;
                 background-color: $list-pressed-background-color !important;
-                
+
                 color: $list-pressed-color;
-                
+
                 &:before {
-                    
-                    border-bottom: 1px solid $default-border-color-for-fieldsets;
+
+                    border-bottom: 1px solid $default-border-color-for-fieldsets !important;
                 }
-                
-                &:last-of-type {
-                    
+
+                &.x-list-item-last {
+
                     &:before {
-                    
+
+                        @include no-border;
+                    }
+
+                    &.x-list-item-first {
+
                         @include no-border;
                     }
                 }
-                
+
                 .x-list-disclosure {
-                    
+
                     &:before {
 
                         color: $list-active-color;
                     }
+                }
+
+                .x-innerhtml {
+
+                    /*Use this to make sure that the input element aligns itself with the border underneath*/
+                    padding: .7em 1em !important;
                 }
             }
         }
-        
+
         &.x-item-selected {
-            
+
             @include no-background;
             background-color: $list-active-background-color !important;
-            
+
             &.x-list-item-tpl {
-                
+
                 @include no-background;
                 background-color: $list-active-background-color !important;
-                
+
                 color: $list-active-color;
-                    
+
                 &:before {
-                    
-                    border-bottom: 1px solid $default-border-color-for-fieldsets;
+
+                    border-bottom: 1px solid $default-border-color-for-fieldsets !important;
                 }
-                
-                &:last-of-type {
-                    
+
+                &.x-list-item-last {
+
                     &:before {
-                    
+
+                        @include no-border;
+                    }
+
+                    &.x-list-item-first {
+
                         @include no-border;
                     }
                 }
-                
+
+                &:last-of-type {
+
+                    &:before {
+
+                        @include no-border;
+                    }
+                }
+
                 .x-list-disclosure {
-                    
+
                     &:before {
 
                         color: $list-active-color;
                     }
+                }
+
+                .x-innerhtml {
+
+                    /*Use this to make sure that the input element aligns itself with the border underneath*/
+                    padding: .7em 1em !important;
                 }
             }
         }
     }
-    
+
     .x-list-header {
-    
+
         @include no-border;
         border-top: $default-border-width $default-border-style $default-border-color !important;
         border-bottom: $default-border-width $default-border-style $default-border-color !important;
-        
-        .x-innerhtml {
-            
-            
-        }
     }
 }

@@ -180,12 +180,12 @@ Ext.define('X.controller.mixin.Util', {
     },
     removeComponentFromDomAndSaveInMemory: function(component) {
         var me = this;
-        component.hide();
+        component.close();
         return false;
     },
     restoreComponentFromDomAndEraseFromMemory: function(component) {
         var me = this;
-        component.show();
+        component.open();
         return false;
     },
     
@@ -218,8 +218,7 @@ Ext.define('X.controller.mixin.Util', {
                     if (X.config.Config.getDEBUG()) {
                         console.log('Debug: X.controller.mixin.Util.hideAllWindows(): Hiding: ' + thisUi.getXTypes() + ': Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                     }
-                    thisUi.revertOptimizedLayeredEffect().
-                            hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
+                    thisUi.close();
                 }
             }
         });

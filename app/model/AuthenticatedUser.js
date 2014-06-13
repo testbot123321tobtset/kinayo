@@ -1,5 +1,8 @@
 Ext.define('X.model.AuthenticatedUser', {
     extend: 'X.model.Application',
+    requires: [
+        'Ext.data.proxy.Rest'
+    ],
     config: {
         fields: [
             {
@@ -46,10 +49,16 @@ Ext.define('X.model.AuthenticatedUser', {
                 type: 'int'
             },
             {
-                name: 'hasCreated'
+                name: 'hasCreated',
+                persist: false
             },
             {
-                name: 'isMemberOf'
+                name: 'isMemberOf',
+                persist: false
+            },
+            {
+                name: 'isFriendsWith',
+                persist: false
             },
             {
                 name: 'fullName',
@@ -64,16 +73,6 @@ Ext.define('X.model.AuthenticatedUser', {
                 name: 'sessionToken',
                 type: 'string',
                 persist: false
-            }
-        ],
-        hasMany: [
-            {
-                //                This is a list of groups that the authenticated user has created
-                //                There can also be groups that the authenticated user had not created but is a part of
-                model: 'X.model.Group'
-            },
-            {
-                model: 'X.model.Friend'
             }
         ],
         validations: [
@@ -100,6 +99,17 @@ Ext.define('X.model.AuthenticatedUser', {
             //            objectId or Id will depend on which user is in session and is set dynamically by the AuthenticatedUser store
             appendId: false,
             batchActions: false,
+            extraParams: {
+                //                Use includeKey instead of include for pointers? https://www.parse.com/questions/help-with-a-simple-relational-query
+                //                include: 'isMemberOf,hasCreated,isFriendsWith'
+                //                includeKey: 'isMemberOf,hasCreated,isFriendsWith'
+                //                include v/s includeKey does seem unreliable. For some reason, isFriendsWith randomly starts wotking with include
+                //                But then when you update the user, isFriendsWith stops working with include and starts working with
+                //                includeKey...Keep an eye out for this TODO
+                //                Okay, so this is very weird – sometimes include works perfectly, sometimes it totally fails i.e. server returns error.
+                //                and includeKey works only for the first record in its array
+                include: 'isMemberOf,hasCreated,isFriendsWith'
+            },
             reader: {
                 type: 'json',
                 //                There is always one authenticated user, and so the resultset returned by Parse will always be of the type:
@@ -130,7 +140,8 @@ Ext.define('X.model.AuthenticatedUser', {
             }
         }
     },
-    //                    This only happens when the authenticated user store loads
+    //                    This is a one-way update. Changes made to the group stores from elsewhere
+    //                    doesn't sync back to this array
     //                    Don't rely on this to get the relevant groups – always use the group
     //                    stores. For instance when a group is created by the user, the arrays in
     //                    authenticated user are not updated
@@ -144,24 +155,54 @@ Ext.define('X.model.AuthenticatedUser', {
         var groupsAuthenticatedUserHasCreatedStore = Ext.getStore('GroupsCreatedByAUStore');
         var groupsStore = Ext.getStore('GroupsStore');
         if (Ext.isObject(groupsAuthenticatedUserIsMemberOfStore) && Ext.isObject(groupsAuthenticatedUserHasCreatedStore) && Ext.isObject(groupsStore)) {
+            
             var groupsIHaveCreated = me.get('hasCreated');
             groupsIHaveCreated = (Ext.isArray(groupsIHaveCreated) && !Ext.isEmpty(groupsIHaveCreated)) ? groupsIHaveCreated : false;
             if (groupsIHaveCreated) {
+                
                 groupsAuthenticatedUserHasCreatedStore.setData(groupsIHaveCreated);
                 if (!groupsAuthenticatedUserHasCreatedStore.isLoaded()) {
+                    
                     groupsAuthenticatedUserHasCreatedStore.loaded = true;
                 }
             }
+            
             var groupsIAmMemberOf = me.get('isMemberOf');
             groupsIAmMemberOf = (Ext.isArray(groupsIAmMemberOf) && !Ext.isEmpty(groupsIAmMemberOf)) ? groupsIAmMemberOf : false;
             if (groupsIAmMemberOf) {
+                
                 groupsAuthenticatedUserIsMemberOfStore.setData(groupsIAmMemberOf);
                 if (!groupsAuthenticatedUserIsMemberOfStore.isLoaded()) {
+                    
                     groupsAuthenticatedUserIsMemberOfStore.loaded = true;
                 }
             }
         }
 
+        return me;
+    },
+    updateFriendsStore: function() {
+        var me = this;
+        if (X.config.Config.getDEBUG()) {
+            console.log('Debug: X.model.AuthenticatedUser.updateFriendStore(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+        }
+        
+        var friendsStore = Ext.getStore('FriendsStore');
+        friendsStore = Ext.isObject(friendsStore) ? friendsStore : false;
+        if (friendsStore) {
+            
+            var myFriends = me.get('isFriendsWith');
+            myFriends = (Ext.isArray(myFriends) && !Ext.isEmpty(myFriends)) ? myFriends : false;
+            if (myFriends) {
+                
+                friendsStore.setData(myFriends);
+                if (!friendsStore.isLoaded()) {
+                    
+                    friendsStore.loaded = true;
+                }
+            }
+        }
+        
         return me;
     }
 });

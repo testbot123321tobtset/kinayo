@@ -1,1 +1,1 @@
-body{background:white;font-weight:400 !important;font-color:gray !important}body .x-scroll-indicator{opacity:0 !important}
+@-webkit-keyframes spotlight{from{-webkit-mask-position:0}to{-webkit-mask-position:100%}}body{background:white;font-weight:400 !important;font-color:gray !important}body .x-scroll-indicator{opacity:0 !important}

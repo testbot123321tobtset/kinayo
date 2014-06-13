@@ -25,6 +25,8 @@ $white-99: darken(white, 1%);
 $facebook-blue: #4c66a4;
 $facebook-blue-lighten: lighten($facebook-blue, 30%);
 $ios7-blue: #157efb;
+$my-blue: #28B7FA;
+$my-blue-lighten: lighten($my-blue, 30%);
 $ios7-red: #fc3e39;
 $ios7-orange: #F92E32;
 $my-orange: #ee6557;
@@ -41,6 +43,7 @@ $i-purple-lighten: $icloud-reminders-purple-lighten;
 $my-purple-lighten: lighten($my-purple, 30%);
 $my-purple-orange: lighten($my-orange, 30%);
 $ios7-music-pink: #F01F73;
+$ios7-music-pink-lighten: lighten($ios7-music-pink, 30%);
 $ios7-music-pink-r: 240;
 $ios7-music-pink-g: 31;
 $ios7-music-pink-b: 115;
@@ -69,18 +72,21 @@ $wetasphalt-b: 94;
 
 /* Default theme colors */
 $default-theme-color: $ios7-music-pink;
+$default-theme-color-lighten: $ios7-music-pink-lighten;
 $default-theme-color-r: $ios7-music-pink-r;
 $default-theme-color-g: $ios7-music-pink-g;
 $default-theme-color-b: $ios7-music-pink-b;
 $default-theme-background-color: white;
-$default-theme-transparency-opacity: 0;
-$default-theme-translucency-opacity: 0.7;
-$default-theme-toolbar-translucency-opacity: 0.9;
+$default-theme-transparency-opacity: 1;
+$default-theme-translucency-opacity: 1;
+$default-theme-toolbar-translucency-opacity: 1;
 $default-background-color: white;
-$default-darker-background-color: $white-96;
+$default-darker-background-color: $white-99;
 $default-border-width: 1px;
 $default-border-style: solid;
 $default-border-color: $silver;
+$default-border: $default-border-width $default-border-style $default-border-color;
+$default-border-lighter-color: $white-94;
 
 /* Default colors on pressed and such events */
 $default-color-normal: $silver;
@@ -92,6 +98,9 @@ $layer-reduction-percent: 1.5%;
 
 /* Default heights */
 $default-toolbar-height: 3.2em;
+$default-edge-distance-from-toolbars: 1.5em;
+$default-button-height: 2.1em;
+$default-field-height: 2.5em;
 
 /* Default font */
 $default-font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, Arial, 'BBAlpha Sans', sans-serif;
@@ -144,6 +153,8 @@ $mask-spinner-font-size: 170%;
 /*
 Buttons
 */
+$default-button-label-side-padding: 8px;
+
 /*$default-button-border-width: $default-border-width;
 $default-button-border-style: $default-border-style;
 $default-button-border-color: $default-border-color;

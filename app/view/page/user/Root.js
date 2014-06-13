@@ -11,15 +11,13 @@ Ext.define('X.view.page.user.Root', {
         cls: 'page-user-root',
         tabBarPosition: 'bottom',
         tabBar: {
-            docked: 'bottom',
-            cls: 'x-stretched x-docked-bottom x-full-width',
-            bottom: 0,
             layout: {
                 type: 'hbox',
                 align: 'center',
                 pack: 'center'
             }
         },
+        
         items: [
 //            {
 //                layout: {
@@ -47,8 +45,8 @@ Ext.define('X.view.page.user.Root', {
                 },
                 itemId: 'userGroups',
                 cls: 'user-groups',
-                iconCls: 'groupsfilled',
-                title: 'Groups',
+                iconCls: 'chatbubblefilled',
+                title: 'Chats',
                 items: [
                     {
                         flex: 1,
@@ -74,15 +72,5 @@ Ext.define('X.view.page.user.Root', {
                 ]
             }
         ]
-    },
-    open: function() {
-        var me = this;
-        me.setDimensionsToFillScreen().show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-        return me;
-    },
-    close: function() {
-        var me = this;
-        me.hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
-        return me;
     }
 });

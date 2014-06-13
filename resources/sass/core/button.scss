@@ -9,11 +9,14 @@ $button-border-color: transparent;
 $button-border-visible-edge-width: $default-border-width;
 $button-border-visible-edge-style: $default-border-style;
 $button-border-visible-edge-color: $default-border-color;
+$button-border-visible-edge-lighter-color: $default-border-lighter-color;
 
 .x-button {
     
     @include no-background;
     background-color: $button-background-color !important;
+            
+    @include no-background;
     
     @include no-border-radius;
     
@@ -21,4 +24,14 @@ $button-border-visible-edge-color: $default-border-color;
     border: $button-border-width $button-border-style $button-border-color !important;
     border-top: $button-border-visible-edge-width $button-border-visible-edge-style $button-border-visible-edge-color !important;
     border-bottom: $button-border-visible-edge-width $button-border-visible-edge-style $button-border-visible-edge-color !important;
+    
+    &.no-top-border {
+        
+        @include no-top-border;
+    }
+    
+    &.no-bottom-border {
+        
+        @include no-bottom-border;
+    }
 }

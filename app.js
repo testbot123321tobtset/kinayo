@@ -103,7 +103,8 @@ Ext.application({
         'overrides.TitleBar',
         'overrides.Component',
         'overrides.dataview.List',
-        'overrides.LoadMask'
+        'overrides.LoadMask',
+        'overrides.form.Panel'
     ],
     models: [
         'ParseSession',
@@ -118,9 +119,8 @@ Ext.application({
         'ParseSession',
         'Users',
         'AuthenticatedUser',
+        'Friends',
         'Groups',
-        'GroupsAUIsMemberOf',
-        'GroupsCreatedByAU',
         'DeviceContacts'
     ],
     controllers: [
@@ -132,6 +132,7 @@ Ext.application({
         'Messages'
     ],
     views: [
+        'plugandplay.LoadingContainer',
         'core.Msg',
         'page.user.Root'
     ],

@@ -23,15 +23,8 @@ Ext.define('X.view.plugandplay.UserGroupContainer', {
         floating: true,
         centered: true,
         fullscreen: true,
-        layer: 1,
-        depthBasedOnOffset: true,
         modal: true,
         hidden: true,
-        querySelectorsForComponentsToBeHiddenToOptimizeLayer: [
-        ],
-        querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
-            '#pageUserRoot'
-        ],
         items: [
             {
                 xtype: 'titlebar',
@@ -78,32 +71,45 @@ Ext.define('X.view.plugandplay.UserGroupContainer', {
                 itemId: 'feedContainer',
                 cls: 'user-group-container-feed-container',
                 flex: 1,
-                tpl: new Ext.XTemplate('{title}'),
-                scrollable: true
+                scrollable: true,
+                
+                hidden: true
             }
         ]
+    },
+    onOpen: function() {
+        var me = this;
+        
+        me.setTitleToGroupTitle();
+        
+        me.down('#feedContainer').open();
+        
+        return me.callParent(arguments);
+    },
+    onClose: function() {
+        var me = this;
+        
+        me.down('#feedContainer').close();
+        
+        return me.callParent(arguments);
     },
     onBackButtonTap: function(button, e, eOpts) {
         var me = this;
         me.callParent(arguments);
         return me;
     },
-    onShow: function() {
-        var me = this;
-        me.setTitleToGroupTitle();
-        me.callParent(arguments);
-    },
     onUpdateData: function() {
         var me = this;
+        
         me.setTitleToGroupTitle();
-        me.callParent(arguments);
-    },
-    getBackButton: function() {
-        var me = this;
-        return me.down('#userGroupContainerToolbar #backButton');
+        
+        return me.callParent(arguments);
     },
     setTitleToGroupTitle: function() {
         var me = this;
+        
         me.down('#userGroupContainerToolbar').setTitle(me.getRecord().get('title'));
+        
+        return me;
     }
 });

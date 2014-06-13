@@ -24,17 +24,8 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
         floating: true,
         centered: true,
         fullscreen: true,
-        layer: 1,
-        depthBasedOnOffset: true,
         modal: true,
         hidden: true,
-        querySelectorsForComponentsToBeHiddenToOptimizeLayer: [
-        ],
-        querySelectorsForComponentsToBeBlurredToOptimizeLayer: [
-            '#pageUserRoot',
-            '#userGroupContainer',
-            '#UserGroupEditContainer'
-        ],
         items: [
             {
                 xtype: 'image',
@@ -117,35 +108,6 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
     onCancelMessage: function() {
         var me = this;
         me.close();
-        return me;
-    },
-    open: function() {
-        var me = this;
-        me.setDimensionsToFillScreen().
-                createOptimizedLayeredEffect().
-                show(X.config.Config.getSHOW_BY_POP_ANIMATION_CONFIG());
-        Ext.Viewport.fireEvent('photomessageinputcontaineropen', {
-            photoMessageInputContainer: me
-        });
-        return me;
-    },
-    close: function() {
-        var me = this;
-        
-        me.revertOptimizedLayeredEffect().
-                hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
-        Ext.Viewport.fireEvent('photomessageinputcontainerclose', {
-            photoMessageInputContainer: me
-        });
-        
-//        Delay this a bit so the UI doesn't abruptly show the text's disappearance
-//        Delaying this will reset the form panel after it hides
-        Ext.create('Ext.util.DelayedTask', function() {
-            me.down('messageformpanel').
-                    reset();
-        }).
-                delay(1);
-                        
         return me;
     },
     setImageUsingBase64Data: function(imageData) {

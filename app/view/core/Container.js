@@ -77,22 +77,15 @@ Ext.define('X.view.core.Container', {
         me.close();
         return me;
     },
+    onContinueButtonTap: function(button, e, eOpts) {
+        var me = this;
+        me.close();
+        return me;
+    },
     onDeleteButtonTap: function(button, e, eOpts) {
         return this;
     },
     onUpdateData: function() {
         return this;
-    },
-    open: function() {
-        var me = this;
-        me.createOptimizedLayeredEffect().
-                show(X.config.Config.getSHOW_ANIMATION_CONFIG());
-        return me;
-    },
-    close: function() {
-        var me = this;
-        me.revertOptimizedLayeredEffect().
-                hide(X.config.Config.getHIDE_ANIMATION_CONFIG());
-        return me;
     }
 });

@@ -1,6 +1,9 @@
 Ext.define('X.controller.Preflight', {
     extend: 'X.controller.Main',
     requires: [
+        'X.view.plugandplay.LoadingContainer',
+        'X.view.plugandplay.NotificationContainer',
+        'X.view.plugandplay.InteractiveUsersListContainer'
     ],
     config: {
         before: {
@@ -26,13 +29,36 @@ Ext.define('X.controller.Preflight', {
 //        and this: http://www.sencha.com/forum/showthread.php?285246-Ext.Msg-slide-show-and-hide-animation
         Ext.Msg.defaultAllowedConfig.width = '100%';
         Ext.Msg.defaultAllowedConfig.bottom = 0;
-        Ext.Msg.defaultAllowedConfig.showAnimation = X.config.Config.getSHOW_ANIMATION_FROM_UP_CONFIG();
-        Ext.Msg.defaultAllowedConfig.hideAnimation = X.config.Config.getHIDE_ANIMATION_FROM_DOWN_SLOW_AT_FIRST_CONFIG();
+        Ext.Msg.defaultAllowedConfig.showAnimation = X.config.Config.getSHOW_ANIMATION_CONFIG_FOR_MESSAGEBOX();
+        Ext.Msg.defaultAllowedConfig.hideAnimation = X.config.Config.getHIDE_ANIMATION_CONFIG_FOR_MESSAGEBOX();
         Ext.Msg.on('painted', function() {
+            Ext.Msg.setScrollable(true);
             Ext.Msg.setZIndex(X.config.Config.getZINDEX_LEVEL_5());
         });
-
-//        Native string extras
+        
+        /*
+         * Singleton Initializations
+         */
+        Ext.Viewport.loadingContainer = Ext.Viewport.add(X.view.plugandplay.LoadingContainer),
+                me.loadingContainer = Ext.Viewport.loadingContainer;
+        
+        Ext.Viewport.notificationContainer = Ext.Viewport.add(X.view.plugandplay.NotificationContainer),
+                me.notificationContainer = Ext.Viewport.notificationContainer;
+        
+        Ext.Viewport.interactiveUsersListContainer = Ext.Viewport.add(X.view.plugandplay.InteractiveUsersListContainer),
+                me.interactiveUsersListContainer = Ext.Viewport.interactiveUsersListContainer;
+        
+        Ext.Viewport.nonInteractiveUsersListContainer = Ext.Viewport.add(X.view.plugandplay.NonInteractiveUsersListContainer),
+                me.nonInteractiveUsersListContainer = Ext.Viewport.interactiveUsersListContainer;
+        
+        //        Native array extras
+        if (!Array.prototype.last) {
+            Array.prototype.last = function() {
+                return this[this.length - 1];
+            };
+        };
+        
+        //        Native string extras
         Ext.apply(String.prototype, (function() {
             function uc(str, p1) {
                 return p1.toUpperCase();

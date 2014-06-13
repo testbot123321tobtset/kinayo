@@ -57,10 +57,5 @@ Ext.define('X.view.plugandplay.SignupAndLoginTabPanel', {
                 ]
             }
         ]
-    },
-    close: function() {
-        var me = this;
-        me.hide(X.config.Config.getHIDE_BY_POP_ANIMATION_CONFIG());
-        return me;
     }
 });

@@ -71,7 +71,8 @@ Ext.define('X.store.ParseSession', {
             if (sessionToken) {
                 var userId = ('userId' in options && Ext.isString(options.userId) && !Ext.isEmpty(options.userId)) ? options.userId : false;
                 if (userId) {
-                    me.setToken({
+                    
+                    return me.setToken({
                         sessionToken: sessionToken,
                         userId: userId
                     });
@@ -80,5 +81,12 @@ Ext.define('X.store.ParseSession', {
         }
         
         return false;
+    },
+    reset: function() {
+        var me = this;
+        
+        me.removeAll();
+        
+        return me;
     }
 });

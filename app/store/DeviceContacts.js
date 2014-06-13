@@ -3,11 +3,15 @@ Ext.define('X.store.DeviceContacts', {
     config: {
         model: 'X.model.DeviceContact',
         storeId: 'DeviceContactStore',
+        
         autoLoad: false,
-        autoSync: false,
+        autoSync: true,
+        
         sorters: 'formattedName',
+        
         grouper: {
             groupFn: function(record) {
+                
                 return Ext.isString(record.get('formattedName')) ? record.get('formattedName')[0] : false;
             }
         }
@@ -22,5 +26,46 @@ Ext.define('X.store.DeviceContacts', {
             }
         });
         return emails;
+    },
+    getPhoneNumbers: function() {
+        var me = this;
+        
+        var phoneNumbers = [];
+        me.each(function(thisContact) {
+            var thisContactPhoneNumbers = thisContact.getAllPhoneNumbers();
+            if(Ext.isArray(thisContactPhoneNumbers)) {
+                phoneNumbers = Ext.Array.merge(phoneNumbers, thisContactPhoneNumbers);
+            }
+        });
+        
+        return phoneNumbers;
+    },
+    setContacts: function(contacts) {
+        var me = this;
+        
+        if(Ext.isArray(contacts)) {
+            
+            me.setData(contacts);
+            
+            if(!me.loaded) {
+                me.loaded = true;
+            }
+        }
+        
+        return me;
+    },
+    resetContacts: function() {
+        var me = this;
+        
+        me.removeAll();
+        
+        return me;
+    },
+    reset: function() {
+        var me = this;
+        
+        me.resetContacts();
+        
+        return me;
     }
 });

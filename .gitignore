@@ -57,4 +57,3 @@ dist
 # phonegap.local.properties
 # js/
 # js/core/models.js
-/app/config/LocalDummyData.js

@@ -143,10 +143,10 @@ Ext.define('X.controller.mixin.DeviceContact', {
                 console.log('Debug: X.controller.mixin.DeviceContact.fetchPhoneNumbersOfDeviceContacts(): This is not a Phonegap application: Dummy data for device contacts: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
             }
 
-            //                Make sure the file LocalDummyData.js exists in app/config directory
-            Ext.require('X.config.LocalDummyData', function() {
+            //                Make sure the file UnformattedDummyData.js exists in app/config directory
+            Ext.require('X.config.UnformattedDummyData', function() {
 
-                var contacts = X.config.LocalDummyData.getDEVICE_UNFORMATTED_CONTACTS();
+                var contacts = X.config.UnformattedDummyData.getDEVICE_UNFORMATTED_CONTACTS();
                 
                 var phoneNumbers = me.getPhoneNumbersFromGivenDeviceContacts(contacts);
                 phoneNumbers = (Ext.isArray(phoneNumbers) && !Ext.isEmpty(phoneNumbers)) ? phoneNumbers : false;
@@ -269,10 +269,10 @@ Ext.define('X.controller.mixin.DeviceContact', {
                     console.log('Debug: X.controller.mixin.DeviceContact.setDeviceContactsStore(): This is not a Phonegap application: Dummy data for device contacts: Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
                 }
                 
-                //                Make sure the file LocalDummyData.js exists in app/config directory
-                Ext.require('X.config.LocalDummyData', function() {
+                //                Make sure the file UnformattedDummyData.js exists in app/config directory
+                Ext.require('X.config.UnformattedDummyData', function() {
                     
-                    var contacts = X.config.LocalDummyData.getDEVICE_UNFORMATTED_CONTACTS();
+                    var contacts = X.config.UnformattedDummyData.getDEVICE_UNFORMATTED_CONTACTS();
                     
                     var phoneNumbers = me.getPhoneNumbersFromGivenDeviceContacts(contacts);
                     

@@ -47,7 +47,37 @@
             font-size: $list-disclosure-icon-font-size;
             line-height: $list-disclosure-icon-font-line-height;
             content: '';
+        }
+    }
+    
+    .x-list-item {
 
+        &.x-item-pressed {
+
+            &.x-list-item-tpl {
+
+                .x-list-disclosure {
+
+                    &:before {
+                        
+                        content: '';
+                    }
+                }
+            }
+        }
+
+        &.x-item-selected {
+
+            &.x-list-item-tpl {
+
+                .x-list-disclosure {
+
+                    &:before {
+                        
+                        content: '';
+                    }
+                }
+            }
         }
     }
     

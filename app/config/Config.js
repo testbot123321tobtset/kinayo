@@ -97,6 +97,11 @@ Ext.define('X.config.Config', {
             GROUP_NO_MEMBERS_FOUND: 'You have no friends in here. Consider adding a few and get chatty!',
             NO_GROUPS_FOUND: 'You have no groups yet. Consider creating one with your friends!',
             
+            UI_LABELS: {
+                PICK_GROUP_MEMBERS: 'Pick Group Members',
+                SHOW_GROUP_MEMBERS: 'Your Friends In This Group'
+            },
+            
             LOADING: {
                 USER_LOGGING_IN: 'Logging you in...',
                 USER_LOADING: 'Laoding your information...',

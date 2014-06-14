@@ -351,6 +351,8 @@ Ext.define('X.controller.mixin.Factory', {
                         indexAtWhichUsersListMustBeInserted = Ext.isNumber(indexAtWhichUsersListMustBeInserted) ? indexAtWhichUsersListMustBeInserted : false;
 
                         userGroupEditFormPanel.setRecord(group);
+                        
+                        userGroupEditContainer.setReadOnly(!isGroupCreatedByMe);
 
                         var usersList = false;
                         var membersStore = false;
@@ -394,9 +396,7 @@ Ext.define('X.controller.mixin.Factory', {
                             usersList.select(group.getMembers(), false, true);
                         }
                         else {
-
-                            //                    userGroupEditContainer.setReadOnly();
-
+                            
                             if (existingUsersListXtype === 'noninteractiveuserslist') {
 
                                 usersList = existingUsersList;

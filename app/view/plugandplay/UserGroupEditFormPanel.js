@@ -41,8 +41,7 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
             },
             {
                 xtype: 'simpleformpaneldisplaycontainer',
-                itemId: 'usersListTitleDisplayContainer',
-                html: 'Pick Group Members'
+                itemId: 'usersListTitleDisplayContainer'
             }
 
 
@@ -146,8 +145,9 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
     },
     getIndexAtWhichListShouldBeInserted: function() {
         var me = this;
-        
-        return me.getItems().indexOf(me.down('#usersListTitleDisplayContainer')) + 1;
+
+        return me.getItems().
+                indexOf(me.down('#usersListTitleDisplayContainer')) + 1;
     },
     resetAllFields: function() {
         var me = this;
@@ -280,25 +280,30 @@ Ext.define('X.view.plugandplay.UserGroupEditFormPanel', {
     setReadOnly: function(isReadOnly) {
         var me = this;
 
-        //        isReadOnly = Ext.isBoolean(isReadOnly) ? isReadOnly : true;
-        //        var fields = me.query('field');
-        //        var noOfFieldsWithReadOnlyAttribute = fields.length;
-        //        if (noOfFieldsWithReadOnlyAttribute > 0) {
-        //            var fieldIndex = 0;
-        //            for (; fieldIndex < noOfFieldsWithReadOnlyAttribute; fieldIndex++) {
-        //                var thisField = fields[fieldIndex];
-        //                if ('setReadOnly' in thisField) {
-        //                    thisField.setReadOnly(isReadOnly);
-        //                }
-        //            }
-        //        }
-        //        var usersListContainer = me.down('#usersListContainer');
-        //        if (Ext.isObject(usersListContainer)) {
-        //            var listLabel = isReadOnly ? X.config.Config.getLABELS().SEE_FRIENDS_IN_THE_GROUP : X.config.Config.getLABELS().SELECT_FRIENDS_TO_ADD_TO_GROUP;
-        //            usersListContainer.setTitle(listLabel);
-        //        }
+        isReadOnly = Ext.isBoolean(isReadOnly) ? isReadOnly : true;
+        
+        if(isReadOnly) {
+            
+            me.down('#usersListTitleDisplayContainer').setHtml(X.config.Config.getMESSAGES().UI_LABELS.SHOW_GROUP_MEMBERS);
+        }
+        else {
+            
+            me.down('#usersListTitleDisplayContainer').setHtml(X.config.Config.getMESSAGES().UI_LABELS.PICK_GROUP_MEMBERS);
+        }
 
-        me.disable();
+        
+        var fields = me.query('field');
+        var noOfFieldsWithReadOnlyAttribute = fields.length;
+        if (noOfFieldsWithReadOnlyAttribute > 0) {
+            var fieldIndex = 0;
+            for (; fieldIndex < noOfFieldsWithReadOnlyAttribute; fieldIndex++) {
+                
+                var thisField = fields[fieldIndex];
+                if ('setReadOnly' in thisField) {
+                    thisField.setReadOnly(isReadOnly);
+                }
+            }
+        }
 
         return me;
     },

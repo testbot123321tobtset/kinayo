@@ -136,6 +136,7 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
         var me = this;
 
         isReadOnly = Ext.isBoolean(isReadOnly) ? isReadOnly : false;
+        
         if (isReadOnly) {
             me.down('#deleteButton').
                     hide();
@@ -144,6 +145,7 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
             me.down('#deleteButton').
                     show();
         }
+        
         me.down('usergroupeditformpanel').
                 setReadOnly(isReadOnly);
 

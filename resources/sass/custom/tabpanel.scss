@@ -21,5 +21,18 @@
         
         @include mini-left-side-box-shadow;
     }
+    
+    .user-add-groups {
+
+        .x-form {
+
+            .x-list {
+                
+                @include no-border;
+
+                outline: $default-border !important;
+            }
+        }
+    }
 }
 

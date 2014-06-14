@@ -30,7 +30,7 @@
             font-family: $list-disclosure-icon-font-family;
             font-size: $list-disclosure-icon-font-size;
             line-height: $list-disclosure-icon-font-line-height;
-            content: ''
+            content: '\f170';
 
         }
     }
@@ -97,6 +97,8 @@
                 .x-list-disclosure {
 
                     &:before {
+                        
+                        content: '\f16f';
 
                         color: $list-active-color;
                     }
@@ -151,6 +153,8 @@
                 .x-list-disclosure {
 
                     &:before {
+                        
+                        content: '\f16f';
 
                         color: $list-active-color;
                     }

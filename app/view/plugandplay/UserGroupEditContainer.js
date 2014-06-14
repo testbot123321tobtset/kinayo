@@ -99,6 +99,18 @@ Ext.define('X.view.plugandplay.userGroupEditContainer', {
         Ext.Function.defer(function() {
             
             me.resetTitle();
+            
+            var list = me.down('list');
+            list = Ext.isObject(list) ? list : false;
+            if(list) {
+                
+                var listStore = list.getStore();
+                listStore = Ext.isObject(listStore) ? listStore : false;
+                if(listStore) {
+                    
+                    listStore.clearFilter(true);
+                }
+            }
         
         }, 4 * X.config.Config.getDEFAULT_ANIMATION_DELAY());
         

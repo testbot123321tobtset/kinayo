@@ -390,10 +390,6 @@ Ext.define('X.controller.mixin.Factory', {
                                     usersList.setStore(membersStore);
                                 }
                             }
-
-                            usersList.deselectAll(true);
-
-                            usersList.select(group.getMembers(), false, true);
                         }
                         else {
                             
@@ -423,12 +419,24 @@ Ext.define('X.controller.mixin.Factory', {
                             membersStore = Ext.getStore('FriendsStore');
                             membersStore = Ext.isObject(membersStore) ? membersStore : false;
                             if (membersStore) {
+                                
+                                var groupMembers = group.getMembers();
+                                groupMembers = Ext.isArray(groupMembers) ? groupMembers : false;
+                                if (groupMembers) {
+
+                                    membersStore.filterBy(function(group) {
+
+                                        return Ext.Array.contains(groupMembers, group);
+                                    });
+                                }
 
                                 usersList.setStore(membersStore);
                             }
-
-                            usersList.deselectAll(true);
                         }
+
+                        usersList.deselectAll(true);
+
+                        usersList.select(group.getMembers(), false, true);
                     }
                 }, 50);
             }

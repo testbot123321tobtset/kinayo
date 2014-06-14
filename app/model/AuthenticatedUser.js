@@ -145,42 +145,42 @@ Ext.define('X.model.AuthenticatedUser', {
     //                    Don't rely on this to get the relevant groups – always use the group
     //                    stores. For instance when a group is created by the user, the arrays in
     //                    authenticated user are not updated
-    updateAllGroupStores: function() {
-        var me = this;
-        if (X.config.Config.getDEBUG()) {
-            console.log('Debug: X.model.AuthenticatedUser.updateAllGroupStores(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
-        }
-
-        var groupsAuthenticatedUserIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
-        var groupsAuthenticatedUserHasCreatedStore = Ext.getStore('GroupsCreatedByAUStore');
-        var groupsStore = Ext.getStore('GroupsStore');
-        if (Ext.isObject(groupsAuthenticatedUserIsMemberOfStore) && Ext.isObject(groupsAuthenticatedUserHasCreatedStore) && Ext.isObject(groupsStore)) {
-            
-            var groupsIHaveCreated = me.get('hasCreated');
-            groupsIHaveCreated = (Ext.isArray(groupsIHaveCreated) && !Ext.isEmpty(groupsIHaveCreated)) ? groupsIHaveCreated : false;
-            if (groupsIHaveCreated) {
-                
-                groupsAuthenticatedUserHasCreatedStore.setData(groupsIHaveCreated);
-                if (!groupsAuthenticatedUserHasCreatedStore.isLoaded()) {
-                    
-                    groupsAuthenticatedUserHasCreatedStore.loaded = true;
-                }
-            }
-            
-            var groupsIAmMemberOf = me.get('isMemberOf');
-            groupsIAmMemberOf = (Ext.isArray(groupsIAmMemberOf) && !Ext.isEmpty(groupsIAmMemberOf)) ? groupsIAmMemberOf : false;
-            if (groupsIAmMemberOf) {
-                
-                groupsAuthenticatedUserIsMemberOfStore.setData(groupsIAmMemberOf);
-                if (!groupsAuthenticatedUserIsMemberOfStore.isLoaded()) {
-                    
-                    groupsAuthenticatedUserIsMemberOfStore.loaded = true;
-                }
-            }
-        }
-
-        return me;
-    },
+    //    updateAllGroupStores: function() {
+    //        var me = this;
+    //        if (X.config.Config.getDEBUG()) {
+    //            console.log('Debug: X.model.AuthenticatedUser.updateAllGroupStores(): Timestamp: ' + Ext.Date.format(new Date(), 'H:i:s'));
+    //        }
+    //
+    //        var groupsAuthenticatedUserIsMemberOfStore = Ext.getStore('GroupsAUIsMemberOfStore');
+    //        var groupsAuthenticatedUserHasCreatedStore = Ext.getStore('GroupsCreatedByAUStore');
+    //        var groupsStore = Ext.getStore('GroupsStore');
+    //        if (Ext.isObject(groupsAuthenticatedUserIsMemberOfStore) && Ext.isObject(groupsAuthenticatedUserHasCreatedStore) && Ext.isObject(groupsStore)) {
+    //            
+    //            var groupsIHaveCreated = me.get('hasCreated');
+    //            groupsIHaveCreated = (Ext.isArray(groupsIHaveCreated) && !Ext.isEmpty(groupsIHaveCreated)) ? groupsIHaveCreated : false;
+    //            if (groupsIHaveCreated) {
+    //                
+    //                groupsAuthenticatedUserHasCreatedStore.setData(groupsIHaveCreated);
+    //                if (!groupsAuthenticatedUserHasCreatedStore.isLoaded()) {
+    //                    
+    //                    groupsAuthenticatedUserHasCreatedStore.loaded = true;
+    //                }
+    //            }
+    //            
+    //            var groupsIAmMemberOf = me.get('isMemberOf');
+    //            groupsIAmMemberOf = (Ext.isArray(groupsIAmMemberOf) && !Ext.isEmpty(groupsIAmMemberOf)) ? groupsIAmMemberOf : false;
+    //            if (groupsIAmMemberOf) {
+    //                
+    //                groupsAuthenticatedUserIsMemberOfStore.setData(groupsIAmMemberOf);
+    //                if (!groupsAuthenticatedUserIsMemberOfStore.isLoaded()) {
+    //                    
+    //                    groupsAuthenticatedUserIsMemberOfStore.loaded = true;
+    //                }
+    //            }
+    //        }
+    //
+    //        return me;
+    //    },
     updateFriendsStore: function() {
         var me = this;
         if (X.config.Config.getDEBUG()) {

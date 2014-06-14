@@ -68,14 +68,12 @@ Ext.define('X.view.plugandplay.InteractiveUsersListContainer', {
                 ]
             },
             {
+                xtype: 'corecontainer',
                 cls: 'tabbar-height-spacer-container'
             },
             {
                 xtype: 'interactiveuserslist',
                 flex: 1
-            },
-            {
-                cls: 'tabbar-height-spacer-container'
             }
         ]
     },

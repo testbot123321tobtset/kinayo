@@ -491,35 +491,35 @@ Ext.define('X.controller.mixin.Factory', {
             console.log('Debug: X.controller.mixin.Factory: generateAndFillViewportWithPhotoMessageInputContainerWindow()');
         }
 
-        var photoMessageInputContainer = false;
-        var photoMessageInputContainerExists = Ext.isObject(me.getPhotoMessageInputContainer());
-        if (photoMessageInputContainerExists) {
-            photoMessageInputContainer = me.getPhotoMessageInputContainer();
-            photoMessageInputContainer.open();
-        }
-        else {
+        var photoMessageInputContainer = me.getPhotoMessageInputContainer();
+        photoMessageInputContainer = (Ext.isObject(photoMessageInputContainer) && !Ext.isEmpty(photoMessageInputContainer)) ? photoMessageInputContainer : false;
+        if(!photoMessageInputContainer) {
+            
             photoMessageInputContainer = Ext.Viewport.add(me.createView({
                 xtype: 'photomessageinputcontainer'
-            }));
-            photoMessageInputContainer.open();
-            photoMessageInputContainerExists = true;
+            })) || false;
         }
-        if (photoMessageInputContainerExists) {
-            var options = Ext.isObject(options) ? options : false;
-            if (options) {
+        if (photoMessageInputContainer) {
+            
+            options = (Ext.isObject(options) && !Ext.isEmpty(options)) ? options : false;
+            if(options) {
+                
                 var imageData = ('imageData' in options) ? options.imageData : false;
                 if (imageData) {
+                    
                     var destinationType = X.config.Config.getPG_CAMERA().DESTINATION_TYPE;
-                    if (destinationType === 1 || destinationType === 2) {
-                        photoMessageInputContainer.setImageUsingFileUrl(imageData);
-                    }
-                    else if (destinationType === 0) {
+                    if (destinationType === 0) {
                         photoMessageInputContainer.setImageUsingBase64Data(imageData);
+                    }
+                    else if (destinationType === 1 || destinationType === 2) {
+                        photoMessageInputContainer.setImageUsingFileUrl(imageData);
                     }
                 }
             }
+            
+            photoMessageInputContainer.openFullScreen();
         }
-
+        
         return me;
     },
     /*

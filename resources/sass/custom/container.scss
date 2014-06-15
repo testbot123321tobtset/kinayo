@@ -15,6 +15,9 @@ $container-border-visible-edge-width: $default-border-width;
 $container-border-visible-edge-style: $default-border-style;
 $container-border-visible-edge-color: $default-border-color;
 
+/*Custom*/
+$photo-message-input-container-message-form-panel-height: 9em;
+
 .blurred-background {
     
     /* http://codepen.io/rikschennink/pen/zvcgx */
@@ -130,5 +133,11 @@ $container-border-visible-edge-color: $default-border-color;
                 color: $default-color-active !important;
             }
         }
+    }
+    
+    .message-form-panel {
+        
+        min-height: $photo-message-input-container-message-form-panel-height !important;
+        height: $photo-message-input-container-message-form-panel-height !important;
     }
 }

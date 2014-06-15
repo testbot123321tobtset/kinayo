@@ -79,17 +79,20 @@
 
 .message-form-panel {
     
-    .x-form-fieldset {
-        
-        @include no-margin;
-        
-        .message-textarea-field {
-            
-            &:before {
-                
-                @include no-border;
-            }
+    .message-textarea-field {
+
+        &:before {
+
+            @include no-border;
         }
+    }
+    
+    .message-textarea-maximum-characters-left-label {
+        
+        @include no-background;
+        background-color: $default-background-color !important;
+        
+        text-align: center !important;
     }
 }
 

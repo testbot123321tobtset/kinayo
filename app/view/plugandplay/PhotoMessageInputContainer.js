@@ -26,6 +26,7 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
         fullscreen: true,
         modal: true,
         hidden: true,
+        scrollable: false,
         items: [
             {
                 xtype: 'image',
@@ -33,13 +34,13 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
                 cls: 'photo-to-be-posted',
                 flex: 1,
                 mode: false,
-                src: 'http://placehold.it/100x200',
+                src: 'http://media-cache-ec0.pinimg.com/736x/52/f0/13/52f0135e1c378a4295f82da96ff1de15.jpg',
                 listeners: {
                     painted: function(me) {
                         var mySize = me.getSize(),
                                 myHeight = mySize.height,
                                 myWidth = mySize.width;
-
+                        
                         var imgDom = me.down('img'),
                                 imgDomHeight = imgDom.dom.naturalHeight,
                                 imgDomWidth = imgDom.dom.naturalWidth,
@@ -53,18 +54,21 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
                             imgDomWidth = 0.9 * myWidth;
                         }
                         
-                        imgDom.setHeight(imgDomHeight);
-                        imgDom.setWidth(imgDomWidth);
-                        
-                        imgDom.setStyle('margin-top', (myHeight - imgDomHeight)/2 + 'px');
-                        imgDom.setStyle('margin-left', (myWidth - imgDomWidth)/2 + 'px');
+                        Ext.Function.defer(function() {
+
+                            imgDom.setHeight(imgDomHeight);
+                            imgDom.setWidth(imgDomWidth);
+
+                            imgDom.setStyle('margin-top', (myHeight - imgDomHeight) / 2 + 'px');
+                            imgDom.setStyle('margin-left', (myWidth - imgDomWidth) / 2 + 'px');
+                        }, 50);
                     }
                 }
             },
             {
                 xtype: 'messageformpanel',
-                flex: 1,
-                scrollable: true
+                
+                scrollable: false
             },
             {
                 xtype: 'tabbar',
@@ -75,17 +79,6 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
                 },
                 items: [
                     {
-                        itemId: 'postMessage',
-                        cls: 'messagebox-button',
-                        iconCls: 'checkmark',
-                        title: 'Post',
-                        listeners: {
-                            tap: function(button, e, eOpts) {
-                                button.up('#photoMessageInputContainer').onPostMessage();
-                            }
-                        }
-                    },
-                    {
                         itemId: 'cancelMessage',
                         cls: 'messagebox-button',
                         iconCls: 'close',
@@ -93,6 +86,17 @@ Ext.define('X.view.plugandplay.PhotoMessageInputContainer', {
                         listeners: {
                             tap: function(button, e, eOpts) {
                                 button.up('#photoMessageInputContainer').onCancelMessage();
+                            }
+                        }
+                    },
+                    {
+                        itemId: 'postMessage',
+                        cls: 'messagebox-button',
+                        iconCls: 'checkmark',
+                        title: 'Post',
+                        listeners: {
+                            tap: function(button, e, eOpts) {
+                                button.up('#photoMessageInputContainer').onPostMessage();
                             }
                         }
                     }

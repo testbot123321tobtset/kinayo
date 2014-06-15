@@ -80,3 +80,11 @@ $field-label-padding: .7em .4em .4em .4em;
     /*Use this to make sure that the input element aligns itself with the border underneath*/
     padding: 0.7em 0.4em 0.4em 1em !important;
 }
+
+.x-field-input {
+    
+    .x-clear-icon {
+        
+        margin-right: 0.8em;
+    }
+}

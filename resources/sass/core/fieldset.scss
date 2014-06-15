@@ -54,6 +54,8 @@
         @include no-margin;
 
         @include no-top-border;
+        
+        padding-left: 1em !important;
 
         &:first-of-type {
 
